@@ -1,14 +1,17 @@
 import "package:countup/countup.dart";
 import "package:flutter/material.dart";
-import "package:spendwise/Requirements/data.dart";
 
 class AvailableBalance extends StatelessWidget {
   const AvailableBalance({
     super.key,
     required this.width,
+    required this.intakeamount,
+    required this.expense,
   });
 
   final double width;
+  final int intakeamount;
+  final int expense;
 
   @override
   Widget build(BuildContext context) {
@@ -51,7 +54,7 @@ class AvailableBalance extends StatelessWidget {
                     Countup(
                       duration: const Duration(seconds: 1),
                       begin: 0,
-                      end: balance.toDouble(),
+                      end: (intakeamount - expense).toDouble(),
                       style: const TextStyle(
                         fontSize: 45.0,
                         color: Colors.green,

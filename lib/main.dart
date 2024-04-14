@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:spendwise/Requirements/data.dart';
 import 'package:spendwise/Screens/home_page.dart';
+import 'package:spendwise/Screens/intro.dart';
 import 'package:spendwise/Screens/login.dart';
 
 void main() {
@@ -20,11 +21,12 @@ class _SpendWiseState extends State<SpendWise> {
     return MaterialApp(
       title: "SpendWise",
       debugShowCheckedModeBanner: false,
-      initialRoute: homeRoute,
       routes: {
-        initialRoute: (context) => const Login(),
-        homeRoute: (context) => const HomePage(),
+        routes[0]: (context) => const Intro(),
+        routes[1]: (context) => const Login(),
+        routes[3]: (context) => const HomePage(),
       },
+      home: loggedin ? const HomePage() : const Intro(),
     );
   }
 }

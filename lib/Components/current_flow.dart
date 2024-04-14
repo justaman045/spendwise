@@ -5,9 +5,13 @@ class CurrentFlow extends StatelessWidget {
   const CurrentFlow({
     super.key,
     required this.width,
+    required this.income,
+    required this.expense,
   });
 
   final double width;
+  final double income;
+  final double expense;
 
   @override
   Widget build(BuildContext context) {
@@ -17,12 +21,12 @@ class CurrentFlow extends StatelessWidget {
         CashFlow(
           width: width,
           flowText: "Income",
-          flowAmount: 22600,
+          flowAmount: income.toInt(),
         ),
         CashFlow(
           width: width,
           flowText: "Expenses",
-          flowAmount: 18000,
+          flowAmount: expense.toInt(),
         ),
       ],
     );
