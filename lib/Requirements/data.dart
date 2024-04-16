@@ -11,7 +11,7 @@ const List<String> routes = [
   "cashentry",
   "wallets"
 ];
-const bool loggedin = true;
+const bool loggedin = false;
 const int balance = 6123;
 const double income = 22600;
 const List<String> navBars = [

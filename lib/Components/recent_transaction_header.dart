@@ -16,7 +16,7 @@ class RecentTransactionHeader extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           const Text(
-            "Recent Transaction",
+            "Today's Transaction",
             style: TextStyle(
               fontSize: 22.0,
               fontWeight: FontWeight.bold,

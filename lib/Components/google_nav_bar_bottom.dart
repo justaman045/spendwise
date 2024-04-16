@@ -2,6 +2,7 @@ import "package:flutter/material.dart";
 import "package:google_nav_bar/google_nav_bar.dart";
 import 'package:line_icons/line_icons.dart';
 import "package:spendwise/Requirements/data.dart";
+import "package:spendwise/Screens/home_page.dart";
 import "package:spendwise/Screens/login.dart";
 
 // have to install this dependeancy
@@ -59,8 +60,13 @@ class _GoogleNavBarBottomState extends State<GoogleNavBarBottom> {
                 ),
                 GButton(
                   onPressed: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => const Login()));
+                    print(ModalRoute.of(context)?.settings.name);
+                    if (ModalRoute.of(context)?.settings.name != "/") {
+                      // Navigator.push(
+                      //     context,
+                      //     MaterialPageRoute(
+                      //         builder: (context) => const Login()));
+                    }
                   },
                   icon: Icons.payment_rounded,
                   text: navBars[1],
