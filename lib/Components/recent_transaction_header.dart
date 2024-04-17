@@ -1,4 +1,8 @@
 import "package:flutter/material.dart";
+import "package:get/get.dart";
+import "package:spendwise/Requirements/data.dart";
+import "package:spendwise/Requirements/transaction.dart";
+import "package:spendwise/Screens/all_transactions.dart";
 
 class RecentTransactionHeader extends StatelessWidget {
   const RecentTransactionHeader({
@@ -26,7 +30,20 @@ class RecentTransactionHeader extends StatelessWidget {
             style: TextButton.styleFrom(
               backgroundColor: const Color.fromRGBO(225, 225, 254, 1),
             ),
-            onPressed: () {},
+            onPressed: () {
+              Get.to(
+                routeName: routes[4],
+                () => AllTransactions(
+                  pageTitle: "All Transactions",
+                  chartTitle: "All Transactions from SMS",
+                  chartType: "Transaction",
+                  transactioncustom: transactions,
+                ),
+                transition: customTrans,
+                curve: customCurve,
+                duration: duration,
+              );
+            },
             child: const Text(
               "See All..",
             ),

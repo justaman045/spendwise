@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:spendwise/Components/available_balance.dart';
 import 'package:spendwise/Components/current_flow.dart';
+import 'package:spendwise/Components/custom_appbar.dart';
 import 'package:spendwise/Components/google_nav_bar_bottom.dart';
 import 'package:spendwise/Components/recent_transaction_header.dart';
 import 'package:spendwise/Components/transaction_widget.dart';
-import 'package:spendwise/Requirements/data.dart';
 import 'package:spendwise/Requirements/transaction.dart';
 
 class HomePage extends StatelessWidget {
@@ -18,22 +18,7 @@ class HomePage extends StatelessWidget {
         transactions.where(isTransactionForToday).toList();
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Welcome, $userName"),
-        centerTitle: false,
-        leading: IconButton(
-          icon: const Icon(Icons.supervised_user_circle_outlined),
-          onPressed: () {},
-          tooltip: "Menu Icon",
-        ),
-        actions: [
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(Icons.wallet),
-            tooltip: "Wallets Recognised",
-          ),
-        ],
-      ),
+      appBar: const CustomAppBar(),
       body: SafeArea(
         child: Column(
           children: [

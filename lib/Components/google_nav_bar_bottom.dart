@@ -1,9 +1,10 @@
 import "package:flutter/material.dart";
+import "package:get/get.dart";
 import "package:google_nav_bar/google_nav_bar.dart";
 import 'package:line_icons/line_icons.dart';
 import "package:spendwise/Requirements/data.dart";
-import "package:spendwise/Screens/home_page.dart";
-import "package:spendwise/Screens/login.dart";
+import "package:spendwise/Requirements/transaction.dart";
+import "package:spendwise/Screens/all_transactions.dart";
 
 // have to install this dependeancy
 // google_nav_bar: ^5.0.6
@@ -60,12 +61,23 @@ class _GoogleNavBarBottomState extends State<GoogleNavBarBottom> {
                 ),
                 GButton(
                   onPressed: () {
-                    print(ModalRoute.of(context)?.settings.name);
-                    if (ModalRoute.of(context)?.settings.name != "/") {
+                    if (ModalRoute.of(context)?.settings.name != routes[4]) {
                       // Navigator.push(
                       //     context,
                       //     MaterialPageRoute(
                       //         builder: (context) => const Login()));
+                      Get.to(
+                        routeName: routes[4],
+                        () => AllTransactions(
+                          pageTitle: "All Transactions",
+                          chartTitle: "All Transactions from SMS",
+                          chartType: "Transaction",
+                          transactioncustom: transactions,
+                        ),
+                        transition: customTrans,
+                        curve: customCurve,
+                        duration: duration,
+                      );
                     }
                   },
                   icon: Icons.payment_rounded,

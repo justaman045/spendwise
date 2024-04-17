@@ -25,21 +25,21 @@ final transactions = [
   ),
   Transaction(
     amount: 411,
-    dateAndTime: DateTime(2024, 4, 14, 10, 00),
+    dateAndTime: DateTime(2024, 4, 10, 10, 00),
     name: "X Box PC Game Pass",
     typeOfTransaction: "Subscription",
     expenseType: "expense",
   ),
   Transaction(
     amount: 4500,
-    dateAndTime: DateTime(2024, 4, 14, 10),
+    dateAndTime: DateTime(2024, 4, 11, 10),
     name: "Maya Mishra",
     typeOfTransaction: "Family",
     expenseType: "income",
   ),
   Transaction(
     amount: 7000,
-    dateAndTime: DateTime(2024, 3, 14, 10),
+    dateAndTime: DateTime(2024, 3, 12, 10),
     name: "ICICI Mine Credit Card",
     typeOfTransaction: "EMI",
     expenseType: "expense",
@@ -53,7 +53,7 @@ final transactions = [
   ),
   Transaction(
     amount: 5000,
-    dateAndTime: DateTime(2024, 4, 14, 10),
+    dateAndTime: DateTime(2024, 4, 17, 10),
     name: "Saloni",
     typeOfTransaction: "Friend",
     expenseType: "income",
@@ -65,6 +65,26 @@ bool isTransactionForToday(Transaction transaction) {
   return transaction.dateAndTime.year == today.year &&
       transaction.dateAndTime.month == today.month &&
       transaction.dateAndTime.day == today.day;
+}
+
+bool isTransactionForThisMonth(Transaction transaction) {
+  final today = DateTime.now();
+  return transaction.dateAndTime.year == today.year &&
+      transaction.dateAndTime.month == today.month;
+}
+
+bool isExpenseForThisMonth(Transaction transaction) {
+  final today = DateTime.now();
+  return transaction.dateAndTime.year == today.year &&
+      transaction.dateAndTime.month == today.month &&
+      transaction.expenseType == "expense";
+}
+
+bool isIncomeForThisMonth(Transaction transaction) {
+  final today = DateTime.now();
+  return transaction.dateAndTime.year == today.year &&
+      transaction.dateAndTime.month == today.month &&
+      transaction.expenseType == "income";
 }
 
 int countTransactionsThisMonth() {
@@ -92,4 +112,33 @@ double totalIncomeThisMonth() {
           transaction.dateAndTime.month == currentMonth &&
           transaction.expenseType == "income")
       .fold(0.0, (sum, transaction) => sum + transaction.amount.toDouble());
+}
+
+List<ExpenseData> expenseChart(List<Transaction> transactions) {
+  final filteredTransactions = transactions.where((transaction) {
+    return transaction.expenseType == "expense";
+  }).toList();
+
+  return filteredTransactions.map((transaction) {
+    final date = transaction.dateAndTime.day;
+    final expense = transaction.amount.toInt();
+
+    return ExpenseData(date, expense);
+  }).toList();
+}
+
+List<ExpenseData> prepareChartData(List<Transaction> transactions) {
+  return transactions.map((transaction) {
+    final date = transaction.dateAndTime.day;
+    final expense = transaction.amount.toInt();
+
+    return ExpenseData(date, expense);
+  }).toList();
+}
+
+class ExpenseData {
+  ExpenseData(this.date, this.expense);
+
+  final int date;
+  final int expense;
 }
