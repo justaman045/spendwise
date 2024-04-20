@@ -60,6 +60,8 @@ class HomePage extends StatelessWidget {
                       name: transaction.name,
                       typeOfTransaction: transaction.typeOfTransaction,
                       height: height,
+                      transactionReferanceNumber:
+                          transaction.transactionReferanceNumber,
                     );
                   },
                 ),

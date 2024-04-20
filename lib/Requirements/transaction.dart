@@ -3,7 +3,8 @@ class Transaction {
   final DateTime dateAndTime;
   final String name;
   final String typeOfTransaction;
-  final String expenseType; // New field
+  final String expenseType;
+  final int transactionReferanceNumber; // New field
 
   const Transaction({
     required this.amount,
@@ -11,6 +12,7 @@ class Transaction {
     required this.name,
     required this.typeOfTransaction,
     required this.expenseType,
+    required this.transactionReferanceNumber,
   });
 }
 
@@ -22,6 +24,7 @@ final transactions = [
     name: "Harshit Yadav",
     typeOfTransaction: "Friend",
     expenseType: "expense",
+    transactionReferanceNumber: 548354912476,
   ),
   Transaction(
     amount: 411,
@@ -29,6 +32,15 @@ final transactions = [
     name: "X Box PC Game Pass",
     typeOfTransaction: "Subscription",
     expenseType: "expense",
+    transactionReferanceNumber: 548354912476,
+  ),
+  Transaction(
+    amount: 411,
+    dateAndTime: DateTime(2024, 4, 20, 10, 00),
+    name: "X Box PC Game Pass",
+    typeOfTransaction: "Subscription",
+    expenseType: "expense",
+    transactionReferanceNumber: 548354912476,
   ),
   Transaction(
     amount: 4500,
@@ -36,6 +48,7 @@ final transactions = [
     name: "Maya Mishra",
     typeOfTransaction: "Family",
     expenseType: "income",
+    transactionReferanceNumber: 548354912476,
   ),
   Transaction(
     amount: 7000,
@@ -43,6 +56,7 @@ final transactions = [
     name: "ICICI Mine Credit Card",
     typeOfTransaction: "EMI",
     expenseType: "expense",
+    transactionReferanceNumber: 548354912476,
   ),
   Transaction(
     amount: 5000,
@@ -50,6 +64,7 @@ final transactions = [
     name: "Saloni",
     typeOfTransaction: "Friend",
     expenseType: "income",
+    transactionReferanceNumber: 548354912476,
   ),
   Transaction(
     amount: 5000,
@@ -57,6 +72,7 @@ final transactions = [
     name: "Saloni",
     typeOfTransaction: "Friend",
     expenseType: "income",
+    transactionReferanceNumber: 548354912476,
   ),
 ];
 

@@ -20,7 +20,7 @@ const int balance = 6123;
 const double income = 22600;
 const List<String> navBars = [
   "Home",
-  "Login",
+  "Transactions",
   "User Profile",
   "Settings",
 ];
