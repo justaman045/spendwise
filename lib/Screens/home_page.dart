@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_sms_inbox/flutter_sms_inbox.dart';
 import 'package:spendwise/Components/available_balance.dart';
 import 'package:spendwise/Components/current_flow.dart';
 import 'package:spendwise/Components/custom_appbar.dart';
-import 'package:spendwise/Components/google_nav_bar_bottom.dart';
+import 'package:spendwise/Components/custom_drawer.dart';
 import 'package:spendwise/Components/recent_transaction_header.dart';
 import 'package:spendwise/Components/transaction_widget.dart';
 import 'package:spendwise/Requirements/transaction.dart';
 
 class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+  const HomePage({super.key, required this.bankTransaction});
+
+  final List<SmsMessage> bankTransaction;
 
   @override
   Widget build(BuildContext context) {
@@ -16,9 +19,14 @@ class HomePage extends StatelessWidget {
     final height = MediaQuery.of(context).size.height;
     final todaysTransactions =
         transactions.where(isTransactionForToday).toList();
+    GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
     return Scaffold(
       appBar: const CustomAppBar(),
+      drawer: CustomDrawer(
+        scaffoldKey: scaffoldKey,
+        bankTransaction: bankTransaction,
+      ),
       body: SafeArea(
         child: Column(
           children: [
@@ -32,7 +40,9 @@ class HomePage extends StatelessWidget {
               income: totalIncomeThisMonth(),
               expense: totalExpenseThisMonth(),
             ),
-            RecentTransactionHeader(width: width),
+            RecentTransactionHeader(
+              width: width,
+            ),
             if (todaysTransactions.isEmpty) ...[
               const Expanded(
                 child: Center(
@@ -73,10 +83,6 @@ class HomePage extends StatelessWidget {
       floatingActionButton: FloatingActionButton.extended(
         label: const Icon(Icons.add),
         onPressed: () {},
-      ),
-      bottomNavigationBar: GoogleNavBarBottom(
-        width: width,
-        height: height,
       ),
     );
   }

@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_sms_inbox/flutter_sms_inbox.dart';
 import 'package:get/get.dart';
 import 'package:spendwise/Requirements/data.dart';
 import 'package:spendwise/Screens/login.dart';
 
 class Intro extends StatelessWidget {
-  const Intro({super.key});
+  const Intro({super.key, required this.bankTransaction});
+
+  final List<SmsMessage> bankTransaction;
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +22,7 @@ class Intro extends StatelessWidget {
             Padding(
               padding: EdgeInsets.only(
                 left: width * 0.17,
-                top: height * 0.15,
+                top: height * 0.08,
               ),
               child: SizedBox(
                 height: height * 0.3,
@@ -66,7 +69,9 @@ class Intro extends StatelessWidget {
                       onPressed: () {
                         Get.to(
                           routeName: routes[1],
-                          () => const Login(),
+                          () => Login(
+                            bankTransaction: bankTransaction,
+                          ),
                           transition: customTrans,
                           curve: customCurve,
                           duration: duration,

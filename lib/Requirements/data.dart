@@ -15,7 +15,7 @@ const List<String> routes = [
   "cashentry",
   "wallets",
 ];
-bool loggedin = true;
+bool loggedin = false;
 const int balance = 6123;
 const double income = 22600;
 const List<String> navBars = [
@@ -33,3 +33,5 @@ const int animationDuration = 2;
 const Transition customTrans = Transition.circularReveal;
 const Curve customCurve = Curves.bounceInOut;
 const Duration duration = Duration(seconds: 1);
+const String name = "Aman Ojha";
+const String designation = "Software Enginner";

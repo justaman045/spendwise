@@ -1,3 +1,5 @@
+import "package:flutter/material.dart";
+
 class Transaction {
   final int amount;
   final DateTime dateAndTime;
@@ -16,11 +18,23 @@ class Transaction {
   });
 }
 
+class Account {
+  final int accountNumber;
+  final String bankName;
+  final String bankUserName;
+
+  Account({
+    required this.accountNumber,
+    required this.bankName,
+    required this.bankUserName,
+  });
+}
+
 final transactions = [
   // Existing transactions with "expenseType" added
   Transaction(
     amount: 320,
-    dateAndTime: DateTime(2024, 3, 22, 10, 00),
+    dateAndTime: DateTime(2024, 4, 21, 10, 00),
     name: "Harshit Yadav",
     typeOfTransaction: "Friend",
     expenseType: "expense",
@@ -28,7 +42,7 @@ final transactions = [
   ),
   Transaction(
     amount: 411,
-    dateAndTime: DateTime(2024, 4, 10, 10, 00),
+    dateAndTime: DateTime(2024, 4, 21, 10, 00),
     name: "X Box PC Game Pass",
     typeOfTransaction: "Subscription",
     expenseType: "expense",
@@ -36,7 +50,7 @@ final transactions = [
   ),
   Transaction(
     amount: 411,
-    dateAndTime: DateTime(2024, 4, 20, 10, 00),
+    dateAndTime: DateTime(2024, 4, 21, 10, 00),
     name: "X Box PC Game Pass",
     typeOfTransaction: "Subscription",
     expenseType: "expense",
@@ -44,7 +58,7 @@ final transactions = [
   ),
   Transaction(
     amount: 4500,
-    dateAndTime: DateTime(2024, 4, 11, 10),
+    dateAndTime: DateTime(2024, 4, 21, 10),
     name: "Maya Mishra",
     typeOfTransaction: "Family",
     expenseType: "income",
@@ -52,7 +66,7 @@ final transactions = [
   ),
   Transaction(
     amount: 7000,
-    dateAndTime: DateTime(2024, 3, 12, 10),
+    dateAndTime: DateTime(2024, 4, 21, 10),
     name: "ICICI Mine Credit Card",
     typeOfTransaction: "EMI",
     expenseType: "expense",
@@ -60,7 +74,7 @@ final transactions = [
   ),
   Transaction(
     amount: 5000,
-    dateAndTime: DateTime(2024, 4, 13, 10),
+    dateAndTime: DateTime(2024, 4, 21, 10),
     name: "Saloni",
     typeOfTransaction: "Friend",
     expenseType: "income",
@@ -68,13 +82,35 @@ final transactions = [
   ),
   Transaction(
     amount: 5000,
-    dateAndTime: DateTime(2024, 4, 17, 10),
+    dateAndTime: DateTime(2024, 4, 21, 10),
     name: "Saloni",
     typeOfTransaction: "Friend",
     expenseType: "income",
     transactionReferanceNumber: 548354912476,
   ),
 ];
+
+final accounts = [
+  Account(
+    accountNumber: 858647520,
+    bankName: "PayTM Account",
+    bankUserName: "Aman Ojha",
+  ),
+];
+
+class MyWidget extends StatefulWidget {
+  const MyWidget({super.key});
+
+  @override
+  State<MyWidget> createState() => _MyWidgetState();
+}
+
+class _MyWidgetState extends State<MyWidget> {
+  @override
+  Widget build(BuildContext context) {
+    return const Placeholder();
+  }
+}
 
 bool isTransactionForToday(Transaction transaction) {
   final today = DateTime.now();

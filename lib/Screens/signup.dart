@@ -1,4 +1,5 @@
 import "package:flutter/material.dart";
+import "package:flutter_sms_inbox/flutter_sms_inbox.dart";
 import "package:get/get.dart";
 import "package:spendwise/Components/gradient_color.dart";
 import "package:spendwise/Components/login_ball.dart";
@@ -7,7 +8,9 @@ import "package:spendwise/Screens/home_page.dart";
 import "package:spendwise/Screens/login.dart";
 
 class SignUp extends StatelessWidget {
-  const SignUp({super.key});
+  const SignUp({super.key, required this.bankTransaction});
+
+  final List<SmsMessage> bankTransaction;
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +47,7 @@ class SignUp extends StatelessWidget {
               ],
             ),
             Padding(
-              padding: EdgeInsets.only(left: width * 0.09, top: height * 0.04),
+              padding: EdgeInsets.only(left: width * 0.09, top: height * 0.03),
               child: const Text(
                 "Create Account",
                 style: TextStyle(
@@ -54,7 +57,7 @@ class SignUp extends StatelessWidget {
               ),
             ),
             Padding(
-              padding: EdgeInsets.only(left: width * 0.09, top: height * 0.01),
+              padding: EdgeInsets.only(left: width * 0.09, top: height * 0.005),
               child: const Text(
                 "Create a Account to keep a track of your money",
                 style: TextStyle(fontSize: 17),
@@ -64,7 +67,7 @@ class SignUp extends StatelessWidget {
               padding: EdgeInsets.only(
                 left: width * 0.1,
                 right: width * 0.1,
-                top: height * 0.02,
+                top: height * 0.01,
                 bottom: height * 0.01,
               ),
               child: TextFormField(
@@ -77,7 +80,7 @@ class SignUp extends StatelessWidget {
               padding: EdgeInsets.only(
                 left: width * 0.1,
                 right: width * 0.1,
-                top: height * 0.02,
+                top: height * 0.01,
                 bottom: height * 0.01,
               ),
               child: TextFormField(
@@ -90,7 +93,7 @@ class SignUp extends StatelessWidget {
               padding: EdgeInsets.only(
                 left: width * 0.1,
                 right: width * 0.1,
-                top: height * 0.02,
+                top: height * 0.01,
                 bottom: height * 0.01,
               ),
               child: TextFormField(
@@ -104,7 +107,7 @@ class SignUp extends StatelessWidget {
               padding: EdgeInsets.only(
                 left: width * 0.1,
                 right: width * 0.1,
-                top: height * 0.02,
+                top: height * 0.01,
                 bottom: height * 0.01,
               ),
               child: TextFormField(
@@ -116,8 +119,8 @@ class SignUp extends StatelessWidget {
             ),
             Padding(
               padding: EdgeInsets.only(
-                left: width * 0.45,
-                top: height * 0.05,
+                left: width * 0.35,
+                top: height * 0.025,
               ),
               child: Row(
                 children: [
@@ -125,7 +128,9 @@ class SignUp extends StatelessWidget {
                     onPressed: () {
                       Get.off(
                         routeName: routes[1],
-                        () => const Login(),
+                        () => Login(
+                          bankTransaction: bankTransaction,
+                        ),
                         transition: customTrans,
                         curve: customCurve,
                         duration: duration,
@@ -140,12 +145,14 @@ class SignUp extends StatelessWidget {
                         Radius.circular(width * 0.035),
                       ),
                     ),
-                    width: width * 0.3,
+                    width: width * 0.4,
                     child: TextButton(
                       onPressed: () {
                         Get.offAll(
                           routeName: routes[3],
-                          () => const HomePage(),
+                          () => HomePage(
+                            bankTransaction: bankTransaction,
+                          ),
                           transition: customTrans,
                           curve: customCurve,
                           duration: duration,
@@ -166,7 +173,7 @@ class SignUp extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Padding(
-                  padding: EdgeInsets.only(top: height * 0.04),
+                  padding: EdgeInsets.only(top: height * 0.02),
                   child: LoginBall(
                     width: width,
                     height: height,

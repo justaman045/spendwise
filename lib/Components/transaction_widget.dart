@@ -48,7 +48,7 @@ class TransactionWidget extends StatelessWidget {
           Padding(
             padding: EdgeInsets.symmetric(
               horizontal: width * 0.05,
-              vertical: height * 0.015,
+              vertical: height * 0.025,
             ),
             // padding: EdgeInsets.symmetric(
             //     horizontal: width * 0.04, vertical: height * 0.01),
@@ -79,11 +79,14 @@ class TransactionWidget extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      name,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 17,
+                    SizedBox(
+                      width: width * 0.4,
+                      child: Text(
+                        name,
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 17,
+                        ),
                       ),
                     ),
                     Row(

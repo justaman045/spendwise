@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_sms_inbox/flutter_sms_inbox.dart';
 import 'package:get/get.dart';
 import 'package:spendwise/Components/gradient_color.dart';
 import 'package:spendwise/Components/login_ball.dart';
@@ -7,7 +8,9 @@ import 'package:spendwise/Screens/home_page.dart';
 import 'package:spendwise/Screens/signup.dart';
 
 class Login extends StatelessWidget {
-  const Login({super.key});
+  const Login({super.key, required this.bankTransaction});
+
+  final List<SmsMessage> bankTransaction;
 
   @override
   Widget build(BuildContext context) {
@@ -94,7 +97,9 @@ class Login extends StatelessWidget {
                     onPressed: () {
                       Get.off(
                         routeName: routes[2],
-                        () => const SignUp(),
+                        () => SignUp(
+                          bankTransaction: bankTransaction,
+                        ),
                         transition: customTrans,
                         curve: customCurve,
                         duration: duration,
@@ -114,7 +119,9 @@ class Login extends StatelessWidget {
                       onPressed: () {
                         Get.to(
                           routeName: routes[3],
-                          () => const HomePage(),
+                          () => HomePage(
+                            bankTransaction: bankTransaction,
+                          ),
                           transition: customTrans,
                           curve: customCurve,
                           duration: duration,
