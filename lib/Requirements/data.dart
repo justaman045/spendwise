@@ -6,7 +6,7 @@ const List<String> routes = [
   "intro",
   "login",
   "signup",
-  "home",
+  "",
   "transactions",
   "monthlyTransaction",
   "profile",
@@ -14,6 +14,7 @@ const List<String> routes = [
   "transaction",
   "cashentry",
   "wallets",
+  "editProfile"
 ];
 bool loggedin = false;
 const int balance = 6123;
@@ -35,3 +36,5 @@ const Curve customCurve = Curves.bounceInOut;
 const Duration duration = Duration(seconds: 1);
 const String name = "Aman Ojha";
 const String designation = "Software Enginner";
+const String emailId = "coderaman07@gmail.com";
+const String password = "somkumud";
