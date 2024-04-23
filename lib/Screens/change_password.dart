@@ -9,10 +9,6 @@ class ChangePassword extends StatelessWidget {
     final double height = MediaQuery.of(context).size.height;
     final double width = MediaQuery.of(context).size.width;
     return Scaffold(
-      // appBar: AppBar(
-      //   title: const Text("Change Password"),
-      //   centerTitle: true,
-      // ),
       body: Column(
         children: [
           Stack(

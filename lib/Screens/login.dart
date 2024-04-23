@@ -5,6 +5,7 @@ import 'package:spendwise/Components/gradient_color.dart';
 import 'package:spendwise/Components/login_ball.dart';
 import 'package:spendwise/Requirements/data.dart';
 import 'package:spendwise/Screens/home_page.dart';
+import 'package:spendwise/Screens/reset_password.dart';
 import 'package:spendwise/Screens/signup.dart';
 
 class Login extends StatelessWidget {
@@ -138,25 +139,62 @@ class Login extends StatelessWidget {
                 ],
               ),
             ),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            Stack(
               children: [
-                Padding(
-                  padding: EdgeInsets.only(top: height * 0.04),
-                  child: LoginBall(
-                    width: width,
-                    height: height,
-                    widthOfBall: 0.4,
-                    heightOfBall: 0.2,
-                    radiusOfBall: 0.2,
-                  ),
-                ),
-                LoginBall(
-                  width: width,
-                  height: height,
-                  widthOfBall: 0.1,
-                  heightOfBall: 0.05,
-                  radiusOfBall: 0.2,
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.only(top: height * 0.04),
+                      child: LoginBall(
+                        width: width,
+                        height: height,
+                        widthOfBall: 0.4,
+                        heightOfBall: 0.2,
+                        radiusOfBall: 0.2,
+                      ),
+                    ),
+                    LoginBall(
+                      width: width,
+                      height: height,
+                      widthOfBall: 0.1,
+                      heightOfBall: 0.05,
+                      radiusOfBall: 0.2,
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(
+                        top: height * 0.03,
+                        left: width * 0.11,
+                      ),
+                      child: GestureDetector(
+                        onTap: () {
+                          Get.off(
+                            routeName: "saveAndAdd",
+                            () => const ResetPassword(),
+                            curve: customCurve,
+                            transition: customTrans,
+                            duration: duration,
+                          );
+                        },
+                        child: Container(
+                          width: width * 0.35,
+                          height: height * 0.055,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(width * 0.04),
+                            gradient: LinearGradient(
+                              begin: Alignment.topRight,
+                              end: Alignment.bottomLeft,
+                              colors: [
+                                Colors.blue.shade400,
+                                Colors.blue.shade600,
+                              ],
+                            ),
+                          ),
+                          child: const Center(child: Text("Reset Password")),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
