@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_sms_inbox/flutter_sms_inbox.dart';
+import 'package:get/get.dart';
 import 'package:spendwise/Components/available_balance.dart';
 import 'package:spendwise/Components/current_flow.dart';
 import 'package:spendwise/Components/custom_appbar.dart';
 import 'package:spendwise/Components/custom_drawer.dart';
 import 'package:spendwise/Components/recent_transaction_header.dart';
 import 'package:spendwise/Components/transaction_widget.dart';
+import 'package:spendwise/Requirements/data.dart';
 import 'package:spendwise/Requirements/transaction.dart';
+import 'package:spendwise/Screens/cash_entry.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key, required this.bankTransaction});
@@ -82,7 +85,15 @@ class HomePage extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton.extended(
         label: const Icon(Icons.add),
-        onPressed: () {},
+        onPressed: () {
+          Get.to(
+            routeName: routes[12],
+            () => const AddCashEntry(),
+            curve: customCurve,
+            transition: customTrans,
+            duration: duration,
+          );
+        },
       ),
     );
   }

@@ -83,17 +83,6 @@ class EditUserProfile extends StatelessWidget {
             ),
           ),
           Padding(
-            padding: EdgeInsets.symmetric(
-                horizontal: width * 0.08, vertical: height * 0.01),
-            child: TextFormField(
-              obscureText: true,
-              initialValue: password,
-              decoration: const InputDecoration(
-                label: Text("Password"),
-              ),
-            ),
-          ),
-          Padding(
             padding: EdgeInsets.symmetric(vertical: height * 0.04),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -128,18 +117,22 @@ class EditUserProfile extends StatelessWidget {
                       ],
                     ),
                   ),
-                  child: const Center(child: Text("Save Changes")),
+                  child: const Center(child: Text("Discard Changes")),
                 ),
               ],
             ),
           ),
-          Padding(
-            padding: EdgeInsets.only(left: width * 0.1, top: height * 0.01),
-            child: Row(
-              children: [
-                Text(
-                    "Date Joined ${DateFormat.yMMMd().format(DateTime.now())}"),
-              ],
+          Expanded(
+            child: SizedBox.expand(
+              child: Padding(
+                padding: EdgeInsets.only(left: width * 0.1, top: height * 0.01),
+                child: Row(
+                  children: [
+                    Text(
+                        "Date Joined ${DateFormat.yMMMd().format(DateTime.now())}"),
+                  ],
+                ),
+              ),
             ),
           ),
         ],

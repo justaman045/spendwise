@@ -14,7 +14,8 @@ const List<String> routes = [
   "transaction",
   "cashentry",
   "wallets",
-  "editProfile"
+  "editProfile",
+  "cashentry",
 ];
 bool loggedin = false;
 const int balance = 6123;
@@ -37,4 +38,21 @@ const Duration duration = Duration(seconds: 1);
 const String name = "Aman Ojha";
 const String designation = "Software Enginner";
 const String emailId = "coderaman07@gmail.com";
-const String password = "somkumud";
+const String password = "password";
+const List<String> expenseType = ["income", "expense"];
+const List<String> typeOfTransaction = [
+  "Bike",
+  "Travel",
+  "Bills",
+  "EMI",
+  "Entertainment",
+  "Food and Drinks",
+  "Fuel",
+  "Groceries",
+  "Health",
+  "Investment",
+  "Other",
+  "Shopping",
+  "Transfer",
+  "Transfer to Self",
+];

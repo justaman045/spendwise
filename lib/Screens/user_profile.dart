@@ -3,6 +3,7 @@ import "package:get/get.dart";
 import "package:spendwise/Requirements/data.dart";
 import "package:spendwise/Requirements/transaction.dart";
 import "package:spendwise/Screens/all_transactions.dart";
+import "package:spendwise/Screens/change_password.dart";
 import "package:spendwise/Screens/delete_account.dart";
 import "package:spendwise/Screens/edit_user_profile.dart";
 
@@ -139,7 +140,15 @@ class UserProfile extends StatelessWidget {
               text: "All Income",
             ),
             MyProfileButtons(
-              fn: () {},
+              fn: () {
+                Get.to(
+                  routeName: "changePassword",
+                  () => const ChangePassword(),
+                  transition: customTrans,
+                  curve: customCurve,
+                  duration: duration,
+                );
+              },
               width: width,
               height: height,
               icons: const Icon(Icons.wallet_rounded),
