@@ -28,20 +28,23 @@ class TransactionDetails extends StatelessWidget {
         children: [
           Padding(
             padding: EdgeInsets.only(top: height * 0.15),
-            child: const Center(
-              child: Image(
-                image: AssetImage("assets/resources/success.gif"),
+            child: SizedBox(
+              width: width * 0.4,
+              child: const Center(
+                child: Image(
+                  image: AssetImage("assets/resources/success.gif"),
+                ),
               ),
             ),
           ),
           if (expenseType == "expense") ...[
-            const Center(
+            Center(
               child: Text(
                 "Payment Sucessfull",
                 style: TextStyle(
                   color: Colors.green,
                   fontWeight: FontWeight.bold,
-                  fontSize: 30,
+                  fontSize: width * 0.07,
                 ),
               ),
             ),

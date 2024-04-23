@@ -15,7 +15,7 @@ class ChangePassword extends StatelessWidget {
             children: [
               Container(
                 height: height * 0.2,
-                width: width * 0.5,
+                width: width * 0.45,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.only(
                     bottomRight: Radius.circular(height * 0.3),
@@ -31,10 +31,10 @@ class ChangePassword extends StatelessWidget {
                 ),
               ),
               Padding(
-                padding: EdgeInsets.only(left: width * 0.65),
+                padding: EdgeInsets.only(left: width * 0.7),
                 child: Container(
                   height: height * 0.3,
-                  width: width * 0.35,
+                  width: width * 0.3,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(height * 0.3),
@@ -139,6 +139,27 @@ class ChangePassword extends StatelessWidget {
           Stack(
             children: [
               Padding(
+                padding: EdgeInsets.only(left: width * 0.8, top: height * 0.15),
+                child: Container(
+                  height: height * 0.2,
+                  width: width * 0.2,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(height * 0.3),
+                      bottomLeft: Radius.circular(height * 0.3),
+                    ),
+                    gradient: const LinearGradient(
+                      begin: Alignment.topRight,
+                      end: Alignment.bottomLeft,
+                      colors: [
+                        Color.fromRGBO(210, 209, 254, 1),
+                        Color.fromRGBO(243, 203, 237, 1),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              Padding(
                 padding: EdgeInsets.symmetric(vertical: height * 0.04),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -183,48 +204,6 @@ class ChangePassword extends StatelessWidget {
                       ),
                     ),
                   ],
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(top: height * 0.1),
-                child: Container(
-                  height: height * 0.3,
-                  width: width * 0.35,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.only(
-                      bottomRight: Radius.circular(height * 0.3),
-                      topRight: Radius.circular(height * 0.3),
-                    ),
-                    gradient: const LinearGradient(
-                      begin: Alignment.topRight,
-                      end: Alignment.bottomLeft,
-                      colors: [
-                        Color.fromRGBO(210, 209, 254, 1),
-                        Color.fromRGBO(243, 203, 237, 1),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(left: width * 0.65, top: height * 0.1),
-                child: Container(
-                  height: height * 0.3,
-                  width: width * 0.35,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(height * 0.3),
-                      bottomLeft: Radius.circular(height * 0.3),
-                    ),
-                    gradient: const LinearGradient(
-                      begin: Alignment.topRight,
-                      end: Alignment.bottomLeft,
-                      colors: [
-                        Color.fromRGBO(210, 209, 254, 1),
-                        Color.fromRGBO(243, 203, 237, 1),
-                      ],
-                    ),
-                  ),
                 ),
               ),
             ],

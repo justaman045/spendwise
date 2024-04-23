@@ -43,7 +43,7 @@ class RecognizedAccounts extends StatelessWidget {
                     ),
                   ),
                   width: width * 0.9,
-                  height: height * 0.1,
+                  height: height * 0.11,
                   child: Padding(
                     padding: EdgeInsets.all(width * 0.04),
                     child: Row(

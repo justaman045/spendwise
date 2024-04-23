@@ -1,5 +1,6 @@
 import "package:countup/countup.dart";
 import "package:flutter/material.dart";
+import "package:spendwise/Requirements/data.dart";
 
 class CashFlow extends StatelessWidget {
   const CashFlow({
@@ -40,34 +41,34 @@ class CashFlow extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Padding(
-                    padding: EdgeInsets.all(8.0),
+                  Padding(
+                    padding: EdgeInsets.all(width * 0.01),
                     child: Icon(
                       Icons.attach_money,
                     ),
                   ),
                   Text(
                     flowText,
-                    style: const TextStyle(
-                      fontSize: 18,
+                    style: TextStyle(
+                      fontSize: width * 0.048,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
                   Row(
                     children: [
-                      const Text(
+                      Text(
                         "Rs. ",
                         style: TextStyle(
-                          fontSize: 24,
+                          fontSize: width * 0.06,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
                       Countup(
-                        duration: const Duration(seconds: 1),
+                        duration: duration,
                         begin: 0,
                         end: flowAmount.toDouble(),
-                        style: const TextStyle(
-                          fontSize: 24,
+                        style: TextStyle(
+                          fontSize: width * 0.07,
                           fontWeight: FontWeight.bold,
                         ),
                       )

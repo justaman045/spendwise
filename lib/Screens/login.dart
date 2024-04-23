@@ -144,22 +144,29 @@ class Login extends StatelessWidget {
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Padding(
-                      padding: EdgeInsets.only(top: height * 0.04),
-                      child: LoginBall(
-                        width: width,
-                        height: height,
-                        widthOfBall: 0.4,
-                        heightOfBall: 0.2,
-                        radiusOfBall: 0.2,
-                      ),
-                    ),
-                    LoginBall(
-                      width: width,
-                      height: height,
-                      widthOfBall: 0.1,
-                      heightOfBall: 0.05,
-                      radiusOfBall: 0.2,
+                    Stack(
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.only(top: height * 0.001),
+                          child: LoginBall(
+                            width: width,
+                            height: height,
+                            widthOfBall: 0.4,
+                            heightOfBall: 0.22,
+                            radiusOfBall: 0.2,
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(left: width * 0.41),
+                          child: LoginBall(
+                            width: width,
+                            height: height,
+                            widthOfBall: 0.1,
+                            heightOfBall: 0.06,
+                            radiusOfBall: 0.2,
+                          ),
+                        ),
+                      ],
                     ),
                     Padding(
                       padding: EdgeInsets.only(
