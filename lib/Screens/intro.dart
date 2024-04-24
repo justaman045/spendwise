@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_sms_inbox/flutter_sms_inbox.dart';
 import 'package:get/get.dart';
+import 'package:spendwise/Components/responsive_methods.dart';
 import 'package:spendwise/Requirements/data.dart';
 import 'package:spendwise/Screens/login.dart';
 
@@ -11,9 +12,6 @@ class Intro extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final double width = MediaQuery.of(context).size.width;
-    final double height = MediaQuery.of(context).size.height;
-
     return Scaffold(
       body: SafeArea(
         child: Column(
@@ -21,27 +19,27 @@ class Intro extends StatelessWidget {
           children: [
             Padding(
               padding: EdgeInsets.only(
-                left: width * 0.17,
-                top: height * 0.08,
+                left: getResponsiveWidth(context) * 0.3,
+                top: getResponsiveHeight(context) * 0.3,
               ),
               child: SizedBox(
-                height: height * 0.3,
+                height: getResponsiveHeight(context) * 1.1,
                 child: const Image(
                   image: AssetImage("assets/resources/intro.jpg"),
                 ),
               ),
             ),
             SizedBox(
-              width: width * 0.7,
+              width: getResponsiveWidth(context) + 10,
               child: Padding(
                 padding: EdgeInsets.only(
-                  left: width * 0.12,
-                  top: height * 0.04,
+                  left: getResponsiveHeight(context) * 0.12,
+                  top: getResponsiveHeight(context) * 0.2,
                 ),
-                child: const Text(
+                child: Text(
                   "Easy way to Manage your Money",
                   style: TextStyle(
-                    fontSize: 40,
+                    fontSize: getResponsiveWidth(context) * 0.1,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -49,18 +47,22 @@ class Intro extends StatelessWidget {
             ),
             Padding(
               padding: EdgeInsets.symmetric(
-                horizontal: width * 0.13,
-                vertical: height * 0.02,
+                horizontal: getResponsiveHeight(context) * 0.13,
+                vertical: getResponsiveHeight(context) * 0.1,
               ),
-              child: const Text(
+              child: Text(
                 introText,
-                style: TextStyle(),
+                style: TextStyle(
+                  fontSize: getResponsiveHeight(context) * 0.08,
+                ),
               ),
             ),
             Padding(
               padding: EdgeInsets.only(
-                left: width * 0.3,
-                top: skipSignIn ? height * 0.01 : height * 0.04,
+                left: getResponsiveWidth(context) * 0.3,
+                top: skipSignIn
+                    ? getResponsiveHeight(context) * 0.01
+                    : getResponsiveHeight(context) * 0.1,
               ),
               child: Row(
                 children: [
@@ -100,7 +102,8 @@ class Intro extends StatelessWidget {
                 child: const Text("Don't want to SignUp??"),
               ),
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: width * 0.1),
+                padding: EdgeInsets.symmetric(
+                    horizontal: getResponsiveWidth(context) * 0.1),
                 child: const Text(introSkipLogin),
               ),
             ]

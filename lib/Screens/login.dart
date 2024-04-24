@@ -3,6 +3,7 @@ import 'package:flutter_sms_inbox/flutter_sms_inbox.dart';
 import 'package:get/get.dart';
 import 'package:spendwise/Components/gradient_color.dart';
 import 'package:spendwise/Components/login_ball.dart';
+import 'package:spendwise/Components/responsive_methods.dart';
 import 'package:spendwise/Requirements/data.dart';
 import 'package:spendwise/Screens/home_page.dart';
 import 'package:spendwise/Screens/reset_password.dart';
@@ -15,9 +16,6 @@ class Login extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final width = MediaQuery.of(context).size.width;
-    final height = MediaQuery.of(context).size.height;
-
     return Scaffold(
       body: SafeArea(
         child: Column(
@@ -27,47 +25,58 @@ class Login extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Padding(
-                  padding: EdgeInsets.only(left: width * 0.5),
+                  padding: EdgeInsets.only(
+                    left: getResponsiveWidth(context) * 0.75,
+                  ),
                   child: LoginBall(
-                      width: width,
-                      height: height,
-                      widthOfBall: 0.1,
-                      heightOfBall: 0.05,
-                      radiusOfBall: 0.2),
+                    width: getResponsiveWidth(context),
+                    height: getResponsiveHeight(context),
+                    widthOfBall: getResponsiveWidth(context) * 0.0005,
+                    heightOfBall: getResponsiveHeight(context) * 0.0011,
+                    radiusOfBall: getResponsiveWidth(context) * 0.005,
+                  ),
                 ),
                 Padding(
-                  padding: EdgeInsets.only(top: height * 0.04),
+                  padding: EdgeInsets.only(
+                    top: getResponsiveHeight(context) * 0.15,
+                  ),
                   child: LoginBall(
-                    width: width,
-                    height: height,
-                    widthOfBall: 0.4,
-                    heightOfBall: 0.2,
-                    radiusOfBall: 0.2,
+                    width: getResponsiveWidth(context),
+                    height: getResponsiveHeight(context),
+                    widthOfBall: getResponsiveWidth(context) * 0.0012,
+                    heightOfBall: getResponsiveHeight(context) * 0.0026,
+                    radiusOfBall: getResponsiveWidth(context) * 0.05,
                   ),
                 ),
               ],
             ),
             Padding(
-              padding: EdgeInsets.only(left: width * 0.09, top: height * 0.04),
-              child: const Text(
+              padding: EdgeInsets.only(
+                left: getResponsiveWidth(context) * 0.1,
+                top: getResponsiveHeight(context) * 0.1,
+              ),
+              child: Text(
                 "Login",
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
-                  fontSize: 30,
+                  fontSize: getResponsiveHeight(context) * 0.16,
                 ),
               ),
             ),
             Padding(
-              padding: EdgeInsets.only(left: width * 0.09, top: height * 0.01),
-              child: const Text(
+              padding: EdgeInsets.only(
+                left: getResponsiveWidth(context) * 0.1,
+                top: getResponsiveHeight(context) * 0.05,
+              ),
+              child: Text(
                 "Please Sign in to Continue",
-                style: TextStyle(fontSize: 18),
+                style: TextStyle(fontSize: getResponsiveHeight(context) * 0.1),
               ),
             ),
             Padding(
               padding: EdgeInsets.symmetric(
-                horizontal: width * 0.07,
-                vertical: height * 0.04,
+                horizontal: getResponsiveWidth(context) * 0.07,
+                vertical: getResponsiveHeight(context) * 0.04,
               ),
               child: TextFormField(
                 decoration: const InputDecoration(
@@ -77,8 +86,8 @@ class Login extends StatelessWidget {
             ),
             Padding(
               padding: EdgeInsets.symmetric(
-                horizontal: width * 0.07,
-                vertical: height * 0.01,
+                horizontal: getResponsiveHeight(context) * 0.07,
+                vertical: getResponsiveHeight(context) * 0.01,
               ),
               child: TextFormField(
                 obscureText: true,
@@ -89,8 +98,8 @@ class Login extends StatelessWidget {
             ),
             Padding(
               padding: EdgeInsets.only(
-                left: width * 0.6,
-                top: height * 0.05,
+                left: getResponsiveWidth(context) * 0.6,
+                top: getResponsiveHeight(context) * 0.05,
               ),
               child: Row(
                 children: [
@@ -112,10 +121,10 @@ class Login extends StatelessWidget {
                     decoration: BoxDecoration(
                       gradient: colorsOfGradient(),
                       borderRadius: BorderRadius.all(
-                        Radius.circular(width * 0.035),
+                        Radius.circular(getResponsiveWidth(context) * 0.035),
                       ),
                     ),
-                    width: width * 0.2,
+                    width: getResponsiveWidth(context) * 0.2,
                     child: TextButton(
                       onPressed: () {
                         Get.to(
@@ -147,20 +156,22 @@ class Login extends StatelessWidget {
                     Stack(
                       children: [
                         Padding(
-                          padding: EdgeInsets.only(top: height * 0.001),
+                          padding: EdgeInsets.only(
+                              top: getResponsiveHeight(context) * 0.001),
                           child: LoginBall(
-                            width: width,
-                            height: height,
+                            width: getResponsiveWidth(context),
+                            height: getResponsiveHeight(context),
                             widthOfBall: 0.4,
                             heightOfBall: 0.22,
                             radiusOfBall: 0.2,
                           ),
                         ),
                         Padding(
-                          padding: EdgeInsets.only(left: width * 0.41),
+                          padding: EdgeInsets.only(
+                              left: getResponsiveWidth(context) * 0.41),
                           child: LoginBall(
-                            width: width,
-                            height: height,
+                            width: getResponsiveWidth(context),
+                            height: getResponsiveHeight(context),
                             widthOfBall: 0.1,
                             heightOfBall: 0.06,
                             radiusOfBall: 0.2,
@@ -170,8 +181,8 @@ class Login extends StatelessWidget {
                     ),
                     Padding(
                       padding: EdgeInsets.only(
-                        top: height * 0.03,
-                        left: width * 0.11,
+                        top: getResponsiveHeight(context) * 0.03,
+                        left: getResponsiveWidth(context) * 0.11,
                       ),
                       child: GestureDetector(
                         onTap: () {
@@ -184,10 +195,11 @@ class Login extends StatelessWidget {
                           );
                         },
                         child: Container(
-                          width: width * 0.35,
-                          height: height * 0.055,
+                          width: getResponsiveWidth(context) * 0.35,
+                          height: getResponsiveHeight(context) * 0.055,
                           decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(width * 0.04),
+                            borderRadius: BorderRadius.circular(
+                                getResponsiveWidth(context) * 0.04),
                             gradient: LinearGradient(
                               begin: Alignment.topRight,
                               end: Alignment.bottomLeft,

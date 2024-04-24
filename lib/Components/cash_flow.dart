@@ -43,7 +43,7 @@ class CashFlow extends StatelessWidget {
                 children: [
                   Padding(
                     padding: EdgeInsets.all(width * 0.01),
-                    child: Icon(
+                    child: const Icon(
                       Icons.attach_money,
                     ),
                   ),
