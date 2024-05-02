@@ -50,3 +50,47 @@ double getResponsiveHeight(BuildContext context) {
         1.2; // Adjust multiplier for extra large screens (tablets)
   }
 }
+
+double getResponsiveSize(BuildContext context,
+    {double percent = 1.0, double minSize = 0.0}) {
+  final size = MediaQuery.of(context).size;
+  final availableSize = size.width < size.height ? size.width : size.height;
+
+  // Calculate size based on screen size and percentage
+  double calculatedSize = availableSize * percent;
+
+  // Ensure minimum size is respected
+  return calculatedSize > minSize ? calculatedSize : minSize;
+}
+
+double getResponsiveWidgetSize(
+  BuildContext context,
+  double desiredSize, {
+  double smallFactor = 0.8,
+  double mediumFactor = 0.6,
+  double largeFactor = 0.5,
+}) {
+  final size = MediaQuery.of(context).size;
+
+  // Categorize screen size based on width thresholds
+  final isSmallScreen = size.width < 600; // Adjust thresholds as needed
+  final isMediumScreen = size.width < 800 && !isSmallScreen;
+
+  // Calculate size based on screen category
+  double adjustedSize;
+  if (isSmallScreen) {
+    adjustedSize = desiredSize * smallFactor;
+  } else if (isMediumScreen) {
+    adjustedSize = desiredSize * mediumFactor;
+  } else {
+    adjustedSize = desiredSize * largeFactor;
+  }
+
+  // Ensure size is within available space
+  return adjustedSize.clamp(0.0, size.width);
+}
+
+double getScreenWidth(BuildContext context) =>
+    MediaQuery.of(context).size.width;
+double getScreenHeight(BuildContext context) =>
+    MediaQuery.of(context).size.height;

@@ -20,32 +20,23 @@ class Login extends StatelessWidget {
       body: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Row(
+              mainAxisAlignment: MainAxisAlignment.end,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Padding(
-                  padding: EdgeInsets.only(
-                    left: getResponsiveWidth(context) * 0.75,
-                  ),
-                  child: LoginBall(
-                    width: getResponsiveWidth(context),
-                    height: getResponsiveHeight(context),
-                    widthOfBall: getResponsiveWidth(context) * 0.0005,
-                    heightOfBall: getResponsiveHeight(context) * 0.0011,
-                    radiusOfBall: getResponsiveWidth(context) * 0.005,
-                  ),
+                LoginBall(
+                  width: getResponsiveSize(context, percent: 0.2),
+                  height: getResponsiveSize(context, percent: 0.4),
                 ),
                 Padding(
                   padding: EdgeInsets.only(
                     top: getResponsiveHeight(context) * 0.15,
                   ),
                   child: LoginBall(
-                    width: getResponsiveWidth(context),
-                    height: getResponsiveHeight(context),
-                    widthOfBall: getResponsiveWidth(context) * 0.0012,
-                    heightOfBall: getResponsiveHeight(context) * 0.0026,
-                    radiusOfBall: getResponsiveWidth(context) * 0.05,
+                    width: getResponsiveSize(context, percent: 0.3),
+                    height: getResponsiveSize(context, percent: 0.3),
                   ),
                 ),
               ],
@@ -161,9 +152,6 @@ class Login extends StatelessWidget {
                           child: LoginBall(
                             width: getResponsiveWidth(context),
                             height: getResponsiveHeight(context),
-                            widthOfBall: 0.4,
-                            heightOfBall: 0.22,
-                            radiusOfBall: 0.2,
                           ),
                         ),
                         Padding(
@@ -172,9 +160,6 @@ class Login extends StatelessWidget {
                           child: LoginBall(
                             width: getResponsiveWidth(context),
                             height: getResponsiveHeight(context),
-                            widthOfBall: 0.1,
-                            heightOfBall: 0.06,
-                            radiusOfBall: 0.2,
                           ),
                         ),
                       ],

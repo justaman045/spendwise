@@ -6,28 +6,20 @@ class LoginBall extends StatelessWidget {
     super.key,
     required this.width,
     required this.height,
-    required this.widthOfBall,
-    required this.heightOfBall,
-    required this.radiusOfBall,
   });
 
   final double width;
   final double height;
-  final double widthOfBall;
-  final double heightOfBall;
-  final double radiusOfBall;
 
   @override
   Widget build(BuildContext context) {
     return Container(
+      height: height,
+      width: width,
       decoration: BoxDecoration(
         gradient: colorsOfGradient(),
-        borderRadius: BorderRadius.all(
-          Radius.circular(width * radiusOfBall),
-        ),
+        shape: BoxShape.circle,
       ),
-      width: width * widthOfBall,
-      height: height * heightOfBall,
     );
   }
 }

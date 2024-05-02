@@ -19,27 +19,27 @@ class Intro extends StatelessWidget {
           children: [
             Padding(
               padding: EdgeInsets.only(
-                left: getResponsiveWidth(context) * 0.3,
-                top: getResponsiveHeight(context) * 0.3,
+                left: getScreenWidth(context) / 2 / 2,
+                top: getScreenHeight(context) * 0.1,
               ),
               child: SizedBox(
-                height: getResponsiveHeight(context) * 1.1,
+                height: getResponsiveSize(context) * 0.5,
                 child: const Image(
                   image: AssetImage("assets/resources/intro.jpg"),
                 ),
               ),
             ),
             SizedBox(
-              width: getResponsiveWidth(context) + 10,
+              width: getResponsiveSize(context),
               child: Padding(
                 padding: EdgeInsets.only(
-                  left: getResponsiveHeight(context) * 0.12,
-                  top: getResponsiveHeight(context) * 0.2,
+                  left: getScreenWidth(context) * 0.1,
+                  top: getScreenHeight(context) * 0.1,
                 ),
                 child: Text(
                   "Easy way to Manage your Money",
                   style: TextStyle(
-                    fontSize: getResponsiveWidth(context) * 0.1,
+                    fontSize: getScreenHeight(context) * 0.05,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -47,24 +47,20 @@ class Intro extends StatelessWidget {
             ),
             Padding(
               padding: EdgeInsets.symmetric(
-                horizontal: getResponsiveHeight(context) * 0.13,
-                vertical: getResponsiveHeight(context) * 0.1,
+                horizontal: getScreenWidth(context) * 0.1,
+                vertical: getScreenHeight(context) * 0.02,
               ),
               child: Text(
                 introText,
                 style: TextStyle(
-                  fontSize: getResponsiveHeight(context) * 0.08,
+                  fontSize: getScreenHeight(context) * 0.02,
                 ),
               ),
             ),
             Padding(
-              padding: EdgeInsets.only(
-                left: getResponsiveWidth(context) * 0.3,
-                top: skipSignIn
-                    ? getResponsiveHeight(context) * 0.01
-                    : getResponsiveHeight(context) * 0.1,
-              ),
+              padding: EdgeInsets.only(top: getScreenHeight(context) * 0.05),
               child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   InkWell(
                     child: TextButton(
@@ -79,19 +75,20 @@ class Intro extends StatelessWidget {
                           duration: duration,
                         );
                       },
-                      child: const Text(
+                      child: Text(
                         "Get Started",
                         style: TextStyle(
                           color: Colors.blueAccent,
-                          fontSize: 22,
+                          fontSize: getScreenHeight(context) * 0.03,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
                     ),
                   ),
-                  const Icon(
+                  Icon(
                     Icons.keyboard_double_arrow_right_sharp,
                     color: Colors.blueAccent,
+                    size: getScreenHeight(context) * 0.03,
                   ),
                 ],
               ),

@@ -28,20 +28,15 @@ class SignUp extends StatelessWidget {
                 Padding(
                   padding: EdgeInsets.only(left: width * 0.65),
                   child: LoginBall(
-                      width: width,
-                      height: height,
-                      widthOfBall: 0.05,
-                      heightOfBall: 0.025,
-                      radiusOfBall: 0.1),
+                    width: width,
+                    height: height,
+                  ),
                 ),
                 Padding(
                   padding: EdgeInsets.only(top: height * 0.04),
                   child: LoginBall(
                     width: width,
                     height: height,
-                    widthOfBall: 0.3,
-                    heightOfBall: 0.15,
-                    radiusOfBall: 0.15,
                   ),
                 ),
               ],
@@ -177,17 +172,11 @@ class SignUp extends StatelessWidget {
                   child: LoginBall(
                     width: width,
                     height: height,
-                    widthOfBall: 0.3,
-                    heightOfBall: 0.15,
-                    radiusOfBall: 0.15,
                   ),
                 ),
                 LoginBall(
                   width: width,
                   height: height,
-                  widthOfBall: 0.1,
-                  heightOfBall: 0.05,
-                  radiusOfBall: 0.2,
                 ),
               ],
             ),
