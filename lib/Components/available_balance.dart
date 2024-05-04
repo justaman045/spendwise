@@ -1,5 +1,6 @@
 import "package:countup/countup.dart";
 import "package:flutter/material.dart";
+import "package:flutter_screenutil/flutter_screenutil.dart";
 import "package:get/get.dart";
 import "package:spendwise/Requirements/data.dart";
 import "package:spendwise/Requirements/transaction.dart";
@@ -34,7 +35,10 @@ class AvailableBalance extends StatelessWidget {
         duration: duration,
       ),
       child: Padding(
-        padding: EdgeInsets.all(width * 0.04),
+        padding: EdgeInsets.symmetric(
+          vertical: 10.h,
+          horizontal: 10.w,
+        ),
         child: Container(
           decoration: BoxDecoration(
             gradient: const LinearGradient(
@@ -46,19 +50,19 @@ class AvailableBalance extends StatelessWidget {
               ],
             ),
             borderRadius: BorderRadius.all(
-              Radius.circular(width * 0.03),
+              Radius.circular(20.w),
             ),
           ),
           // width: width,
           child: Center(
             child: Padding(
-              padding: EdgeInsets.all(width * 0.1),
+              padding: EdgeInsets.all(40.r),
               child: Column(
                 children: [
                   Text(
-                    "Avaiable Balance",
+                    "Available Balance",
                     style: TextStyle(
-                      fontSize: width * 0.038,
+                      fontSize: 15.w,
                     ),
                   ),
                   Row(
@@ -67,7 +71,7 @@ class AvailableBalance extends StatelessWidget {
                       Text(
                         "Rs. ",
                         style: TextStyle(
-                          fontSize: width * 0.07,
+                          fontSize: 25.r,
                           color: Colors.green,
                           fontWeight: FontWeight.bold,
                         ),

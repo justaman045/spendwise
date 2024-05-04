@@ -1,5 +1,7 @@
 import "package:flutter/material.dart";
+import "package:flutter_screenutil/flutter_screenutil.dart";
 import "package:get/get.dart";
+import "package:spendwise/Components/responsive_methods.dart";
 import "package:spendwise/Components/transaction_charts.dart";
 import "package:spendwise/Components/transaction_widget.dart";
 import "package:spendwise/Requirements/transaction.dart";
@@ -20,11 +22,12 @@ class AllTransactions extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final width = MediaQuery.of(context).size.width;
-    final height = MediaQuery.of(context).size.height;
     return Scaffold(
       appBar: AppBar(
-        title: Text(pageTitle),
+        title: Text(
+          pageTitle,
+          style: TextStyle(fontSize: 20.r),
+        ),
         centerTitle: true,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.black),
@@ -47,12 +50,12 @@ class AllTransactions extends StatelessWidget {
                 final transaction = transactioncustom[index];
                 return TransactionWidget(
                   expenseType: transaction.expenseType,
-                  width: width,
+                  width: getScreenWidth(context),
                   amount: transaction.amount,
                   dateAndTime: transaction.dateAndTime,
                   name: transaction.name,
                   typeOfTransaction: transaction.typeOfTransaction,
-                  height: height,
+                  height: getScreenHeight(context),
                   transactionReferanceNumber:
                       transaction.transactionReferanceNumber,
                 );

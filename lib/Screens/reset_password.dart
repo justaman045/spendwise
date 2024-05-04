@@ -1,4 +1,5 @@
 import "package:flutter/material.dart";
+import "package:flutter_screenutil/flutter_screenutil.dart";
 import "package:get/get.dart";
 
 class ResetPassword extends StatelessWidget {
@@ -6,19 +7,17 @@ class ResetPassword extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final double height = MediaQuery.of(context).size.height;
-    final double width = MediaQuery.of(context).size.width;
     return Scaffold(
       body: Column(
         children: [
           Stack(
             children: [
               Container(
-                height: height * 0.2,
-                width: width * 0.5,
+                height: 150.h,
+                width: 150.w,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.only(
-                    bottomRight: Radius.circular(height * 0.3),
+                    bottomRight: Radius.circular(150.r),
                   ),
                   gradient: const LinearGradient(
                     begin: Alignment.topRight,
@@ -30,26 +29,28 @@ class ResetPassword extends StatelessWidget {
                   ),
                 ),
               ),
-              Padding(
-                padding: EdgeInsets.only(left: width * 0.65),
-                child: Container(
-                  height: height * 0.3,
-                  width: width * 0.35,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(height * 0.3),
-                      bottomLeft: Radius.circular(height * 0.3),
-                    ),
-                    gradient: const LinearGradient(
-                      begin: Alignment.topRight,
-                      end: Alignment.bottomLeft,
-                      colors: [
-                        Color.fromRGBO(210, 209, 254, 1),
-                        Color.fromRGBO(243, 203, 237, 1),
-                      ],
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Container(
+                    height: 200.h,
+                    width: 120.w,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(150.r),
+                        bottomLeft: Radius.circular(150.r),
+                      ),
+                      gradient: const LinearGradient(
+                        begin: Alignment.topRight,
+                        end: Alignment.bottomLeft,
+                        colors: [
+                          Color.fromRGBO(210, 209, 254, 1),
+                          Color.fromRGBO(243, 203, 237, 1),
+                        ],
+                      ),
                     ),
                   ),
-                ),
+                ],
               ),
               SafeArea(
                 child: Column(
@@ -57,83 +58,91 @@ class ResetPassword extends StatelessWidget {
                   children: [
                     Padding(
                       padding: EdgeInsets.only(
-                        top: height * 0.15,
-                        left: width * 0.05,
+                        top: 100.h,
+                        left: 20.w,
                       ),
                       child: Text(
                         "Reset Password",
                         style: TextStyle(
-                          fontSize: height * 0.04,
+                          fontSize: 30.r,
                           fontWeight: FontWeight.w500,
                         ),
                       ),
                     ),
                     Padding(
                       padding: EdgeInsets.only(
-                        left: width * 0.05,
-                        top: height * 0.03,
+                        left: 20.w,
+                        top: 10.h,
+                        right: 20.w,
                       ),
                       child: Text(
                         "Reset your Password, via your Email Address. Just Enter your Emal and we'll send you a Password Reset Link",
-                        style: TextStyle(fontSize: height * 0.017),
+                        style: TextStyle(fontSize: 13.r),
                       ),
                     ),
                     Padding(
                       padding: EdgeInsets.only(
-                        left: width * 0.06,
-                        top: height * 0.03,
-                        right: width * 0.06,
+                        left: 20.w,
+                        top: 20.h,
+                        right: 20.w,
                       ),
                       child: TextFormField(
                         decoration: InputDecoration(
                           label: const Text("Enter you Email Account"),
                           border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(width * 0.04),
+                            borderRadius: BorderRadius.circular(20.r),
                           ),
                         ),
                       ),
                     ),
                     Padding(
                       padding: EdgeInsets.only(
-                          top: height * 0.05, left: width * 0.55),
+                        top: 50.h,
+                        right: 20.w,
+                      ),
                       child: GestureDetector(
-                        child: Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(width * 0.04),
-                            gradient: LinearGradient(
-                              begin: Alignment.topRight,
-                              end: Alignment.bottomLeft,
-                              colors: [
-                                Colors.blue.shade400,
-                                Colors.blue.shade600,
-                              ],
-                            ),
-                          ),
-                          width: width * 0.4,
-                          height: height * 0.06,
-                          child: Center(
-                            child: Text(
-                              "Send me the Link",
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: width * 0.037,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10.r),
+                                gradient: LinearGradient(
+                                  begin: Alignment.topRight,
+                                  end: Alignment.bottomLeft,
+                                  colors: [
+                                    Colors.blue.shade400,
+                                    Colors.blue.shade600,
+                                  ],
+                                ),
+                              ),
+                              width: 150.w,
+                              height: 45.h,
+                              child: Center(
+                                child: Text(
+                                  "Send me the Link",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 13.r,
+                                  ),
+                                ),
                               ),
                             ),
-                          ),
+                          ],
                         ),
                       ),
                     ),
                     Padding(
-                      padding: EdgeInsets.only(top: height * 0.1),
+                      padding: EdgeInsets.only(top: 100.r),
                       child: Stack(
                         children: [
                           Container(
-                            height: height * 0.2,
-                            width: width * 0.2,
+                            height: 150.h,
+                            width: 80.w,
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.only(
-                                bottomRight: Radius.circular(height * 0.3),
-                                topRight: Radius.circular(height * 0.3),
+                                bottomRight: Radius.circular(300.r),
+                                topRight: Radius.circular(300.r),
                               ),
                               gradient: const LinearGradient(
                                 begin: Alignment.topRight,
@@ -146,40 +155,41 @@ class ResetPassword extends StatelessWidget {
                             ),
                           ),
                           Positioned(
-                            child: Padding(
-                              padding: EdgeInsets.only(left: width * 0.65),
-                              child: Container(
-                                height: height * 0.3,
-                                width: width * 0.35,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.only(
-                                    topLeft: Radius.circular(height * 0.3),
-                                    bottomLeft: Radius.circular(height * 0.3),
-                                  ),
-                                  gradient: const LinearGradient(
-                                    begin: Alignment.topRight,
-                                    end: Alignment.bottomLeft,
-                                    colors: [
-                                      Color.fromRGBO(210, 209, 254, 1),
-                                      Color.fromRGBO(243, 203, 237, 1),
-                                    ],
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                Container(
+                                  height: 180.h,
+                                  width: 100.w,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.only(
+                                      topLeft: Radius.circular(300.r),
+                                      bottomLeft: Radius.circular(300.r),
+                                    ),
+                                    gradient: const LinearGradient(
+                                      begin: Alignment.topRight,
+                                      end: Alignment.bottomLeft,
+                                      colors: [
+                                        Color.fromRGBO(210, 209, 254, 1),
+                                        Color.fromRGBO(243, 203, 237, 1),
+                                      ],
+                                    ),
                                   ),
                                 ),
-                              ),
+                              ],
                             ),
                           ),
                           Positioned(
-                            bottom: height * 0.04,
+                            bottom: 20.h,
                             child: Padding(
-                              padding: EdgeInsets.only(left: width * 0.25),
+                              padding: EdgeInsets.only(left: 75.w),
                               child: GestureDetector(
                                 onTap: () => Get.back(),
                                 child: Container(
-                                  width: width * 0.5,
-                                  height: height * 0.08,
+                                  width: 200.w,
+                                  height: 50.h,
                                   decoration: BoxDecoration(
-                                    borderRadius:
-                                        BorderRadius.circular(width * 0.04),
+                                    borderRadius: BorderRadius.circular(20.r),
                                     gradient: LinearGradient(
                                       begin: Alignment.topRight,
                                       end: Alignment.bottomLeft,
@@ -189,10 +199,11 @@ class ResetPassword extends StatelessWidget {
                                       ],
                                     ),
                                   ),
-                                  child: const Center(
+                                  child: Center(
                                     child: Text(
                                       "Go Back",
                                       style: TextStyle(
+                                        fontSize: 15.r,
                                         color: Colors.white,
                                       ),
                                     ),

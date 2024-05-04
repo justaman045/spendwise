@@ -1,12 +1,11 @@
 import "package:flutter/material.dart";
+import "package:flutter_screenutil/flutter_screenutil.dart";
 
 class Settings extends StatelessWidget {
   const Settings({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final double width = MediaQuery.of(context).size.width;
-    final double height = MediaQuery.of(context).size.height;
     return Scaffold(
       appBar: AppBar(),
       body: SafeArea(
@@ -14,31 +13,31 @@ class Settings extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding: EdgeInsets.only(top: height * 0.06, left: width * 0.05),
+              padding: EdgeInsets.only(top: 50.h, left: 20.w),
               child: Text(
                 "Settings",
-                style: TextStyle(fontSize: width * 0.08),
+                style: TextStyle(fontSize: 30.r),
               ),
             ),
             Padding(
               padding: EdgeInsets.symmetric(
-                horizontal: width * 0.05,
-                vertical: height * 0.02,
+                horizontal: 20.w,
+                vertical: 10.h,
               ),
               child: const Divider(),
             ),
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: width * 0.08),
+              padding: EdgeInsets.symmetric(horizontal: 20.w),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
                     "Dark Mode",
-                    style: TextStyle(fontSize: width * 0.05),
+                    style: TextStyle(fontSize: 20.r),
                   ),
                   Icon(
                     Icons.toggle_off,
-                    size: width * 0.12,
+                    size: 40.r,
                   ),
                 ],
               ),

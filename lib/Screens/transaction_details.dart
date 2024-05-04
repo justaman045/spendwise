@@ -1,6 +1,8 @@
 import "package:flutter/material.dart";
+import "package:flutter_screenutil/flutter_screenutil.dart";
 import "package:get/get.dart";
 import "package:intl/intl.dart";
+import "package:spendwise/Components/responsive_methods.dart";
 
 class TransactionDetails extends StatelessWidget {
   const TransactionDetails({
@@ -20,174 +22,242 @@ class TransactionDetails extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final double width = MediaQuery.of(context).size.width;
-    final double height = MediaQuery.of(context).size.height;
-
     return Scaffold(
-      body: Column(
-        children: [
-          Padding(
-            padding: EdgeInsets.only(top: height * 0.15),
-            child: SizedBox(
-              width: width * 0.4,
-              child: const Center(
-                child: Image(
-                  image: AssetImage("assets/resources/success.gif"),
+      body: SafeArea(
+        child: Column(
+          children: [
+            Padding(
+              padding: EdgeInsets.only(top: 90.h),
+              child: SizedBox(
+                width: 150.r,
+                child: const Center(
+                  child: Image(
+                    image: AssetImage("assets/resources/success.gif"),
+                  ),
                 ),
               ),
             ),
-          ),
-          if (expenseType == "expense") ...[
-            Center(
-              child: Text(
-                "Payment Sucessfull",
-                style: TextStyle(
-                  color: Colors.green,
-                  fontWeight: FontWeight.bold,
-                  fontSize: width * 0.07,
+            if (expenseType == "expense") ...[
+              Center(
+                child: Text(
+                  "Payment Sucessfull",
+                  style: TextStyle(
+                    color: Colors.green,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 25.r,
+                  ),
                 ),
               ),
-            ),
-            Center(
-              child: Padding(
-                padding: EdgeInsets.only(top: height * 0.02),
-                child: Text("You've paid to $toName"),
-              ),
-            ),
-          ] else ...[
-            const Center(
-              child: Text(
-                "Payment Recieved",
-                style: TextStyle(
-                  color: Colors.green,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 30,
+              Center(
+                child: Padding(
+                  padding: EdgeInsets.symmetric(
+                    vertical: 10.h,
+                    horizontal: 20.w,
+                  ),
+                  child: Text(
+                    "You've paid to $toName",
+                    style: TextStyle(fontSize: 13.r),
+                  ),
                 ),
               ),
+            ] else ...[
+              Center(
+                child: Text(
+                  "Payment Recieved",
+                  style: TextStyle(
+                    color: Colors.green,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 25.r,
+                  ),
+                ),
+              ),
+              Center(
+                child: Padding(
+                  padding: EdgeInsets.symmetric(
+                    vertical: 10.h,
+                    horizontal: 30.w,
+                  ),
+                  child: Text(
+                    "You've recived Income, keep saving and Investing.",
+                    style: TextStyle(
+                      fontSize: 15.r,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: 5.h),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  DetailsButton(
+                    width: getScreenWidth(context),
+                    btnText: "Share",
+                    icon: const Icon(Icons.share),
+                  ),
+                  DetailsButton(
+                    width: getScreenWidth(context),
+                    btnText: "Print",
+                    icon: const Icon(Icons.print),
+                  ),
+                ],
+              ),
             ),
-            Center(
-              child: Padding(
-                padding: EdgeInsets.only(top: height * 0.02),
-                child: const Text(
-                    "You've recived Income, keep saving and Investing."),
+            Padding(
+              padding: EdgeInsets.only(
+                left: 30.w,
+                right: 30.w,
+                top: 20.h,
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  if (expenseType == "income") ...[
+                    Text(
+                      "From",
+                      style: TextStyle(
+                        fontSize: 13.r,
+                      ),
+                    ),
+                  ] else ...[
+                    Text(
+                      "To",
+                      style: TextStyle(
+                        fontSize: 13.r,
+                      ),
+                    ),
+                  ],
+                  Text(
+                    toName,
+                    style: TextStyle(
+                      fontSize: 13.r,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(
+                left: 30.w,
+                right: 30.w,
+                top: 15.h,
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    "Transaction ID",
+                    style: TextStyle(fontSize: 13.r),
+                  ),
+                  Text(
+                    transactionReferanceNumber.toString(),
+                    style: TextStyle(
+                      fontSize: 13.r,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(
+                left: 30.w,
+                right: 30.w,
+                top: 15.h,
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    "Date and Time",
+                    style: TextStyle(
+                      fontSize: 13.r,
+                    ),
+                  ),
+                  Row(
+                    children: [
+                      Text(
+                        DateFormat.yMMMMd('en_US').format(dateTime).toString(),
+                        style: TextStyle(
+                          fontSize: 13.r,
+                        ),
+                      ),
+                      Text(
+                        ", ",
+                        style: TextStyle(
+                          fontSize: 13.r,
+                        ),
+                      ),
+                      Text(
+                        DateFormat.jm().format(dateTime).toString(),
+                        style: TextStyle(
+                          fontSize: 13.r,
+                        ),
+                      ),
+                    ],
+                  )
+                ],
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(
+                left: 30.w,
+                right: 30.w,
+                top: 15.h,
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    "Expense",
+                    style: TextStyle(
+                      fontSize: 13.r,
+                    ),
+                  ),
+                  Text(
+                    "Rs. $amount",
+                    style: TextStyle(
+                      fontSize: 13.r,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: 35.h),
+              child: Container(
+                width: 250.w,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(
+                      13.h,
+                    ),
+                  ),
+                  gradient: const LinearGradient(
+                    begin: Alignment.topRight,
+                    end: Alignment.bottomLeft,
+                    colors: [
+                      Colors.black54,
+                      Colors.black87,
+                    ],
+                  ),
+                ),
+                child: TextButton(
+                  onPressed: () {
+                    Get.back();
+                  },
+                  child: Text(
+                    "Go Back",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 13.r,
+                    ),
+                  ),
+                ),
               ),
             ),
           ],
-          Padding(
-            padding: EdgeInsets.symmetric(vertical: height * 0.02),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                DetailsButton(
-                  width: width,
-                  btnText: "Share",
-                  icon: const Icon(Icons.share),
-                ),
-                DetailsButton(
-                  width: width,
-                  btnText: "Print",
-                  icon: const Icon(Icons.print),
-                ),
-              ],
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.only(
-              left: width * 0.09,
-              right: width * 0.09,
-              top: width * 0.05,
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                if (expenseType == "income") ...[
-                  const Text("From"),
-                ] else ...[
-                  const Text("To"),
-                ],
-                Text(toName),
-              ],
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.only(
-              left: width * 0.09,
-              right: width * 0.09,
-              top: width * 0.04,
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Text("Transaction ID"),
-                Text(transactionReferanceNumber.toString()),
-              ],
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.only(
-              left: width * 0.09,
-              right: width * 0.09,
-              top: width * 0.04,
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Text("Date and Time"),
-                Row(
-                  children: [
-                    Text(
-                      DateFormat.yMMMMd('en_US').format(dateTime).toString(),
-                    ),
-                    const Text(", "),
-                    Text(
-                      DateFormat.jm().format(dateTime).toString(),
-                    ),
-                  ],
-                )
-              ],
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.only(
-              left: width * 0.09,
-              right: width * 0.09,
-              top: width * 0.04,
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Text("Expense"),
-                Text("Rs. $amount"),
-              ],
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.symmetric(vertical: height * 0.05),
-            child: Container(
-              width: width * 0.8,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.all(Radius.circular(width * 0.03)),
-                gradient: const LinearGradient(
-                  begin: Alignment.topRight,
-                  end: Alignment.bottomLeft,
-                  colors: [
-                    Colors.black54,
-                    Colors.black87,
-                  ],
-                ),
-              ),
-              child: TextButton(
-                onPressed: () {
-                  Get.back();
-                },
-                child: const Text(
-                  "Go Back",
-                  style: TextStyle(color: Colors.white),
-                ),
-              ),
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }
@@ -211,18 +281,21 @@ class DetailsButton extends StatelessWidget {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(width * 0.04),
         border: Border.all(
-          width: width * 0.003,
+          width: 1.w,
         ),
       ),
       child: Padding(
-        padding: EdgeInsets.all(width * 0.03),
+        padding: EdgeInsets.all(10.w),
         child: Row(
           children: [
             icon,
             SizedBox(
-              width: width * 0.03,
+              width: 7.w,
             ),
-            Text(btnText),
+            Text(
+              btnText,
+              style: TextStyle(fontSize: 15.r),
+            ),
           ],
         ),
       ),

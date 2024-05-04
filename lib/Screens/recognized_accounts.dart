@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:spendwise/Requirements/transaction.dart';
 
 class RecognizedAccounts extends StatelessWidget {
@@ -6,12 +7,12 @@ class RecognizedAccounts extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final double width = MediaQuery.of(context).size.width;
-    final double height = MediaQuery.of(context).size.height;
-
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Wallets Recognized"),
+        title: Text(
+          "Wallets Recognized",
+          style: TextStyle(fontSize: 15.r),
+        ),
         centerTitle: true,
       ),
       body: SafeArea(
@@ -20,13 +21,16 @@ class RecognizedAccounts extends StatelessWidget {
           children: [
             Padding(
               padding: EdgeInsets.only(
-                top: height * 0.02,
-                left: width * 0.05,
+                top: 15.h,
+                left: 20.w,
               ),
-              child: const Text("Primary Account"),
+              child: Text(
+                "Primary Account",
+                style: TextStyle(fontSize: 15.r),
+              ),
             ),
             Padding(
-              padding: EdgeInsets.all(width * 0.03),
+              padding: EdgeInsets.all(10.w),
               child: Center(
                 child: Container(
                   decoration: BoxDecoration(
@@ -39,22 +43,22 @@ class RecognizedAccounts extends StatelessWidget {
                       ],
                     ),
                     borderRadius: BorderRadius.all(
-                      Radius.circular(width * 0.03),
+                      Radius.circular(15.r),
                     ),
                   ),
-                  width: width * 0.9,
-                  height: height * 0.11,
+                  width: 330.w,
+                  height: 90.h,
                   child: Padding(
-                    padding: EdgeInsets.all(width * 0.04),
+                    padding: EdgeInsets.all(20.r),
                     child: Row(
                       children: [
                         Icon(
                           Icons.account_balance,
-                          size: width * 0.08,
+                          size: 25.r,
                         ),
                         Padding(
                           padding: EdgeInsets.only(
-                            left: width * 0.04,
+                            left: 20.w,
                           ),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -62,12 +66,12 @@ class RecognizedAccounts extends StatelessWidget {
                             children: [
                               Text(
                                 "***** ${accounts[0].accountNumber.toString().substring(accounts[0].accountNumber.toString().length - 5)}",
-                                style: TextStyle(fontSize: height * 0.02),
+                                style: TextStyle(fontSize: 15.r),
                               ),
                               Text(
                                 accounts[0].bankName,
                                 style: TextStyle(
-                                  fontSize: height * 0.018,
+                                  fontSize: 13.r,
                                 ),
                               ),
                             ],

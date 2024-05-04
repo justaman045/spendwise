@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_sms_inbox/flutter_sms_inbox.dart';
 import 'package:get/get.dart';
 import 'package:spendwise/Components/responsive_methods.dart';
@@ -17,29 +18,33 @@ class Intro extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Padding(
-              padding: EdgeInsets.only(
-                left: getScreenWidth(context) / 2 / 2,
-                top: getScreenHeight(context) * 0.1,
-              ),
-              child: SizedBox(
-                height: getResponsiveSize(context) * 0.5,
-                child: const Image(
-                  image: AssetImage("assets/resources/intro.jpg"),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Padding(
+                  padding: EdgeInsets.only(
+                    top: 70.h,
+                  ),
+                  child: SizedBox(
+                    height: 200.r,
+                    child: const Image(
+                      image: AssetImage("assets/resources/intro.jpg"),
+                    ),
+                  ),
                 ),
-              ),
+              ],
             ),
             SizedBox(
-              width: getResponsiveSize(context),
+              width: 330.w,
               child: Padding(
                 padding: EdgeInsets.only(
-                  left: getScreenWidth(context) * 0.1,
-                  top: getScreenHeight(context) * 0.1,
+                  left: 35.w,
+                  top: 50.h,
                 ),
                 child: Text(
                   "Easy way to Manage your Money",
                   style: TextStyle(
-                    fontSize: getScreenHeight(context) * 0.05,
+                    fontSize: 30.r,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -47,18 +52,18 @@ class Intro extends StatelessWidget {
             ),
             Padding(
               padding: EdgeInsets.symmetric(
-                horizontal: getScreenWidth(context) * 0.1,
-                vertical: getScreenHeight(context) * 0.02,
+                horizontal: 33.w,
+                vertical: 14.h,
               ),
               child: Text(
                 introText,
                 style: TextStyle(
-                  fontSize: getScreenHeight(context) * 0.02,
+                  fontSize: 17.r,
                 ),
               ),
             ),
             Padding(
-              padding: EdgeInsets.only(top: getScreenHeight(context) * 0.05),
+              padding: EdgeInsets.only(top: 50.r),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [

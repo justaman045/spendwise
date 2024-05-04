@@ -1,4 +1,5 @@
 import "package:flutter/material.dart";
+import "package:flutter_screenutil/flutter_screenutil.dart";
 import "package:flutter_sms_inbox/flutter_sms_inbox.dart";
 import "package:get/get.dart";
 import "package:spendwise/Requirements/data.dart";
@@ -20,13 +21,13 @@ class CustomDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final double width = MediaQuery.of(context).size.width;
     return Drawer(
-      elevation: width,
+      width: 250.w,
+      elevation: 10.h,
       child: ListView(
         children: [
-          const DrawerHeader(
-            decoration: BoxDecoration(
+          DrawerHeader(
+            decoration: const BoxDecoration(
               gradient: LinearGradient(
                 begin: Alignment.topRight,
                 end: Alignment.bottomLeft,
@@ -40,10 +41,15 @@ class CustomDrawer extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Icon(Icons.person_2_sharp),
+                const Icon(Icons.person_2_sharp),
                 Column(
                   children: [
-                    Text(userName),
+                    Text(
+                      userName,
+                      style: TextStyle(
+                        fontSize: 20.w,
+                      ),
+                    ),
                   ],
                 ),
               ],
@@ -51,7 +57,10 @@ class CustomDrawer extends StatelessWidget {
           ),
           ListTile(
             title: Center(
-              child: Text(navBars[0]),
+              child: Text(
+                navBars[0],
+                style: TextStyle(fontSize: 15.w),
+              ),
             ),
             onTap: () {
               if (ModalRoute.of(context)?.settings.name != "/") {
@@ -68,7 +77,10 @@ class CustomDrawer extends StatelessWidget {
           ),
           ListTile(
             title: Center(
-              child: Text(navBars[1]),
+              child: Text(
+                navBars[1],
+                style: TextStyle(fontSize: 15.w),
+              ),
             ),
             onTap: () {
               if (ModalRoute.of(context)?.settings.name != routes[4]) {
@@ -91,7 +103,12 @@ class CustomDrawer extends StatelessWidget {
           ),
           ListTile(
             title: Center(
-              child: Text(navBars[2]),
+              child: Text(
+                navBars[2],
+                style: TextStyle(
+                  fontSize: 15.w,
+                ),
+              ),
             ),
             onTap: () {
               if (ModalRoute.of(context)?.settings.name != routes[6]) {
@@ -107,7 +124,12 @@ class CustomDrawer extends StatelessWidget {
           ),
           ListTile(
             title: Center(
-              child: Text(navBars[3]),
+              child: Text(
+                navBars[3],
+                style: TextStyle(
+                  fontSize: 15.w,
+                ),
+              ),
             ),
             onTap: () {
               if (ModalRoute.of(context)?.settings.name != routes[7]) {

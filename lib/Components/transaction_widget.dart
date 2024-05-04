@@ -1,5 +1,6 @@
 import 'package:countup/countup.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:spendwise/Requirements/data.dart';
@@ -47,8 +48,8 @@ class TransactionWidget extends StatelessWidget {
         children: [
           Padding(
             padding: EdgeInsets.symmetric(
-              horizontal: width * 0.05,
-              vertical: height * 0.025,
+              horizontal: 15.w,
+              vertical: 15.h,
             ),
             // padding: EdgeInsets.symmetric(
             //     horizontal: width * 0.04, vertical: height * 0.01),
@@ -56,15 +57,16 @@ class TransactionWidget extends StatelessWidget {
               decoration: BoxDecoration(
                 color: Colors.blueAccent,
                 borderRadius: BorderRadius.all(
-                  Radius.circular(width * 0.04),
+                  Radius.circular(15.w),
                 ),
               ),
               child: Row(
                 children: [
                   Padding(
-                    padding: EdgeInsets.all(width * 0.04),
-                    child: const Icon(
+                    padding: EdgeInsets.all(13.w),
+                    child: Icon(
                       Icons.shopping_cart,
+                      size: 20.r,
                     ),
                   ),
                 ],
@@ -72,7 +74,7 @@ class TransactionWidget extends StatelessWidget {
             ),
           ),
           SizedBox(
-            width: width * 0.7,
+            width: 270.w,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -80,32 +82,32 @@ class TransactionWidget extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     SizedBox(
-                      width: width * 0.4,
+                      width: 170.w,
                       child: Text(
                         name,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontWeight: FontWeight.bold,
-                          fontSize: 17,
+                          fontSize: 15.r,
                         ),
                       ),
                     ),
                     Row(
                       children: [
                         if (expenseType == "expense") ...[
-                          const Text(
+                          Text(
                             "Rs. -",
                             style: TextStyle(
                               color: Colors.redAccent,
-                              fontSize: 20,
+                              fontSize: 18.r,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
                         ] else ...[
-                          const Text(
+                          Text(
                             "Rs. +",
                             style: TextStyle(
                               color: Colors.green,
-                              fontSize: 20,
+                              fontSize: 18.r,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
@@ -114,9 +116,9 @@ class TransactionWidget extends StatelessWidget {
                           Countup(
                             begin: 0,
                             end: amount.toDouble(),
-                            style: const TextStyle(
+                            style: TextStyle(
                               color: Colors.redAccent,
-                              fontSize: 20,
+                              fontSize: 20.r,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
@@ -124,9 +126,9 @@ class TransactionWidget extends StatelessWidget {
                           Countup(
                             begin: 0,
                             end: amount.toDouble(),
-                            style: const TextStyle(
+                            style: TextStyle(
                               color: Colors.green,
-                              fontSize: 20,
+                              fontSize: 20.r,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
@@ -138,16 +140,30 @@ class TransactionWidget extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(typeOfTransaction),
+                    Text(
+                      typeOfTransaction,
+                      style: TextStyle(
+                        fontSize: 13.r,
+                      ),
+                    ),
                     Row(
                       children: [
                         Text(
                           DateFormat.yMMMMd('en_US')
                               .format(dateAndTime)
                               .toString(),
+                          style: TextStyle(fontSize: 11.r),
                         ),
-                        const Text(", "),
-                        Text(DateFormat.jm().format(dateAndTime).toString())
+                        Text(", ",
+                            style: TextStyle(
+                              fontSize: 11.r,
+                            )),
+                        Text(
+                          DateFormat.jm().format(dateAndTime).toString(),
+                          style: TextStyle(
+                            fontSize: 11.r,
+                          ),
+                        )
                       ],
                     )
                   ],

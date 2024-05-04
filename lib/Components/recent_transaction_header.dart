@@ -1,4 +1,5 @@
 import "package:flutter/material.dart";
+import "package:flutter_screenutil/flutter_screenutil.dart";
 import "package:get/get.dart";
 import "package:spendwise/Requirements/data.dart";
 import "package:spendwise/Requirements/transaction.dart";
@@ -15,14 +16,14 @@ class RecentTransactionHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.all(width * 0.04),
+      padding: EdgeInsets.all(15.w),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          const Text(
+          Text(
             "Today's Transaction",
             style: TextStyle(
-              fontSize: 22.0,
+              fontSize: 20.r,
               fontWeight: FontWeight.bold,
             ),
           ),
@@ -44,8 +45,9 @@ class RecentTransactionHeader extends StatelessWidget {
                 duration: duration,
               );
             },
-            child: const Text(
+            child: Text(
               "See All..",
+              style: TextStyle(fontSize: 15.r),
             ),
           ),
         ],

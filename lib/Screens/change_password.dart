@@ -1,4 +1,5 @@
 import "package:flutter/material.dart";
+import "package:flutter_screenutil/flutter_screenutil.dart";
 import "package:get/get.dart";
 
 class ChangePassword extends StatelessWidget {
@@ -6,19 +7,21 @@ class ChangePassword extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final double height = MediaQuery.of(context).size.height;
-    final double width = MediaQuery.of(context).size.width;
+    // final double height = MediaQuery.of(context).size.height;
+    // final double width = MediaQuery.of(context).size.width;
     return Scaffold(
       body: Column(
         children: [
           Stack(
             children: [
               Container(
-                height: height * 0.2,
-                width: width * 0.45,
+                height: 150.h,
+                width: 150.w,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.only(
-                    bottomRight: Radius.circular(height * 0.3),
+                    bottomRight: Radius.circular(
+                      200.r,
+                    ),
                   ),
                   gradient: const LinearGradient(
                     begin: Alignment.topRight,
@@ -30,26 +33,28 @@ class ChangePassword extends StatelessWidget {
                   ),
                 ),
               ),
-              Padding(
-                padding: EdgeInsets.only(left: width * 0.7),
-                child: Container(
-                  height: height * 0.3,
-                  width: width * 0.3,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(height * 0.3),
-                      bottomLeft: Radius.circular(height * 0.3),
-                    ),
-                    gradient: const LinearGradient(
-                      begin: Alignment.topRight,
-                      end: Alignment.bottomLeft,
-                      colors: [
-                        Color.fromRGBO(210, 209, 254, 1),
-                        Color.fromRGBO(243, 203, 237, 1),
-                      ],
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Container(
+                    height: 180.h,
+                    width: 100.w,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(200.r),
+                        bottomLeft: Radius.circular(200.r),
+                      ),
+                      gradient: const LinearGradient(
+                        begin: Alignment.topRight,
+                        end: Alignment.bottomLeft,
+                        colors: [
+                          Color.fromRGBO(210, 209, 254, 1),
+                          Color.fromRGBO(243, 203, 237, 1),
+                        ],
+                      ),
                     ),
                   ),
-                ),
+                ],
               ),
               SafeArea(
                 child: Column(
@@ -57,22 +62,27 @@ class ChangePassword extends StatelessWidget {
                   children: [
                     Padding(
                       padding: EdgeInsets.only(
-                        top: height * 0.15,
-                        left: width * 0.05,
+                        top: 100.h,
+                        left: 20.w,
                       ),
                       child: Text(
                         "Change Password",
                         style: TextStyle(
-                          fontSize: height * 0.04,
+                          fontSize: 30.r,
                           fontWeight: FontWeight.w500,
                         ),
                       ),
                     ),
                     Padding(
                       padding: EdgeInsets.only(
-                          left: width * 0.05, top: height * 0.03),
-                      child: const Text(
-                          "You're just one step away from changing your Password"),
+                        left: 20.w,
+                        right: 20.w,
+                        top: 10.h,
+                      ),
+                      child: Text(
+                        "You're just one step away from changing your Password",
+                        style: TextStyle(fontSize: 15.r),
+                      ),
                     ),
                   ],
                 ),
@@ -81,41 +91,53 @@ class ChangePassword extends StatelessWidget {
           ),
           Padding(
             padding: EdgeInsets.only(
-              left: width * 0.05,
-              right: width * 0.05,
-              top: height * 0.03,
+              left: 20.w,
+              right: 20.w,
+              top: 10.h,
             ),
-            child: const TextField(
+            child: TextField(
               decoration: InputDecoration(
-                label: Text("New Password"),
+                label: Text(
+                  "New Password",
+                  style: TextStyle(fontSize: 15.r),
+                ),
                 prefixIcon: Icon(
                   Icons.password,
+                  size: 15.r,
                 ),
               ),
             ),
           ),
           Padding(
             padding: EdgeInsets.symmetric(
-              horizontal: width * 0.05,
-              vertical: height * 0.01,
+              horizontal: 20.w,
+              vertical: 10.h,
             ),
-            child: const TextField(
+            child: TextField(
               decoration: InputDecoration(
-                label: Text("Confirm New Password"),
+                label: Text(
+                  "Confirm New Password",
+                  style: TextStyle(fontSize: 15.r),
+                ),
                 prefixIcon: Icon(
                   Icons.password,
+                  size: 15.r,
                 ),
               ),
             ),
           ),
           Padding(
-            padding: EdgeInsets.only(right: width * 0.06, top: height * 0.04),
+            padding: EdgeInsets.only(
+              right: 20.w,
+              top: 20.h,
+            ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 Container(
+                  width: 60.w,
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(width * 0.05),
+                    borderRadius: BorderRadius.circular(10.r),
                     gradient: LinearGradient(
                       begin: Alignment.topRight,
                       end: Alignment.bottomLeft,
@@ -129,7 +151,7 @@ class ChangePassword extends StatelessWidget {
                     onPressed: () {},
                     icon: Icon(
                       Icons.arrow_right_alt_outlined,
-                      size: width * 0.08,
+                      size: 40.w,
                     ),
                   ),
                 ),
@@ -139,55 +161,20 @@ class ChangePassword extends StatelessWidget {
           Stack(
             children: [
               Padding(
-                padding: EdgeInsets.only(left: width * 0.8, top: height * 0.15),
-                child: Container(
-                  height: height * 0.2,
-                  width: width * 0.2,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(height * 0.3),
-                      bottomLeft: Radius.circular(height * 0.3),
-                    ),
-                    gradient: const LinearGradient(
-                      begin: Alignment.topRight,
-                      end: Alignment.bottomLeft,
-                      colors: [
-                        Color.fromRGBO(210, 209, 254, 1),
-                        Color.fromRGBO(243, 203, 237, 1),
-                      ],
-                    ),
-                  ),
+                padding: EdgeInsets.only(
+                  top: 70.h,
                 ),
-              ),
-              Padding(
-                padding: EdgeInsets.symmetric(vertical: height * 0.04),
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    GestureDetector(
-                      onTap: () => Get.back(),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(width * 0.05),
-                          gradient: const LinearGradient(
-                            begin: Alignment.topRight,
-                            end: Alignment.bottomLeft,
-                            colors: [
-                              Color.fromRGBO(210, 209, 254, 1),
-                              Color.fromRGBO(243, 203, 237, 1),
-                            ],
-                          ),
-                        ),
-                        width: width * 0.3,
-                        height: height * 0.07,
-                        child: const Center(
-                          child: Text("Go Back"),
-                        ),
-                      ),
-                    ),
                     Container(
+                      height: 140.h,
+                      width: 80.w,
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(width * 0.05),
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(250.r),
+                          bottomLeft: Radius.circular(250.r),
+                        ),
                         gradient: const LinearGradient(
                           begin: Alignment.topRight,
                           end: Alignment.bottomLeft,
@@ -197,10 +184,58 @@ class ChangePassword extends StatelessWidget {
                           ],
                         ),
                       ),
-                      width: width * 0.3,
-                      height: height * 0.07,
-                      child: const Center(
-                        child: Text("Save Changes"),
+                    ),
+                  ],
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(vertical: 50.h),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    GestureDetector(
+                      onTap: () => Get.back(),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(15.r),
+                          gradient: const LinearGradient(
+                            begin: Alignment.topRight,
+                            end: Alignment.bottomLeft,
+                            colors: [
+                              Color.fromRGBO(210, 209, 254, 1),
+                              Color.fromRGBO(243, 203, 237, 1),
+                            ],
+                          ),
+                        ),
+                        width: 100.w,
+                        height: 50.h,
+                        child: Center(
+                          child: Text(
+                            "Go Back",
+                            style: TextStyle(fontSize: 13.r),
+                          ),
+                        ),
+                      ),
+                    ),
+                    Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(15.r),
+                        gradient: const LinearGradient(
+                          begin: Alignment.topRight,
+                          end: Alignment.bottomLeft,
+                          colors: [
+                            Color.fromRGBO(210, 209, 254, 1),
+                            Color.fromRGBO(243, 203, 237, 1),
+                          ],
+                        ),
+                      ),
+                      width: 100.w,
+                      height: 50.h,
+                      child: Center(
+                        child: Text(
+                          "Save Changes",
+                          style: TextStyle(fontSize: 13.r),
+                        ),
                       ),
                     ),
                   ],

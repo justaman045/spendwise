@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_sms_inbox/flutter_sms_inbox.dart';
 import 'package:get/get.dart';
 import 'package:spendwise/Components/available_balance.dart';
@@ -6,6 +7,7 @@ import 'package:spendwise/Components/current_flow.dart';
 import 'package:spendwise/Components/custom_appbar.dart';
 import 'package:spendwise/Components/custom_drawer.dart';
 import 'package:spendwise/Components/recent_transaction_header.dart';
+import 'package:spendwise/Components/responsive_methods.dart';
 import 'package:spendwise/Components/transaction_widget.dart';
 import 'package:spendwise/Requirements/data.dart';
 import 'package:spendwise/Requirements/transaction.dart';
@@ -18,8 +20,8 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final width = MediaQuery.of(context).size.width;
-    final height = MediaQuery.of(context).size.height;
+    // final width = MediaQuery.of(context).size.width;
+    // final height = MediaQuery.of(context).size.height;
     final todaysTransactions =
         transactions.where(isTransactionForToday).toList();
     GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
@@ -34,26 +36,26 @@ class HomePage extends StatelessWidget {
         child: Column(
           children: [
             AvailableBalance(
-              width: width,
+              width: 300.h,
               intakeamount: totalIncomeThisMonth().toInt(),
               expense: totalExpenseThisMonth().toInt(),
             ),
             CurrentFlow(
-              width: width,
+              width: getScreenWidth(context),
               income: totalIncomeThisMonth(),
               expense: totalExpenseThisMonth(),
             ),
             RecentTransactionHeader(
-              width: width,
+              width: getScreenWidth(context),
             ),
             if (todaysTransactions.isEmpty) ...[
-              const Expanded(
+              Expanded(
                 child: Center(
                   child: Text(
                     "No Transactions Today",
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
-                      fontSize: 20,
+                      fontSize: 20.r,
                     ),
                   ),
                 ),
@@ -67,12 +69,12 @@ class HomePage extends StatelessWidget {
                     final transaction = todaysTransactions[index];
                     return TransactionWidget(
                       expenseType: transaction.expenseType,
-                      width: width,
+                      width: 100.w,
                       amount: transaction.amount,
                       dateAndTime: transaction.dateAndTime,
                       name: transaction.name,
                       typeOfTransaction: transaction.typeOfTransaction,
-                      height: height,
+                      height: 100.h,
                       transactionReferanceNumber:
                           transaction.transactionReferanceNumber,
                     );

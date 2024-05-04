@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 import 'package:spendwise/Requirements/data.dart';
 
@@ -11,23 +12,26 @@ class EditUserProfile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final double width = MediaQuery.of(context).size.width;
-    final double height = MediaQuery.of(context).size.height;
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Edit Profile"),
+        title: Text(
+          "Edit Profile",
+          style: TextStyle(fontSize: 20.r),
+        ),
         centerTitle: true,
       ),
-      body: Column(
-        children: [
-          Padding(
-            padding: EdgeInsets.only(top: height * 0.04),
-            child: Center(
-              child: Stack(
-                children: [
-                  Container(
-                    decoration: BoxDecoration(
-                        gradient: const LinearGradient(
+      body: SafeArea(
+        child: Column(
+          children: [
+            Padding(
+              padding: EdgeInsets.only(top: 30.h),
+              child: Center(
+                child: Stack(
+                  children: [
+                    Container(
+                      decoration: const BoxDecoration(
+                        shape: BoxShape.circle,
+                        gradient: LinearGradient(
                           begin: Alignment.topRight,
                           end: Alignment.bottomLeft,
                           colors: [
@@ -35,107 +39,153 @@ class EditUserProfile extends StatelessWidget {
                             Color.fromRGBO(243, 203, 237, 1),
                           ],
                         ),
-                        borderRadius: BorderRadius.circular(width * 0.5)),
-                    width: width * 0.35,
-                    height: height * 0.16,
-                  ),
-                ],
-              ),
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: width * 0.08),
-            child: TextFormField(
-              initialValue: name,
-              decoration: const InputDecoration(
-                label: Text("Name"),
-              ),
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.symmetric(
-                horizontal: width * 0.08, vertical: height * 0.01),
-            child: TextFormField(
-              initialValue: designation,
-              decoration: const InputDecoration(
-                label: Text("Designation"),
-              ),
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.symmetric(
-                horizontal: width * 0.08, vertical: height * 0.01),
-            child: TextFormField(
-              initialValue: emailId,
-              decoration: const InputDecoration(
-                label: Text("Email ID"),
-              ),
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.symmetric(
-                horizontal: width * 0.08, vertical: height * 0.01),
-            child: TextFormField(
-              initialValue: userName,
-              decoration: const InputDecoration(
-                label: Text("Username"),
-              ),
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.symmetric(vertical: height * 0.04),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Container(
-                  width: width * 0.3,
-                  height: height * 0.05,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(width * 0.05),
-                    gradient: const LinearGradient(
-                      begin: Alignment.topRight,
-                      end: Alignment.bottomLeft,
-                      colors: [
-                        Color.fromRGBO(210, 209, 254, 1),
-                        Color.fromRGBO(243, 203, 237, 1),
-                      ],
+                      ),
+                      width: 150.w,
+                      height: 150.h,
                     ),
-                  ),
-                  child: const Center(child: Text("Save Changes")),
-                ),
-                Container(
-                  width: width * 0.3,
-                  height: height * 0.05,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(width * 0.05),
-                    gradient: const LinearGradient(
-                      begin: Alignment.topRight,
-                      end: Alignment.bottomLeft,
-                      colors: [
-                        Color.fromRGBO(210, 209, 254, 1),
-                        Color.fromRGBO(243, 203, 237, 1),
-                      ],
-                    ),
-                  ),
-                  child: const Center(child: Text("Discard Changes")),
-                ),
-              ],
-            ),
-          ),
-          Expanded(
-            child: SizedBox.expand(
-              child: Padding(
-                padding: EdgeInsets.only(left: width * 0.1, top: height * 0.01),
-                child: Row(
-                  children: [
-                    Text(
-                        "Date Joined ${DateFormat.yMMMd().format(DateTime.now())}"),
                   ],
                 ),
               ),
             ),
-          ),
-        ],
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 25.w),
+              child: SizedBox(
+                height: 60.h,
+                child: TextFormField(
+                  initialValue: name,
+                  style: TextStyle(fontSize: 15.r),
+                  decoration: InputDecoration(
+                    label: Text(
+                      "Name",
+                      style: TextStyle(fontSize: 15.r),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: 25.w,
+                vertical: 10.h,
+              ),
+              child: SizedBox(
+                height: 60.h,
+                child: TextFormField(
+                  style: TextStyle(fontSize: 15.r),
+                  initialValue: designation,
+                  decoration: InputDecoration(
+                    label: Text(
+                      "Designation",
+                      style: TextStyle(fontSize: 15.r),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: 25.w,
+                vertical: 10.h,
+              ),
+              child: SizedBox(
+                height: 60.h,
+                child: TextFormField(
+                  style: TextStyle(fontSize: 15.r),
+                  initialValue: emailId,
+                  decoration: InputDecoration(
+                    label: Text(
+                      "Email ID",
+                      style: TextStyle(fontSize: 15.r),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: 25.w,
+                vertical: 10.h,
+              ),
+              child: SizedBox(
+                height: 60.h,
+                child: TextFormField(
+                  style: TextStyle(fontSize: 15.r),
+                  initialValue: userName,
+                  decoration: InputDecoration(
+                    label: Text(
+                      "Username",
+                      style: TextStyle(fontSize: 15.r),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: 10.h),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Container(
+                    width: 150.w,
+                    height: 50.h,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20.w),
+                      gradient: const LinearGradient(
+                        begin: Alignment.topRight,
+                        end: Alignment.bottomLeft,
+                        colors: [
+                          Color.fromRGBO(210, 209, 254, 1),
+                          Color.fromRGBO(243, 203, 237, 1),
+                        ],
+                      ),
+                    ),
+                    child: Center(
+                        child: Text(
+                      "Save Changes",
+                      style: TextStyle(fontSize: 15.r),
+                    )),
+                  ),
+                  Container(
+                    width: 150.w,
+                    height: 50.h,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20.w),
+                      gradient: const LinearGradient(
+                        begin: Alignment.topRight,
+                        end: Alignment.bottomLeft,
+                        colors: [
+                          Color.fromRGBO(210, 209, 254, 1),
+                          Color.fromRGBO(243, 203, 237, 1),
+                        ],
+                      ),
+                    ),
+                    child: Center(
+                      child: Text(
+                        "Discard Changes",
+                        style: TextStyle(fontSize: 15.r),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Expanded(
+              child: SizedBox.expand(
+                child: Padding(
+                  padding: EdgeInsets.only(left: 20.w, top: 10.h),
+                  child: Row(
+                    children: [
+                      Text(
+                        "Date Joined ${DateFormat.yMMMd().format(DateTime.now())}",
+                        style: TextStyle(fontSize: 15.r),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

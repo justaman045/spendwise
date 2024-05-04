@@ -1,5 +1,6 @@
 import "package:countup/countup.dart";
 import "package:flutter/material.dart";
+import "package:flutter_screenutil/flutter_screenutil.dart";
 import "package:spendwise/Requirements/data.dart";
 
 class CashFlow extends StatelessWidget {
@@ -17,11 +18,11 @@ class CashFlow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.all(width * 0.04),
+      padding: EdgeInsets.all(15.r),
       child: Row(
         children: [
           Container(
-            width: (width * 0.42),
+            width: (150.w),
             // color: Colors.black,
             decoration: BoxDecoration(
               gradient: const LinearGradient(
@@ -33,16 +34,16 @@ class CashFlow extends StatelessWidget {
                 ],
               ),
               borderRadius: BorderRadius.all(
-                Radius.circular(width * 0.03),
+                Radius.circular(20.r),
               ),
             ),
             child: Padding(
-              padding: EdgeInsets.all(width * 0.04),
+              padding: EdgeInsets.all(15.r),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Padding(
-                    padding: EdgeInsets.all(width * 0.01),
+                    padding: EdgeInsets.all(5.r),
                     child: const Icon(
                       Icons.attach_money,
                     ),
@@ -50,7 +51,7 @@ class CashFlow extends StatelessWidget {
                   Text(
                     flowText,
                     style: TextStyle(
-                      fontSize: width * 0.048,
+                      fontSize: 16.r,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
@@ -59,7 +60,7 @@ class CashFlow extends StatelessWidget {
                       Text(
                         "Rs. ",
                         style: TextStyle(
-                          fontSize: width * 0.06,
+                          fontSize: 15.r,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -68,7 +69,7 @@ class CashFlow extends StatelessWidget {
                         begin: 0,
                         end: flowAmount.toDouble(),
                         style: TextStyle(
-                          fontSize: width * 0.07,
+                          fontSize: 25.r,
                           fontWeight: FontWeight.bold,
                         ),
                       )

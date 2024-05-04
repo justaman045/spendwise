@@ -1,5 +1,7 @@
 import "package:flutter/material.dart";
+import "package:flutter_screenutil/flutter_screenutil.dart";
 import "package:get/get.dart";
+import "package:spendwise/Components/responsive_methods.dart";
 import "package:spendwise/Requirements/data.dart";
 import "package:spendwise/Requirements/transaction.dart";
 import "package:spendwise/Screens/all_transactions.dart";
@@ -12,11 +14,12 @@ class UserProfile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final double width = MediaQuery.of(context).size.width;
-    final double height = MediaQuery.of(context).size.height;
     return Scaffold(
       appBar: AppBar(
-        title: const Text("My Profile"),
+        title: Text(
+          "My Profile",
+          style: TextStyle(fontSize: 20.r),
+        ),
         centerTitle: true,
       ),
       body: SafeArea(
@@ -25,16 +28,17 @@ class UserProfile extends StatelessWidget {
           children: [
             Padding(
               padding: EdgeInsets.only(
-                left: width * 0.1,
-                top: height * 0.05,
+                left: 30.w,
+                top: 35.h,
               ),
               child: Row(
                 children: [
                   Stack(
                     children: [
                       Container(
-                        decoration: BoxDecoration(
-                          gradient: const LinearGradient(
+                        decoration: const BoxDecoration(
+                          shape: BoxShape.circle,
+                          gradient: LinearGradient(
                             begin: Alignment.topRight,
                             end: Alignment.bottomLeft,
                             colors: [
@@ -42,28 +46,30 @@ class UserProfile extends StatelessWidget {
                               Color.fromRGBO(243, 203, 237, 1),
                             ],
                           ),
-                          borderRadius: BorderRadius.circular(width * 0.5),
                         ),
-                        width: width * 0.35,
-                        height: height * 0.16,
+                        width: 120.w,
+                        height: 120.h,
                       ),
                     ],
                   ),
                   Padding(
-                    padding: EdgeInsets.only(left: width * 0.04),
+                    padding: EdgeInsets.only(left: 15.w),
                     child: SizedBox(
-                      width: width * 0.45,
+                      width: 170.w,
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          const Column(
+                          Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
                                 name,
-                                style: TextStyle(fontSize: 24),
+                                style: TextStyle(fontSize: 25.r),
                               ),
-                              Text(designation),
+                              Text(
+                                designation,
+                                style: TextStyle(fontSize: 13.r),
+                              ),
                             ],
                           ),
                           GestureDetector(
@@ -77,7 +83,10 @@ class UserProfile extends StatelessWidget {
                               transition: customTrans,
                               duration: duration,
                             ),
-                            child: const Icon(Icons.edit_outlined),
+                            child: Icon(
+                              Icons.edit_outlined,
+                              size: 20.r,
+                            ),
                           ),
                         ],
                       ),
@@ -88,13 +97,18 @@ class UserProfile extends StatelessWidget {
             ),
             Padding(
               padding: EdgeInsets.only(
-                left: width * 0.075,
-                top: height * 0.05,
+                left: 30.w,
+                top: 30.h,
               ),
-              child: const Text("Dashboard"),
+              child: Text(
+                "Dashboard",
+                style: TextStyle(
+                  fontSize: 15.r,
+                ),
+              ),
             ),
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: width * 0.07),
+              padding: EdgeInsets.symmetric(horizontal: 30.w),
               child: const Divider(),
             ),
             MyProfileButtons(
@@ -113,9 +127,12 @@ class UserProfile extends StatelessWidget {
                   duration: duration,
                 );
               },
-              width: width,
-              height: height,
-              icons: const Icon(Icons.wallet_rounded),
+              width: getScreenWidth(context),
+              height: getScreenHeight(context),
+              icons: Icon(
+                Icons.wallet_rounded,
+                size: 20.r,
+              ),
               text: "All Payments",
             ),
             MyProfileButtons(
@@ -134,9 +151,12 @@ class UserProfile extends StatelessWidget {
                   duration: duration,
                 );
               },
-              width: width,
-              height: height,
-              icons: const Icon(Icons.wallet_rounded),
+              width: getScreenWidth(context),
+              height: getScreenHeight(context),
+              icons: Icon(
+                Icons.wallet_rounded,
+                size: 20.r,
+              ),
               text: "All Income",
             ),
             MyProfileButtons(
@@ -149,31 +169,46 @@ class UserProfile extends StatelessWidget {
                   duration: duration,
                 );
               },
-              width: width,
-              height: height,
-              icons: const Icon(Icons.wallet_rounded),
+              width: getScreenWidth(context),
+              height: getScreenHeight(context),
+              icons: Icon(
+                Icons.wallet_rounded,
+                size: 20.r,
+              ),
               text: "Change Password",
             ),
             Padding(
               padding: EdgeInsets.only(
-                left: width * 0.075,
-                top: height * 0.04,
+                left: 30.w,
+                top: 30.h,
               ),
-              child: const Text("Account"),
+              child: Text(
+                "Account",
+                style: TextStyle(fontSize: 13.r),
+              ),
             ),
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: width * 0.07),
+              padding: EdgeInsets.symmetric(
+                horizontal: 30.w,
+              ),
               child: const Divider(),
             ),
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: width * 0.05),
+              padding: EdgeInsets.symmetric(
+                horizontal: 20.w,
+              ),
               child: TextButton(
                 onPressed: () {},
-                child: const Text("Sign Out..."),
+                child: Text(
+                  "Sign Out...",
+                  style: TextStyle(fontSize: 15.r),
+                ),
               ),
             ),
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: width * 0.05),
+              padding: EdgeInsets.symmetric(
+                horizontal: 20.w,
+              ),
               child: TextButton(
                   onPressed: () {
                     Get.to(
@@ -184,7 +219,10 @@ class UserProfile extends StatelessWidget {
                       duration: duration,
                     );
                   },
-                  child: const Text("Delete Account")),
+                  child: Text(
+                    "Delete Account",
+                    style: TextStyle(fontSize: 15.r),
+                  )),
             ),
           ],
         ),
@@ -215,11 +253,11 @@ class MyProfileButtons extends StatelessWidget {
       onTap: () => fn(),
       child: Padding(
         padding: EdgeInsets.symmetric(
-          horizontal: width * 0.07,
-          vertical: height * 0.01,
+          horizontal: 25.w,
+          vertical: 5.h,
         ),
         child: Container(
-          height: height * 0.07,
+          height: 50.h,
           decoration: BoxDecoration(
             gradient: const LinearGradient(
               begin: Alignment.topRight,
@@ -229,17 +267,23 @@ class MyProfileButtons extends StatelessWidget {
                 Color.fromRGBO(243, 203, 237, 1),
               ],
             ),
-            borderRadius: BorderRadius.circular(width * 0.5),
+            borderRadius: BorderRadius.circular(50.w),
           ),
-          width: width,
+          width: getScreenWidth(context),
           child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: width * 0.04),
+            padding: EdgeInsets.symmetric(horizontal: 20.w),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 icons,
-                Text(text),
-                const Icon(Icons.chevron_right_sharp),
+                Text(
+                  text,
+                  style: TextStyle(fontSize: 13.r),
+                ),
+                Icon(
+                  Icons.chevron_right_sharp,
+                  size: 20.r,
+                ),
               ],
             ),
           ),

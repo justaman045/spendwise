@@ -1,4 +1,5 @@
 import "package:flutter/material.dart";
+import "package:flutter_screenutil/flutter_screenutil.dart";
 import "package:get/get.dart";
 import "package:spendwise/Requirements/data.dart";
 import "package:spendwise/Screens/recognized_accounts.dart";
@@ -13,7 +14,10 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      title: const Text("Welcome, $userName"),
+      title: Text(
+        "Welcome, $userName",
+        style: TextStyle(fontSize: 20.w),
+      ),
       centerTitle: false,
       // leading: IconButton(
       //   icon: const Icon(Icons.supervised_user_circle_outlined),
@@ -30,7 +34,10 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                 transition: customTrans,
                 duration: duration);
           },
-          icon: const Icon(Icons.wallet),
+          icon: Icon(
+            Icons.wallet,
+            size: 20.h,
+          ),
           tooltip: "Wallets Recognised",
         ),
       ],

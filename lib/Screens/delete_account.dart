@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
 class DeleteAccount extends StatelessWidget {
@@ -6,12 +7,9 @@ class DeleteAccount extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final double height = MediaQuery.of(context).size.height;
-    final double width = MediaQuery.of(context).size.width;
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(width * 0.05),
           gradient: LinearGradient(
             begin: Alignment.topRight,
             end: Alignment.bottomLeft,
@@ -27,28 +25,32 @@ class DeleteAccount extends StatelessWidget {
             children: [
               Padding(
                 padding: EdgeInsets.only(
-                  top: height * 0.08,
-                  left: width * 0.08,
+                  top: 100.h,
+                  left: 30.w,
                 ),
                 child: Text(
                   "Delete Account",
                   style: TextStyle(
-                    fontSize: width * 0.08,
+                    fontSize: 35.r,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
               ),
               Padding(
                 padding: EdgeInsets.symmetric(
-                    vertical: height * 0.04, horizontal: width * 0.08),
+                  vertical: 30.h,
+                  horizontal: 30.w,
+                ),
                 child: Text(
                   "We're very sorry to see you go away from us. Are you sure you want to go away from us and this Time saving appp??. If not you can just right away click the go back button and, no harm will come to your account.",
-                  style:
-                      TextStyle(height: height * 0.002, fontSize: width * 0.04),
+                  style: TextStyle(
+                    height: 1.5.r,
+                    fontSize: 15.r,
+                  ),
                 ),
               ),
               Padding(
-                padding: EdgeInsets.only(top: height * 0.2),
+                padding: EdgeInsets.only(top: 100.h),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
@@ -56,7 +58,9 @@ class DeleteAccount extends StatelessWidget {
                       onTap: () => Get.back(),
                       child: Container(
                         decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(width * 0.05),
+                          borderRadius: BorderRadius.circular(
+                            30.w,
+                          ),
                           gradient: const LinearGradient(
                             begin: Alignment.topRight,
                             end: Alignment.bottomLeft,
@@ -66,16 +70,21 @@ class DeleteAccount extends StatelessWidget {
                             ],
                           ),
                         ),
-                        width: width * 0.3,
-                        height: height * 0.07,
-                        child: const Center(
-                          child: Text("Go Back"),
+                        width: 150.w,
+                        height: 50.h,
+                        child: Center(
+                          child: Text(
+                            "Go Back",
+                            style: TextStyle(fontSize: 13.r),
+                          ),
                         ),
                       ),
                     ),
                     Container(
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(width * 0.05),
+                        borderRadius: BorderRadius.circular(
+                          30.w,
+                        ),
                         gradient: const LinearGradient(
                           begin: Alignment.topRight,
                           end: Alignment.bottomLeft,
@@ -85,10 +94,15 @@ class DeleteAccount extends StatelessWidget {
                           ],
                         ),
                       ),
-                      width: width * 0.3,
-                      height: height * 0.07,
-                      child: const Center(
-                        child: Text("Delete Account"),
+                      width: 150.w,
+                      height: 50.h,
+                      child: Center(
+                        child: Text(
+                          "Delete Account",
+                          style: TextStyle(
+                            fontSize: 13.r,
+                          ),
+                        ),
                       ),
                     ),
                   ],

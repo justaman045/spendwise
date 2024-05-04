@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:spendwise/Requirements/data.dart';
@@ -50,30 +51,34 @@ class _SpendWiseState extends State<SpendWise> {
 
   @override
   Widget build(BuildContext context) {
-    return GetMaterialApp(
-      title: "SpendWise",
-      debugShowCheckedModeBanner: false,
-      routes: {
-        routes[0]: (context) => Intro(
-              bankTransaction: messages,
-            ),
-        routes[1]: (context) => Login(
-              bankTransaction: messages,
-            ),
-        routes[2]: (context) => SignUp(
-              bankTransaction: messages,
-            ),
-        routes[3]: (context) => HomePage(
-              bankTransaction: messages,
-            ),
+    return ScreenUtilInit(
+      builder: (_, child) {
+        return GetMaterialApp(
+          title: "SpendWise",
+          debugShowCheckedModeBanner: false,
+          routes: {
+            routes[0]: (context) => Intro(
+                  bankTransaction: messages,
+                ),
+            routes[1]: (context) => Login(
+                  bankTransaction: messages,
+                ),
+            routes[2]: (context) => SignUp(
+                  bankTransaction: messages,
+                ),
+            routes[3]: (context) => HomePage(
+                  bankTransaction: messages,
+                ),
+          },
+          home: loggedin
+              ? HomePage(
+                  bankTransaction: messages,
+                )
+              : Intro(
+                  bankTransaction: messages,
+                ),
+        );
       },
-      home: loggedin
-          ? HomePage(
-              bankTransaction: messages,
-            )
-          : Intro(
-              bankTransaction: messages,
-            ),
     );
   }
 }
