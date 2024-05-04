@@ -19,14 +19,14 @@ class TransactionWidget extends StatelessWidget {
     required this.transactionReferanceNumber,
   });
 
-  final double width;
-  final double height;
-  final String name;
-  final String typeOfTransaction;
-  final int amount;
-  final DateTime dateAndTime;
-  final String expenseType;
-  final int transactionReferanceNumber;
+  final double? width;
+  final double? height;
+  final String? name;
+  final String? typeOfTransaction;
+  final int? amount;
+  final DateTime? dateAndTime;
+  final String? expenseType;
+  final int? transactionReferanceNumber;
 
   @override
   Widget build(BuildContext context) {
@@ -82,9 +82,9 @@ class TransactionWidget extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     SizedBox(
-                      width: 170.w,
+                      width: 150.w,
                       child: Text(
-                        name,
+                        name!,
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 15.r,
@@ -115,7 +115,7 @@ class TransactionWidget extends StatelessWidget {
                         if (expenseType == "expense") ...[
                           Countup(
                             begin: 0,
-                            end: amount.toDouble(),
+                            end: amount!.toDouble(),
                             style: TextStyle(
                               color: Colors.redAccent,
                               fontSize: 20.r,
@@ -125,7 +125,7 @@ class TransactionWidget extends StatelessWidget {
                         ] else ...[
                           Countup(
                             begin: 0,
-                            end: amount.toDouble(),
+                            end: amount!.toDouble(),
                             style: TextStyle(
                               color: Colors.green,
                               fontSize: 20.r,
@@ -141,7 +141,7 @@ class TransactionWidget extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      typeOfTransaction,
+                      typeOfTransaction!,
                       style: TextStyle(
                         fontSize: 13.r,
                       ),
@@ -150,7 +150,7 @@ class TransactionWidget extends StatelessWidget {
                       children: [
                         Text(
                           DateFormat.yMMMMd('en_US')
-                              .format(dateAndTime)
+                              .format(dateAndTime!)
                               .toString(),
                           style: TextStyle(fontSize: 11.r),
                         ),
@@ -159,7 +159,7 @@ class TransactionWidget extends StatelessWidget {
                               fontSize: 11.r,
                             )),
                         Text(
-                          DateFormat.jm().format(dateAndTime).toString(),
+                          DateFormat.jm().format(dateAndTime!).toString(),
                           style: TextStyle(
                             fontSize: 11.r,
                           ),

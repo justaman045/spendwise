@@ -14,11 +14,11 @@ class TransactionDetails extends StatelessWidget {
     required this.expenseType,
   });
 
-  final String toName;
-  final int amount;
-  final DateTime dateTime;
-  final int transactionReferanceNumber;
-  final String expenseType;
+  final String? toName;
+  final int? amount;
+  final DateTime? dateTime;
+  final int? transactionReferanceNumber;
+  final String? expenseType;
 
   @override
   Widget build(BuildContext context) {
@@ -129,7 +129,7 @@ class TransactionDetails extends StatelessWidget {
                     ),
                   ],
                   Text(
-                    toName,
+                    toName!,
                     style: TextStyle(
                       fontSize: 13.r,
                     ),
@@ -177,7 +177,7 @@ class TransactionDetails extends StatelessWidget {
                   Row(
                     children: [
                       Text(
-                        DateFormat.yMMMMd('en_US').format(dateTime).toString(),
+                        DateFormat.yMMMMd('en_US').format(dateTime!).toString(),
                         style: TextStyle(
                           fontSize: 13.r,
                         ),
@@ -189,7 +189,7 @@ class TransactionDetails extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        DateFormat.jm().format(dateTime).toString(),
+                        DateFormat.jm().format(dateTime!).toString(),
                         style: TextStyle(
                           fontSize: 13.r,
                         ),
