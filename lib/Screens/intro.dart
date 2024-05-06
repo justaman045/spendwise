@@ -3,13 +3,10 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:spendwise/Components/responsive_methods.dart';
 import 'package:spendwise/Requirements/data.dart';
-import 'package:spendwise/Requirements/transaction.dart';
 import 'package:spendwise/Screens/login.dart';
 
 class Intro extends StatelessWidget {
-  const Intro({super.key, required this.bankTransaction});
-
-  final List<Transaction> bankTransaction;
+  const Intro({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -72,9 +69,7 @@ class Intro extends StatelessWidget {
                       onPressed: () {
                         Get.to(
                           routeName: routes[1],
-                          () => Login(
-                            bankTransaction: bankTransaction,
-                          ),
+                          () => const Login(),
                           transition: customTrans,
                           curve: customCurve,
                           duration: duration,

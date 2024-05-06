@@ -4,7 +4,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:spendwise/Requirements/data.dart';
-import 'package:spendwise/Requirements/transaction.dart';
 import 'package:spendwise/Screens/home_page.dart';
 import 'package:spendwise/Screens/intro.dart';
 import 'package:spendwise/Screens/login.dart';
@@ -29,10 +28,10 @@ class SpendWise extends StatefulWidget {
 }
 
 class _SpendWiseState extends State<SpendWise> {
-  final SmsQuery query = SmsQuery();
   List<SmsMessage> messages = [];
-  List<Transaction> transactions = [];
+
   dynamic currentUser;
+  dynamic message;
 
   @override
   void initState() {
@@ -42,40 +41,12 @@ class _SpendWiseState extends State<SpendWise> {
 
   Future<void> _requestSmsPermission() async {
     if (await Permission.sms.request().isGranted) {
-      _querySmsMessages();
-    }
-  }
-
-  Future<void> _querySmsMessages() async {
-    final message = await query.querySms(
-      kinds: [
-        SmsQueryKind.inbox,
-        SmsQueryKind.sent,
-      ],
-      count: 50000,
-    );
-    debugPrint('sms inbox messages: ${message.length}');
-
-    transactions = transactionss;
-
-    // ------------------------------------------------Area to test my Code----------------------------------
-
-    final filteredMessages = filterBankTransactions(message);
-
-    // filteredMessages.forEach((element) {
-    //   // debugPrint(element.date.toString());
-    //   debugPrint(element.body);
-    // });
-
-    final testTrans = parseBankTransactions(filteredMessages);
-    // ------------------------------------------------Area to test my Code----------------------------------
-
-    final tcurrentUser = await FirebaseAuth.instance.currentUser;
-    debugPrint(tcurrentUser.toString());
-    if (tcurrentUser != null) {
-      setState(() {
-        currentUser = tcurrentUser;
-      });
+      final tcurrentUser = FirebaseAuth.instance.currentUser;
+      if (tcurrentUser != null) {
+        setState(() {
+          currentUser = tcurrentUser;
+        });
+      }
     }
   }
 
@@ -87,24 +58,12 @@ class _SpendWiseState extends State<SpendWise> {
           title: "SpendWise",
           debugShowCheckedModeBanner: false,
           routes: {
-            routes[0]: (context) => Intro(
-                  bankTransaction: transactions,
-                ),
-            routes[1]: (context) => Login(
-                  bankTransaction: transactions,
-                ),
-            routes[2]: (context) => SignUp(
-                  bankTransaction: transactions,
-                ),
-            routes[3]: (context) => HomePage(
-                  bankTransaction: transactions,
-                ),
+            routes[0]: (context) => const Intro(),
+            routes[1]: (context) => const Login(),
+            routes[2]: (context) => const SignUp(),
+            routes[3]: (context) => const HomePage(),
           },
-          home: currentUser != null
-              ? HomePage(bankTransaction: transactions)
-              : Intro(
-                  bankTransaction: transactions,
-                ),
+          home: currentUser != null ? const HomePage() : const Intro(),
         );
       },
     );

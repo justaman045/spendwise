@@ -4,7 +4,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:spendwise/Components/gradient_color.dart';
 import 'package:spendwise/Requirements/data.dart';
-import 'package:spendwise/Requirements/transaction.dart';
 import 'package:spendwise/Screens/home_page.dart';
 import 'package:spendwise/Screens/reset_password.dart';
 import 'package:spendwise/Screens/signup.dart';
@@ -12,9 +11,7 @@ import 'package:spendwise/Screens/signup.dart';
 final _formKey = GlobalKey<FormState>();
 
 class Login extends StatefulWidget {
-  const Login({super.key, required this.bankTransaction});
-
-  final List<Transaction> bankTransaction;
+  const Login({super.key});
 
   @override
   State<Login> createState() => _LoginState();
@@ -129,10 +126,14 @@ class _LoginState extends State<Login> {
                         ),
                         child: TextFormField(
                           validator: (value) {
-                            if (!value!.contains("@") && value.contains(".")) {
+                            if (!value!.contains("@")) {
                               return "Enter correct email";
+                            } else if (RegExp(
+                                    r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                                .hasMatch(emailEditingController.text)) {
+                              return null;
                             }
-                            return null;
+                            return "Please Enter correct Email ID";
                           },
                           controller: emailEditingController,
                           keyboardType: TextInputType.emailAddress,
@@ -176,9 +177,7 @@ class _LoginState extends State<Login> {
                         onPressed: () {
                           Get.off(
                             routeName: routes[2],
-                            () => SignUp(
-                              bankTransaction: widget.bankTransaction,
-                            ),
+                            () => const SignUp(),
                             transition: customTrans,
                             curve: customCurve,
                             duration: duration,
@@ -204,20 +203,35 @@ class _LoginState extends State<Login> {
                         child: TextButton(
                           onPressed: () async {
                             if (_formKey.currentState!.validate()) {
-                              final userCredentials = await FirebaseAuth
-                                  .instance
-                                  .signInWithEmailAndPassword(
-                                      email: emailEditingController.text,
-                                      password: passwordEditingController.text);
-                              Get.to(
-                                routeName: routes[3],
-                                () => HomePage(
-                                  bankTransaction: widget.bankTransaction,
-                                ),
-                                transition: customTrans,
-                                curve: customCurve,
-                                duration: duration,
-                              );
+                              try {
+                                await FirebaseAuth.instance
+                                    .signInWithEmailAndPassword(
+                                        email: emailEditingController.text,
+                                        password:
+                                            passwordEditingController.text);
+                                Get.to(
+                                  routeName: routes[3],
+                                  () => const HomePage(),
+                                  transition: customTrans,
+                                  curve: customCurve,
+                                  duration: duration,
+                                );
+                              } on FirebaseAuthException catch (e) {
+                                debugPrint(e.code);
+                                if (e.code == "invalid-credential") {
+                                  Get.snackbar(
+                                    "Error",
+                                    "Invalid Credentials",
+                                    snackPosition: SnackPosition.BOTTOM,
+                                  );
+                                } else if (e.code == "too-many-requests") {
+                                  Get.snackbar(
+                                    "Error",
+                                    "Server Error, Try again Later",
+                                    snackPosition: SnackPosition.TOP,
+                                  );
+                                }
+                              }
                             }
                           },
                           child: Text(

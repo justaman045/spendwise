@@ -1,0 +1,14 @@
+final user = FirebaseAuth.instance.currentUser;
+                        final credential = EmailAuthProvider.credential(
+                            email: user!.email.toString(),
+                            password: PasswordEditingController.text);
+
+await FirebaseAuth.instance.currentUser!
+                            .delete()
+                            .then((value) => Get.offAll(
+                                  routeName: routes[3],
+                                  () => const Intro(),
+                                  transition: customTrans,
+                                  curve: customCurve,
+                                  duration: duration,
+                                ));

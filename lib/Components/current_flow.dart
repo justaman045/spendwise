@@ -25,9 +25,8 @@ class CurrentFlow extends StatelessWidget {
         GestureDetector(
           onTap: () => Get.to(
             routeName: "Monthly Income",
-            () => AllTransactions(
-              transactioncustom:
-                  bankTransactions.where(isIncomeForThisMonth).toList(),
+            () => const AllTransactions(
+              type: "income",
               pageTitle: "All Income this Month",
               chartTitle: "Income Read from SMS",
               chartType: "Income",
@@ -45,9 +44,8 @@ class CurrentFlow extends StatelessWidget {
         GestureDetector(
           onTap: () => Get.to(
             routeName: "Monthly Expense",
-            () => AllTransactions(
-              transactioncustom:
-                  bankTransactions.where(isExpenseForThisMonth).toList(),
+            () => const AllTransactions(
+              type: "expense",
               pageTitle: "All Expense this Month",
               chartTitle: "Expense Read from SMS",
               chartType: "Expense",

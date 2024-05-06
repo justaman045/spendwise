@@ -3,6 +3,8 @@ import "package:flutter_screenutil/flutter_screenutil.dart";
 import "package:get/get.dart";
 import "package:spendwise/Requirements/data.dart";
 
+final _formKey = GlobalKey<FormState>();
+
 class AddCashEntry extends StatefulWidget {
   const AddCashEntry({super.key});
 
@@ -11,12 +13,18 @@ class AddCashEntry extends StatefulWidget {
 }
 
 class _AddCashEntryState extends State<AddCashEntry> {
+  TextEditingController nameEditingController = TextEditingController();
+  TextEditingController amountEditingController = TextEditingController();
+  TextEditingController typeOftransactionEditingController =
+      TextEditingController();
+  TextEditingController expenseTypeEditingController = TextEditingController();
   String typeOfexp = "";
   String typeOftransaction = "";
+  String transactionReferanceNumber = "";
   @override
   void initState() {
-    typeOfexp = expenseType[0];
-    typeOftransaction = typeOfTransaction[0];
+    expenseTypeEditingController.text = expenseType[0];
+    typeOftransactionEditingController.text = typeOfTransaction[0];
     super.initState();
   }
 
@@ -47,135 +55,144 @@ class _AddCashEntryState extends State<AddCashEntry> {
                 ),
               ),
             ),
-            Padding(
-              padding: EdgeInsets.only(
-                left: 20.r,
-                top: 15.h,
-                right: 20.w,
-              ),
-              child: SizedBox(
-                height: 60.h,
-                child: TextFormField(
-                  decoration: InputDecoration(
-                    label: Text(
-                      "Recipient Name",
-                      style: TextStyle(
-                        fontSize: 13.r,
-                      ),
+            Form(
+              key: _formKey,
+              child: Column(
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(
+                      left: 20.r,
+                      top: 15.h,
+                      right: 20.w,
                     ),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(15.h),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.only(
-                left: 20.r,
-                top: 15.h,
-                right: 20.w,
-              ),
-              child: SizedBox(
-                height: 60.h,
-                child: TextFormField(
-                  keyboardType: TextInputType.number,
-                  decoration: InputDecoration(
-                    label: Text(
-                      "Amount",
-                      style: TextStyle(
-                        fontSize: 13.r,
-                      ),
-                    ),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(15.h),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.only(
-                left: 20.r,
-                top: 15.h,
-                right: 20.w,
-              ),
-              child: SizedBox(
-                height: 60.h,
-                child: DropdownButtonFormField(
-                  decoration: InputDecoration(
-                    label: Text(
-                      "Income/Expense",
-                      style: TextStyle(
-                        fontSize: 13.r,
-                      ),
-                    ),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(15.h),
-                    ),
-                  ),
-                  value: typeOfexp,
-                  items: expenseType
-                      .map(
-                        (e) => DropdownMenuItem(
-                          value: e,
-                          child: Text(
-                            e,
+                    child: SizedBox(
+                      height: 60.h,
+                      child: TextFormField(
+                        controller: nameEditingController,
+                        decoration: InputDecoration(
+                          label: Text(
+                            "Recipient Name",
                             style: TextStyle(
                               fontSize: 13.r,
                             ),
                           ),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(15.h),
+                          ),
                         ),
-                      )
-                      .toList(),
-                  onChanged: (String? value) => setState(
-                    () {
-                      if (value != null) typeOfexp = value;
-                    },
-                  ),
-                ),
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.only(
-                left: 20.r,
-                top: 15.h,
-                right: 20.w,
-              ),
-              child: SizedBox(
-                height: 60.h,
-                child: DropdownButtonFormField(
-                  decoration: InputDecoration(
-                    label: Text(
-                      "Type Of Transaction",
-                      style: TextStyle(
-                        fontSize: 13.r,
                       ),
                     ),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(15.h),
-                    ),
                   ),
-                  value: typeOftransaction,
-                  items: typeOfTransaction
-                      .map(
-                        (e) => DropdownMenuItem(
-                          value: e,
-                          child: Text(
-                            e,
+                  Padding(
+                    padding: EdgeInsets.only(
+                      left: 20.r,
+                      top: 15.h,
+                      right: 20.w,
+                    ),
+                    child: SizedBox(
+                      height: 60.h,
+                      child: TextFormField(
+                        controller: amountEditingController,
+                        keyboardType: TextInputType.number,
+                        decoration: InputDecoration(
+                          label: Text(
+                            "Amount",
                             style: TextStyle(
                               fontSize: 13.r,
                             ),
                           ),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(15.h),
+                          ),
                         ),
-                      )
-                      .toList(),
-                  onChanged: (String? value) => setState(
-                    () {
-                      if (value != null) typeOftransaction = value;
-                    },
+                      ),
+                    ),
                   ),
-                ),
+                  Padding(
+                    padding: EdgeInsets.only(
+                      left: 20.r,
+                      top: 15.h,
+                      right: 20.w,
+                    ),
+                    child: SizedBox(
+                      height: 60.h,
+                      child: DropdownButtonFormField(
+                        decoration: InputDecoration(
+                          label: Text(
+                            "Income/Expense",
+                            style: TextStyle(
+                              fontSize: 13.r,
+                            ),
+                          ),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(15.h),
+                          ),
+                        ),
+                        value: typeOfexp,
+                        items: expenseType
+                            .map(
+                              (e) => DropdownMenuItem(
+                                value: e,
+                                child: Text(
+                                  e,
+                                  style: TextStyle(
+                                    fontSize: 13.r,
+                                  ),
+                                ),
+                              ),
+                            )
+                            .toList(),
+                        onChanged: (String? value) => setState(
+                          () {
+                            if (value != null) typeOfexp = value;
+                          },
+                        ),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(
+                      left: 20.r,
+                      top: 15.h,
+                      right: 20.w,
+                    ),
+                    child: SizedBox(
+                      height: 60.h,
+                      child: DropdownButtonFormField(
+                        decoration: InputDecoration(
+                          label: Text(
+                            "Type Of Transaction",
+                            style: TextStyle(
+                              fontSize: 13.r,
+                            ),
+                          ),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(15.h),
+                          ),
+                        ),
+                        value: typeOftransaction,
+                        items: typeOfTransaction
+                            .map(
+                              (e) => DropdownMenuItem(
+                                value: e,
+                                child: Text(
+                                  e,
+                                  style: TextStyle(
+                                    fontSize: 13.r,
+                                  ),
+                                ),
+                              ),
+                            )
+                            .toList(),
+                        onChanged: (String? value) => setState(
+                          () {
+                            if (value != null) typeOftransaction = value;
+                          },
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
             Padding(
@@ -215,25 +232,30 @@ class _AddCashEntryState extends State<AddCashEntry> {
                       ),
                     ),
                   ),
-                  Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(11.w),
-                      gradient: const LinearGradient(
-                        begin: Alignment.topRight,
-                        end: Alignment.bottomLeft,
-                        colors: [
-                          Color.fromRGBO(210, 209, 254, 1),
-                          Color.fromRGBO(243, 203, 237, 1),
-                        ],
+                  GestureDetector(
+                    onTap: () {
+                      // FirebaseF
+                    },
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(11.w),
+                        gradient: const LinearGradient(
+                          begin: Alignment.topRight,
+                          end: Alignment.bottomLeft,
+                          colors: [
+                            Color.fromRGBO(210, 209, 254, 1),
+                            Color.fromRGBO(243, 203, 237, 1),
+                          ],
+                        ),
                       ),
-                    ),
-                    width: 150.w,
-                    height: 50.h,
-                    child: Center(
-                      child: Text(
-                        "Add Payment",
-                        style: TextStyle(
-                          fontSize: 13.r,
+                      width: 150.w,
+                      height: 50.h,
+                      child: Center(
+                        child: Text(
+                          "Add Payment",
+                          style: TextStyle(
+                            fontSize: 13.r,
+                          ),
                         ),
                       ),
                     ),

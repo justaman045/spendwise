@@ -1,12 +1,18 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:spendwise/Requirements/data.dart';
+import 'package:spendwise/Screens/intro.dart';
+
+final _formKey = GlobalKey<FormState>();
 
 class DeleteAccount extends StatelessWidget {
   const DeleteAccount({super.key});
 
   @override
   Widget build(BuildContext context) {
+    TextEditingController PasswordEditingController = TextEditingController();
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(
@@ -49,6 +55,34 @@ class DeleteAccount extends StatelessWidget {
                   ),
                 ),
               ),
+              Form(
+                child: Padding(
+                  padding: EdgeInsets.only(
+                    left: 20.w,
+                    right: 20.w,
+                    top: 10.h,
+                  ),
+                  child: TextFormField(
+                    controller: PasswordEditingController,
+                    validator: (value) {
+                      if (value!.length < 8) {
+                        return "Password should be atleast 8 Charcters";
+                      }
+                      return null;
+                    },
+                    decoration: InputDecoration(
+                      label: Text(
+                        "Old Password",
+                        style: TextStyle(fontSize: 15.r),
+                      ),
+                      prefixIcon: Icon(
+                        Icons.password,
+                        size: 15.r,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
               Padding(
                 padding: EdgeInsets.only(top: 100.h),
                 child: Row(
@@ -80,27 +114,47 @@ class DeleteAccount extends StatelessWidget {
                         ),
                       ),
                     ),
-                    Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(
-                          30.w,
+                    GestureDetector(
+                      onTap: () async {
+                        if (_formKey.currentState!.validate()) {
+                          final user = FirebaseAuth.instance.currentUser;
+                          final credential = EmailAuthProvider.credential(
+                              email: user!.email.toString(),
+                              password: PasswordEditingController.text);
+                          await user.reauthenticateWithCredential(credential);
+                          await FirebaseAuth.instance.currentUser!
+                              .delete()
+                              .then((value) => Get.offAll(
+                                    routeName: routes[3],
+                                    () => const Intro(),
+                                    transition: customTrans,
+                                    curve: customCurve,
+                                    duration: duration,
+                                  ));
+                        }
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(
+                            30.w,
+                          ),
+                          gradient: const LinearGradient(
+                            begin: Alignment.topRight,
+                            end: Alignment.bottomLeft,
+                            colors: [
+                              Color.fromRGBO(210, 209, 254, 1),
+                              Color.fromRGBO(243, 203, 237, 1),
+                            ],
+                          ),
                         ),
-                        gradient: const LinearGradient(
-                          begin: Alignment.topRight,
-                          end: Alignment.bottomLeft,
-                          colors: [
-                            Color.fromRGBO(210, 209, 254, 1),
-                            Color.fromRGBO(243, 203, 237, 1),
-                          ],
-                        ),
-                      ),
-                      width: 150.w,
-                      height: 50.h,
-                      child: Center(
-                        child: Text(
-                          "Delete Account",
-                          style: TextStyle(
-                            fontSize: 13.r,
+                        width: 150.w,
+                        height: 50.h,
+                        child: Center(
+                          child: Text(
+                            "Delete Account",
+                            style: TextStyle(
+                              fontSize: 13.r,
+                            ),
                           ),
                         ),
                       ),

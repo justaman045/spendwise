@@ -36,11 +36,11 @@ class RecentTransactionHeader extends StatelessWidget {
             onPressed: () {
               Get.to(
                 routeName: routes[4],
-                () => AllTransactions(
+                () => const AllTransactions(
+                  type: "",
                   pageTitle: "All Transactions",
                   chartTitle: "All Transactions from SMS",
                   chartType: "Transaction",
-                  transactioncustom: bankTransactions,
                 ),
                 transition: customTrans,
                 curve: customCurve,

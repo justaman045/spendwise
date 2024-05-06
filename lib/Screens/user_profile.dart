@@ -4,7 +4,6 @@ import "package:flutter_screenutil/flutter_screenutil.dart";
 import "package:get/get.dart";
 import "package:spendwise/Components/responsive_methods.dart";
 import "package:spendwise/Requirements/data.dart";
-import "package:spendwise/Requirements/transaction.dart";
 import "package:spendwise/Screens/all_transactions.dart";
 import "package:spendwise/Screens/change_password.dart";
 import "package:spendwise/Screens/delete_account.dart";
@@ -12,8 +11,7 @@ import "package:spendwise/Screens/edit_user_profile.dart";
 import "package:spendwise/Screens/intro.dart";
 
 class UserProfile extends StatelessWidget {
-  const UserProfile({super.key, required this.bankTransaction});
-  final List<Transaction> bankTransaction;
+  const UserProfile({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -118,12 +116,11 @@ class UserProfile extends StatelessWidget {
               fn: () {
                 Get.to(
                   routeName: routes[4],
-                  () => AllTransactions(
+                  () => const AllTransactions(
+                    type: "expense",
                     pageTitle: "All Payments",
                     chartTitle: "Payments",
                     chartType: "Payments",
-                    transactioncustom:
-                        bankTransaction.where(isExpenseForThisMonth).toList(),
                   ),
                   curve: customCurve,
                   transition: customTrans,
@@ -142,9 +139,8 @@ class UserProfile extends StatelessWidget {
               fn: () {
                 Get.to(
                   routeName: "Monthly Income",
-                  () => AllTransactions(
-                    transactioncustom:
-                        bankTransaction.where(isIncomeForThisMonth).toList(),
+                  () => const AllTransactions(
+                    type: "income",
                     pageTitle: "All Income",
                     chartTitle: "Income",
                     chartType: "Income",
@@ -202,16 +198,15 @@ class UserProfile extends StatelessWidget {
               ),
               child: TextButton(
                 onPressed: () async {
-                  await FirebaseAuth.instance.signOut();
-                  Get.offAll(
-                    routeName: routes[3],
-                    () => Intro(
-                      bankTransaction: bankTransaction,
-                    ),
-                    transition: customTrans,
-                    curve: customCurve,
-                    duration: duration,
-                  );
+                  await FirebaseAuth.instance
+                      .signOut()
+                      .then((value) => Get.offAll(
+                            routeName: routes[3],
+                            () => const Intro(),
+                            transition: customTrans,
+                            curve: customCurve,
+                            duration: duration,
+                          ));
                 },
                 child: Text(
                   "Sign Out...",

@@ -12,87 +12,103 @@ import 'package:spendwise/Requirements/data.dart';
 import 'package:spendwise/Requirements/transaction.dart';
 import 'package:spendwise/Screens/cash_entry.dart';
 
-class HomePage extends StatelessWidget {
-  const HomePage({super.key, required this.bankTransaction});
+class HomePage extends StatefulWidget {
+  const HomePage({super.key});
 
-  final List<Transaction> bankTransaction;
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
 
+class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
+    List<Transaction> bankTransaction = [];
 
-    return Scaffold(
-      appBar: const CustomAppBar(),
-      drawer: CustomDrawer(
-        scaffoldKey: scaffoldKey,
-        bankTransaction: bankTransaction,
-      ),
-      body: SafeArea(
-        child: Column(
-          children: [
-            AvailableBalance(
-              width: 300.h,
-              intakeamount: totalIncomeThisMonth(bankTransaction).toInt(),
-              expense: totalExpenseThisMonth(bankTransaction).toInt(),
-              bankTransaction: bankTransaction,
+    return FutureBuilder(
+      future: querySmsMessages(),
+      initialData: bankTransaction,
+      builder: (BuildContext context, AsyncSnapshot snapshot) {
+        if (snapshot.connectionState == ConnectionState.done) {
+          bankTransaction = snapshot.data;
+          return Scaffold(
+            appBar: const CustomAppBar(),
+            drawer: CustomDrawer(
+              scaffoldKey: scaffoldKey,
             ),
-            CurrentFlow(
-              width: getScreenWidth(context),
-              bankTransactions: bankTransaction,
-            ),
-            RecentTransactionHeader(
-              bankTransactions: bankTransaction,
-              width: getScreenWidth(context),
-            ),
-            if (bankTransaction.isEmpty) ...[
-              Expanded(
-                child: Center(
-                  child: Text(
-                    "No Transactions Today",
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20.r,
-                    ),
+            body: SafeArea(
+              child: Column(
+                children: [
+                  AvailableBalance(
+                    width: 300.h,
+                    bankTransaction: bankTransaction,
                   ),
-                ),
+                  CurrentFlow(
+                    width: getScreenWidth(context),
+                    bankTransactions: bankTransaction,
+                  ),
+                  RecentTransactionHeader(
+                    bankTransactions: bankTransaction,
+                    width: getScreenWidth(context),
+                  ),
+                  if (bankTransaction.isEmpty) ...[
+                    Expanded(
+                      child: Center(
+                        child: Text(
+                          "No Transactions Today",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20.r,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ] else ...[
+                    Expanded(
+                      child: ListView.builder(
+                        itemCount: bankTransaction
+                            .length, // Use todaysTransactions length
+                        itemBuilder: (context, index) {
+                          final transaction = bankTransaction[index];
+                          return TransactionWidget(
+                            expenseType: transaction.expenseType,
+                            width: 100.w,
+                            amount: transaction.amount.toInt(),
+                            dateAndTime: transaction.dateAndTime,
+                            name: transaction.name,
+                            typeOfTransaction: transaction.typeOfTransaction,
+                            height: 100.h,
+                            transactionReferanceNumber:
+                                transaction.transactionReferanceNumber,
+                          );
+                        },
+                      ),
+                    ),
+                  ]
+                ],
               ),
-            ] else ...[
-              Expanded(
-                child: ListView.builder(
-                  itemCount:
-                      bankTransaction.length, // Use todaysTransactions length
-                  itemBuilder: (context, index) {
-                    final transaction = bankTransaction[index];
-                    return TransactionWidget(
-                      expenseType: transaction.expenseType,
-                      width: 100.w,
-                      amount: transaction.amount.toInt(),
-                      dateAndTime: transaction.dateAndTime,
-                      name: transaction.name,
-                      typeOfTransaction: transaction.typeOfTransaction,
-                      height: 100.h,
-                      transactionReferanceNumber:
-                          transaction.transactionReferanceNumber,
-                    );
-                  },
-                ),
-              ),
-            ]
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton.extended(
-        label: const Icon(Icons.add),
-        onPressed: () {
-          Get.to(
-            routeName: routes[12],
-            () => const AddCashEntry(),
-            curve: customCurve,
-            transition: customTrans,
-            duration: duration,
+            ),
+            floatingActionButton: FloatingActionButton.extended(
+              label: const Icon(Icons.add),
+              onPressed: () {
+                Get.to(
+                  routeName: routes[12],
+                  () => const AddCashEntry(),
+                  curve: customCurve,
+                  transition: customTrans,
+                  duration: duration,
+                );
+              },
+            ),
           );
-        },
-      ),
+        } else {
+          return const Scaffold(
+            body: SafeArea(
+              child: CircularProgressIndicator(),
+            ),
+          );
+        }
+      },
     );
   }
 }

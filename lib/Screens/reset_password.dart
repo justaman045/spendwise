@@ -1,10 +1,19 @@
+import "package:firebase_auth/firebase_auth.dart";
 import "package:flutter/material.dart";
 import "package:flutter_screenutil/flutter_screenutil.dart";
 import "package:get/get.dart";
 
-class ResetPassword extends StatelessWidget {
+final _formKey = GlobalKey<FormState>();
+
+class ResetPassword extends StatefulWidget {
   const ResetPassword({super.key});
 
+  @override
+  State<ResetPassword> createState() => _ResetPasswordState();
+}
+
+class _ResetPasswordState extends State<ResetPassword> {
+  TextEditingController emailEditingController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -80,17 +89,27 @@ class ResetPassword extends StatelessWidget {
                         style: TextStyle(fontSize: 13.r),
                       ),
                     ),
-                    Padding(
-                      padding: EdgeInsets.only(
-                        left: 20.w,
-                        top: 20.h,
-                        right: 20.w,
-                      ),
-                      child: TextFormField(
-                        decoration: InputDecoration(
-                          label: const Text("Enter you Email Account"),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20.r),
+                    Form(
+                      key: _formKey,
+                      child: Padding(
+                        padding: EdgeInsets.only(
+                          left: 20.w,
+                          top: 20.h,
+                          right: 20.w,
+                        ),
+                        child: TextFormField(
+                          validator: (value) {
+                            if (!value!.contains("@")) {
+                              return "Please enter correct Email Address";
+                            }
+                            return null;
+                          },
+                          controller: emailEditingController,
+                          decoration: InputDecoration(
+                            label: const Text("Enter you Email Account"),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(20.r),
+                            ),
                           ),
                         ),
                       ),
@@ -101,6 +120,12 @@ class ResetPassword extends StatelessWidget {
                         right: 20.w,
                       ),
                       child: GestureDetector(
+                        onTap: () async {
+                          if (_formKey.currentState!.validate()) {
+                            await FirebaseAuth.instance.sendPasswordResetEmail(
+                                email: emailEditingController.text);
+                          }
+                        },
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [

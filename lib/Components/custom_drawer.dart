@@ -2,7 +2,6 @@ import "package:flutter/material.dart";
 import "package:flutter_screenutil/flutter_screenutil.dart";
 import "package:get/get.dart";
 import "package:spendwise/Requirements/data.dart";
-import "package:spendwise/Requirements/transaction.dart";
 import "package:spendwise/Screens/all_transactions.dart";
 import "package:spendwise/Screens/home_page.dart";
 import "package:spendwise/Screens/settings.dart";
@@ -11,11 +10,10 @@ import "package:spendwise/Screens/user_profile.dart";
 class CustomDrawer extends StatelessWidget {
   const CustomDrawer({
     super.key,
-    required this.bankTransaction,
     required this.scaffoldKey,
   });
 
-  final List<Transaction> bankTransaction;
+  // final List<Transaction> bankTransaction;
   final GlobalKey scaffoldKey;
 
   @override
@@ -66,7 +64,7 @@ class CustomDrawer extends StatelessWidget {
                 // print(ModalRoute.of(context)?.settings.name);
                 Get.to(
                   routeName: "/",
-                  () => HomePage(bankTransaction: bankTransaction),
+                  () => const HomePage(),
                   curve: customCurve,
                   transition: customTrans,
                   duration: duration,
@@ -87,11 +85,11 @@ class CustomDrawer extends StatelessWidget {
 
                 Get.to(
                   routeName: routes[4],
-                  () => AllTransactions(
+                  () => const AllTransactions(
+                    type: "",
                     pageTitle: "All Transactions",
                     chartTitle: "All Transactions from SMS",
                     chartType: "Transaction",
-                    transactioncustom: bankTransaction,
                   ),
                   curve: customCurve,
                   transition: customTrans,
@@ -113,9 +111,7 @@ class CustomDrawer extends StatelessWidget {
               if (ModalRoute.of(context)?.settings.name != routes[6]) {
                 Get.to(
                   routeName: routes[6],
-                  () => UserProfile(
-                    bankTransaction: bankTransaction,
-                  ),
+                  () => const UserProfile(),
                   curve: customCurve,
                   transition: customTrans,
                   duration: duration,

@@ -1,20 +1,16 @@
 import "package:firebase_auth/firebase_auth.dart";
 import "package:flutter/material.dart";
-import "package:flutter/widgets.dart";
 import "package:flutter_screenutil/flutter_screenutil.dart";
 import "package:get/get.dart";
 import "package:spendwise/Components/gradient_color.dart";
 import "package:spendwise/Requirements/data.dart";
-import "package:spendwise/Requirements/transaction.dart";
 import "package:spendwise/Screens/home_page.dart";
 import "package:spendwise/Screens/login.dart";
 
 final _formKey = GlobalKey<FormState>();
 
 class SignUp extends StatelessWidget {
-  const SignUp({super.key, required this.bankTransaction});
-
-  final List<Transaction> bankTransaction;
+  const SignUp({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -221,9 +217,7 @@ class SignUp extends StatelessWidget {
                         onPressed: () {
                           Get.off(
                             routeName: routes[1],
-                            () => Login(
-                              bankTransaction: bankTransaction,
-                            ),
+                            () => const Login(),
                             transition: customTrans,
                             curve: customCurve,
                             duration: duration,
@@ -247,24 +241,17 @@ class SignUp extends StatelessWidget {
                         child: TextButton(
                           onPressed: () async {
                             if (_formKey.currentState!.validate()) {
-                              final userCredentials = await FirebaseAuth
-                                  .instance
+                              await FirebaseAuth.instance
                                   .createUserWithEmailAndPassword(
                                       email: emailEditingController.text,
                                       password: passwordEditingController.text);
-                              if (userCredentials == null) {
-                                const CircularProgressIndicator();
-                              } else {
-                                Get.offAll(
-                                  routeName: routes[3],
-                                  () => HomePage(
-                                    bankTransaction: bankTransaction,
-                                  ),
-                                  transition: customTrans,
-                                  curve: customCurve,
-                                  duration: duration,
-                                );
-                              }
+                              Get.offAll(
+                                routeName: routes[3],
+                                () => const HomePage(),
+                                transition: customTrans,
+                                curve: customCurve,
+                                duration: duration,
+                              );
                             }
                           },
                           child: Text(

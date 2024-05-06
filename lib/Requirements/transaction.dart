@@ -1,5 +1,7 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_sms_inbox/flutter_sms_inbox.dart';
+
+final SmsQuery query = SmsQuery();
+List<Transaction> transactions = [];
 
 class Transaction {
   final double amount;
@@ -86,27 +88,49 @@ bool isIncomeForThisMonth(Transaction transaction) {
       transaction.expenseType == "income";
 }
 
-int countTransactionsThisMonth(List<Transaction> transactions) {
+List<Transaction> countTransactionsThisMonth(List<Transaction> transactions) {
   final currentMonth = DateTime.now().month;
   return transactions
       .where((transaction) => transaction.dateAndTime.month == currentMonth)
-      .length;
+      .toList();
+}
+
+List<Transaction> allIncomeThisMonth(List<Transaction> transactions) {
+  return transactions
+      .where((transaction) => isIncomeForThisMonth(transaction))
+      .toList();
+}
+
+List<Transaction> allExpenseThisMonth(List<Transaction> transactions) {
+  return transactions
+      .where((transaction) => isExpenseForThisMonth(transaction))
+      .toList();
 }
 
 double totalExpenseThisMonth(List<Transaction> transactions) {
   final currentMonth = DateTime.now().month;
-  return transactions.fold(
-      0.0, (sum, transaction) => sum + (transaction.amount));
+  double expense = 0;
+  for (var element in transactions) {
+    if (element.dateAndTime.month == currentMonth) {
+      if (element.expenseType == "expense") {
+        expense += element.amount;
+      }
+    }
+  }
+  return expense;
 }
 
 double totalIncomeThisMonth(List<Transaction> transactions) {
   final currentMonth = DateTime.now().month;
-  return transactions.fold(
-      0.0,
-      (sum, transaction) =>
-          sum +
-          (transaction.amount) *
-              (transaction.expenseType == "income" ? 1 : -1));
+  double income = 0;
+  for (var element in transactions) {
+    if (element.dateAndTime.month == currentMonth) {
+      if (element.expenseType == "income") {
+        income += element.amount;
+      }
+    }
+  }
+  return income;
 }
 
 List<ExpenseData> expenseChart(List<Transaction> transactions) {
@@ -135,6 +159,33 @@ class ExpenseData {
   ExpenseData(this.date, this.expense);
 }
 
+Future<List<Transaction>> querySmsMessages() async {
+  // final message = await query.querySms(
+  //   kinds: [
+  //     SmsQueryKind.inbox,
+  //     SmsQueryKind.sent,
+  //   ],
+  //   count: 50000,
+  // );
+  // debugPrint('sms inbox messages: ${message.length}');
+
+  transactions = transactionss;
+
+  // ------------------------------------------------Area to test my Code----------------------------------
+
+  // final filteredMessages = filterBankTransactions(message);
+
+  // filteredMessages.forEach((element) {
+  //   // debugPrint(element.date.toString());
+  //   debugPrint(element.body);
+  // });
+
+  // final testTrans = parseBankTransactions(filteredMessages);
+  // ------------------------------------------------Area to test my Code----------------------------------
+
+  return transactions;
+}
+
 final bankTransactionRegex = RegExp(
   r'(?:debit|credit|transaction|payment|transfer)(?:\s+from|to)?(?:\s+INR|\$)(?:\d+(?:\.\d+)?)(?:\s+on|\sat)(?:\s+\d{2}:\d{2})?(?:\s+on\s+\d{2}/\d{2}/\d{4})?',
   caseSensitive: false,
@@ -146,7 +197,7 @@ final bankNameRegex = RegExp(
 
 List<SmsMessage> filterBankTransactions(List<SmsMessage> messages) {
   final filteredMessages = <SmsMessage>[];
-  debugPrint(messages.length.toString());
+  // debugPrint(messages.length.toString());
   for (final message in messages) {
     final body = message.body
         ?.toLowerCase(); // Convert to lowercase for case-insensitive matching
@@ -160,19 +211,19 @@ List<SmsMessage> filterBankTransactions(List<SmsMessage> messages) {
   return filteredMessages;
 }
 
-void parseBankTransactions(List bankMessages) {
-  final nameRegex = RegExp(r";.*\.");
-  final amountRegex = RegExp(r"R.*[0-9]*\.[0-9]+");
-  final accountNumberRegex = RegExp(r"Acct\s+([\w]+)");
-  final dateRegex = RegExp(r"on\s+([\w-]+)");
-  final transactionTypeRegex = RegExp(r"[A-Za-z]+.*\.");
+// void parseBankTransactions(List bankMessages) {
+//   final nameRegex = RegExp(r";.*\.");
+//   final amountRegex = RegExp(r"R.*[0-9]*\.[0-9]+");
+//   final accountNumberRegex = RegExp(r"Acct\s+([\w]+)");
+//   final dateRegex = RegExp(r"on\s+([\w-]+)");
+//   final transactionTypeRegex = RegExp(r"[A-Za-z]+.*\.");
 
-  bankMessages.forEach((element) {
-    // debugPrint(element.body);
-    Match? nameMatch = transactionTypeRegex.firstMatch(element.body);
-    debugPrint(nameMatch?.group(0));
-  });
-}
+//   bankMessages.forEach((element) {
+//     // debugPrint(element.body);
+//     Match? nameMatch = transactionTypeRegex.firstMatch(element.body);
+//     // debugPrint(nameMatch?.group(0));
+//   });
+// }
 
 // List<Transaction> parseBankTransactions(List messages) {
 //   final transactionRegex = RegExp(

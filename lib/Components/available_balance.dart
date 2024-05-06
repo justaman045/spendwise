@@ -10,27 +10,23 @@ class AvailableBalance extends StatelessWidget {
   const AvailableBalance({
     super.key,
     required this.width,
-    required this.intakeamount,
-    required this.expense,
     required this.bankTransaction,
   });
 
   final double width;
-  final int intakeamount;
-  final int expense;
   final List<Transaction> bankTransaction;
 
   @override
   Widget build(BuildContext context) {
+    // debugPrint((totalIncomeThisMonth(bankTransaction)).toString());
     return GestureDetector(
       onTap: () => Get.to(
         routeName: routes[5],
-        () => AllTransactions(
+        () => const AllTransactions(
           pageTitle: "Monthly Transactions",
           chartTitle: "This months Transactions from SMS",
           chartType: "Transaction",
-          transactioncustom:
-              bankTransaction.where(isTransactionForThisMonth).toList(),
+          type: "",
         ),
         transition: customTrans,
         curve: customCurve,
@@ -81,7 +77,9 @@ class AvailableBalance extends StatelessWidget {
                       Countup(
                         duration: duration,
                         begin: 0,
-                        end: (intakeamount - expense).toDouble(),
+                        end: (totalIncomeThisMonth(bankTransaction) -
+                                totalExpenseThisMonth(bankTransaction))
+                            .toDouble(),
                         style: TextStyle(
                           fontSize: width * 0.12,
                           color: Colors.green,
