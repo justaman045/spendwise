@@ -11,13 +11,11 @@ class CurrentFlow extends StatelessWidget {
   const CurrentFlow({
     super.key,
     required this.width,
-    required this.income,
-    required this.expense,
+    required this.bankTransactions,
   });
 
   final double width;
-  final double income;
-  final double expense;
+  final List<Transaction> bankTransactions;
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +27,7 @@ class CurrentFlow extends StatelessWidget {
             routeName: "Monthly Income",
             () => AllTransactions(
               transactioncustom:
-                  transactions.where(isIncomeForThisMonth).toList(),
+                  bankTransactions.where(isIncomeForThisMonth).toList(),
               pageTitle: "All Income this Month",
               chartTitle: "Income Read from SMS",
               chartType: "Income",
@@ -49,7 +47,7 @@ class CurrentFlow extends StatelessWidget {
             routeName: "Monthly Expense",
             () => AllTransactions(
               transactioncustom:
-                  transactions.where(isExpenseForThisMonth).toList(),
+                  bankTransactions.where(isExpenseForThisMonth).toList(),
               pageTitle: "All Expense this Month",
               chartTitle: "Expense Read from SMS",
               chartType: "Expense",
@@ -61,7 +59,7 @@ class CurrentFlow extends StatelessWidget {
           child: CashFlow(
             width: width,
             flowText: "Expenses this Month",
-            flowAmount: expense.toInt(),
+            flowAmount: totalExpenseThisMonth(bankTransactions).toInt(),
           ),
         ),
       ],

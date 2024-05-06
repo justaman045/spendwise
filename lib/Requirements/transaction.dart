@@ -1,15 +1,15 @@
-import "package:flutter/material.dart";
+import 'package:flutter/material.dart';
 import 'package:flutter_sms_inbox/flutter_sms_inbox.dart';
 
 class Transaction {
-  final int? amount; // Made nullable
-  final DateTime? dateAndTime; // Made nullable
-  final String? name; // Made nullable
-  final String? typeOfTransaction;
-  final String? expenseType;
-  final int? transactionReferanceNumber; // Made nullable
+  final double amount;
+  final DateTime dateAndTime;
+  final String name;
+  final String typeOfTransaction;
+  final String expenseType;
+  final int transactionReferanceNumber;
 
-  const Transaction({
+  Transaction({
     required this.amount,
     required this.dateAndTime,
     required this.name,
@@ -31,7 +31,7 @@ class Account {
   });
 }
 
-final transactions = [
+final transactionss = [
   // Existing transactions with "expenseType" added
   Transaction(
     amount: 22600,
@@ -59,200 +59,172 @@ final accounts = [
   ),
 ];
 
-class MyWidget extends StatefulWidget {
-  const MyWidget({super.key});
-
-  @override
-  State<MyWidget> createState() => _MyWidgetState();
-}
-
-class _MyWidgetState extends State<MyWidget> {
-  @override
-  Widget build(BuildContext context) {
-    return const Placeholder();
-  }
-}
-
 bool isTransactionForToday(Transaction transaction) {
   final today = DateTime.now();
-  return transaction.dateAndTime?.year == today.year &&
-      transaction.dateAndTime?.month == today.month &&
-      transaction.dateAndTime?.day == today.day;
+  return transaction.dateAndTime.year == today.year &&
+      transaction.dateAndTime.month == today.month &&
+      transaction.dateAndTime.day == today.day;
 }
 
 bool isTransactionForThisMonth(Transaction transaction) {
   final today = DateTime.now();
-  return transaction.dateAndTime?.year == today.year &&
-      transaction.dateAndTime?.month == today.month;
+  return transaction.dateAndTime.year == today.year &&
+      transaction.dateAndTime.month == today.month;
 }
 
 bool isExpenseForThisMonth(Transaction transaction) {
   final today = DateTime.now();
-  return transaction.dateAndTime?.year == today.year &&
-      transaction.dateAndTime?.month == today.month &&
+  return transaction.dateAndTime.year == today.year &&
+      transaction.dateAndTime.month == today.month &&
       transaction.expenseType == "expense";
 }
 
 bool isIncomeForThisMonth(Transaction transaction) {
   final today = DateTime.now();
-  return transaction.dateAndTime?.year == today.year &&
-      transaction.dateAndTime?.month == today.month &&
+  return transaction.dateAndTime.year == today.year &&
+      transaction.dateAndTime.month == today.month &&
       transaction.expenseType == "income";
 }
 
-int countTransactionsThisMonth() {
+int countTransactionsThisMonth(List<Transaction> transactions) {
   final currentMonth = DateTime.now().month;
-  // No change needed for counting all transactions this month
   return transactions
-      .where((transaction) => transaction.dateAndTime?.month == currentMonth)
+      .where((transaction) => transaction.dateAndTime.month == currentMonth)
       .length;
 }
 
-// Method to calculate total expense this month (considering expenseType)
-double totalExpenseThisMonth() {
+double totalExpenseThisMonth(List<Transaction> transactions) {
   final currentMonth = DateTime.now().month;
-  return transactions
-      .where((transaction) =>
-          transaction.dateAndTime?.month == currentMonth &&
-          transaction.expenseType == "expense")
-      .fold(0.0, (sum, transaction) => sum + transaction.amount!.toDouble());
+  return transactions.fold(
+      0.0, (sum, transaction) => sum + (transaction.amount));
 }
 
-double totalIncomeThisMonth() {
+double totalIncomeThisMonth(List<Transaction> transactions) {
   final currentMonth = DateTime.now().month;
-  return transactions
-      .where((transaction) =>
-          transaction.dateAndTime?.month == currentMonth &&
-          transaction.expenseType == "income")
-      .fold(0.0, (sum, transaction) => sum + transaction.amount!.toDouble());
+  return transactions.fold(
+      0.0,
+      (sum, transaction) =>
+          sum +
+          (transaction.amount) *
+              (transaction.expenseType == "income" ? 1 : -1));
 }
 
 List<ExpenseData> expenseChart(List<Transaction> transactions) {
-  final filteredTransactions = transactions.where((transaction) {
-    return transaction.expenseType == "expense";
-  }).toList();
-
+  final filteredTransactions = transactions
+      .where((transaction) => transaction.expenseType == "expense")
+      .toList();
   return filteredTransactions.map((transaction) {
-    final date = transaction.dateAndTime?.day;
-    final expense = transaction.amount?.toInt();
-
-    return ExpenseData(date!, expense!);
+    final date = transaction.dateAndTime.day;
+    final expense = transaction.amount.toInt();
+    return ExpenseData(date, expense);
   }).toList();
 }
 
 List<ExpenseData> prepareChartData(List<Transaction> transactions) {
   return transactions.map((transaction) {
-    final date = transaction.dateAndTime?.day;
-    final expense = transaction.amount?.toInt();
-
-    return ExpenseData(date!, expense!);
+    final date = transaction.dateAndTime.day;
+    final expense = transaction.amount.toInt();
+    return ExpenseData(date, expense);
   }).toList();
 }
 
 class ExpenseData {
-  ExpenseData(this.date, this.expense);
-
   final int date;
   final int expense;
+
+  ExpenseData(this.date, this.expense);
 }
 
-Future<List<Transaction>> parseBankTransactions(
-    List<SmsMessage> messages) async {
-  List<Transaction> transactions = [];
+final bankTransactionRegex = RegExp(
+  r'(?:debit|credit|transaction|payment|transfer)(?:\s+from|to)?(?:\s+INR|\$)(?:\d+(?:\.\d+)?)(?:\s+on|\sat)(?:\s+\d{2}:\d{2})?(?:\s+on\s+\d{2}/\d{2}/\d{4})?',
+  caseSensitive: false,
+);
+final bankNameRegex = RegExp(
+  r'(?:(?:ICICI|HDFC|Axis|SBI|Kotak|Bank of Baroda|Yes Bank|IDBI|PNB|Citibank|HSBC|Standard Chartered)(?: Bank)?)',
+  caseSensitive: false,
+);
 
-  for (SmsMessage message in messages) {
-    final amount = extractAmount(message.body);
-    final date = extractDate(message.body);
-    final referenceNumber = extractReferenceNumber(message.body);
-    final debitCredit = extractDebitCredit(message.body);
-    final name = extractName(message.body);
+List<SmsMessage> filterBankTransactions(List<SmsMessage> messages) {
+  final filteredMessages = <SmsMessage>[];
+  debugPrint(messages.length.toString());
+  for (final message in messages) {
+    final body = message.body
+        ?.toLowerCase(); // Convert to lowercase for case-insensitive matching
 
-    if (amount != null && date != null) {
-      transactions.add(Transaction(
-        amount: amount.toInt(),
-        dateAndTime: date,
-        name: name ?? "", // Name might be null if not applicable
-        typeOfTransaction:
-            debitCredit ?? "debit", // Debit by default if not specified
-        expenseType: "", // Expense type not provided in the SMS examples
-        transactionReferanceNumber:
-            referenceNumber ?? 0, // Reference number might be null
-      ));
+    // Check if the message contains bank-related keywords or matches the regular expressions
+    if (body != null &&
+        (bankTransactionRegex.hasMatch(body) || bankNameRegex.hasMatch(body))) {
+      filteredMessages.add(message);
     }
   }
-
-  return transactions;
+  return filteredMessages;
 }
 
-double? extractAmount(String? message) {
-  final amountMatch = amountPattern.firstMatch(message!);
-  if (amountMatch != null) {
-    return double.parse(amountMatch.group(1)!);
-  }
-  return null;
+void parseBankTransactions(List bankMessages) {
+  final nameRegex = RegExp(r";.*\.");
+  final amountRegex = RegExp(r"R.*[0-9]*\.[0-9]+");
+  final accountNumberRegex = RegExp(r"Acct\s+([\w]+)");
+  final dateRegex = RegExp(r"on\s+([\w-]+)");
+  final transactionTypeRegex = RegExp(r"[A-Za-z]+.*\.");
+
+  bankMessages.forEach((element) {
+    // debugPrint(element.body);
+    Match? nameMatch = transactionTypeRegex.firstMatch(element.body);
+    debugPrint(nameMatch?.group(0));
+  });
 }
 
-DateTime? extractDate(String? message) {
-  final dateMatch = datePattern.firstMatch(message!);
-  if (dateMatch != null) {
-    final day = int.parse(dateMatch.group(1)!);
-    final month = monthMap[dateMatch.group(2)!];
-    final year = int.parse(dateMatch.group(3)!);
-    return DateTime(year, month!, day);
-  }
-  return null;
-}
+// List<Transaction> parseBankTransactions(List messages) {
+//   final transactionRegex = RegExp(
+//     r"(?i)(?:\b(?:debited|credited)\b\s+for\s+Rs\s+([0-9,.]+)\)\s+on\s+([0-9]{2}-[A-Z]{3}-[0-9]{2})\s+([^\s]+(?:\s+[^\s]+)?)(?:\s+trf\s+to\s+([^\s]+))?(?:\s+Refno\s+([0-9]+))?(?:\s+.*)?",
+//     caseSensitive: false,
+//     multiLine: true,
+//   );
 
-int? extractReferenceNumber(String? message) {
-  final refMatch = refPattern.firstMatch(message!);
-  if (refMatch != null) {
-    final referenceString = refMatch.group(1);
-    if (referenceString != null) {
-      try {
-        return int.parse(referenceString);
-      } catch (e) {
-        // Handle the case where the extracted string cannot be parsed to int
-        return null;
-      }
-    }
-  }
-  return null;
-}
+//   final transactions = <Transaction>[];
+//   for (final message in messages) {
+//     final matches = transactionRegex.allMatches(message);
+//     for (final match in matches) {
+//       final amount = double.parse(match.group(1)!.replaceAll(",", ""));
+//       final dateAndTime = DateTime.parse(match.group(2)!);
+//       final name = match.group(3)!;
+//       final typeOfTransaction =
+//           match.group(1) == "debited" ? "Debit" : "Credit";
+//       final expenseType = match.group(4);
+//       final transactionReferanceNumber =
+//           match.group(5) != null ? int.parse(match.group(5)!) : null;
+//       transactions.add(Transaction(
+//         amount: amount,
+//         dateAndTime: dateAndTime,
+//         name: name,
+//         typeOfTransaction: typeOfTransaction,
+//         expenseType: expenseType.toString(),
+//         transactionReferanceNumber: transactionReferanceNumber?.toInt() != null
+//             ? transactionReferanceNumber!.toInt()
+//             : 0,
+//       ));
+//     }
+//   }
+//   return transactions;
+// }
 
-String? extractDebitCredit(String? message) {
-  if (debitCreditPattern.hasMatch(message!)) {
-    return "debit";
-  } else if (creditPattern.hasMatch(message)) {
-    return "credit";
-  }
-  return null;
-}
+// Example usage:
+// final messages = [
+//   "ICICI Bank Acct XX692 debited for Rs 1021.00 on 04-Apr-24; Aman Kumar Ojha credited. UPI:446151474748. Call 18002662 for dispute. SMS BLOCK 692 to 9215676766.",
+//   "Dear UPI user A/C X5488 debited by 156.0 on date 21Apr24 trf to K L SONS Refno 447860130589. If not u? call 1800111109. -SBI",
+//   // Add more transaction messages here
+// ];
 
-String? extractName(String? message) {
-  final nameMatch = namePattern.firstMatch(message!);
-  return nameMatch?.group(1);
-}
+// final transactions = searchTransactions(messages);
 
-// Regular expressions used for parsing
-final amountPattern = RegExp(r"debited by|for Rs (\d+\.\d+)");
-final datePattern = RegExp(r"on (\d{2}-\w{3}-\d{2})");
-final refPattern = RegExp(r"Refno|UPI:(\d+)");
-final debitCreditPattern = RegExp(r"debited");
-final creditPattern = RegExp(r"credited");
-final namePattern = RegExp(r"; (.*?) credited");
+// // Display the extracted transactions
+// for (final transaction in transactions) {
+//   print("Amount: ${transaction.amount}");
+//   print("Date and Time: ${transaction.dateAndTime}");
+//   print("Name: ${transaction.name}");
+//   print("Type of Transaction: ${transaction.typeOfTransaction}");
+//   print("Expense Type: ${transaction.expenseType}");
+//   print("Transaction Reference Number: ${transaction.transactionReferanceNumber}");
+//   print("----------------------");
+// }
 
-// Month mapping for date parsing
-final monthMap = {
-  "Jan": 1,
-  "Feb": 2,
-  "Mar": 3,
-  "Apr": 4,
-  "May": 5,
-  "Jun": 6,
-  "Jul": 7,
-  "Aug": 8,
-  "Sep": 9,
-  "Oct": 10,
-  "Nov": 11,
-  "Dec": 12,
-};

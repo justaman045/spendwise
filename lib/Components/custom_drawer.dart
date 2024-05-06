@@ -1,6 +1,5 @@
 import "package:flutter/material.dart";
 import "package:flutter_screenutil/flutter_screenutil.dart";
-import "package:flutter_sms_inbox/flutter_sms_inbox.dart";
 import "package:get/get.dart";
 import "package:spendwise/Requirements/data.dart";
 import "package:spendwise/Requirements/transaction.dart";
@@ -16,7 +15,7 @@ class CustomDrawer extends StatelessWidget {
     required this.scaffoldKey,
   });
 
-  final List<SmsMessage> bankTransaction;
+  final List<Transaction> bankTransaction;
   final GlobalKey scaffoldKey;
 
   @override
@@ -92,7 +91,7 @@ class CustomDrawer extends StatelessWidget {
                     pageTitle: "All Transactions",
                     chartTitle: "All Transactions from SMS",
                     chartType: "Transaction",
-                    transactioncustom: transactions,
+                    transactioncustom: bankTransaction,
                   ),
                   curve: customCurve,
                   transition: customTrans,
@@ -114,7 +113,9 @@ class CustomDrawer extends StatelessWidget {
               if (ModalRoute.of(context)?.settings.name != routes[6]) {
                 Get.to(
                   routeName: routes[6],
-                  () => const UserProfile(),
+                  () => UserProfile(
+                    bankTransaction: bankTransaction,
+                  ),
                   curve: customCurve,
                   transition: customTrans,
                   duration: duration,

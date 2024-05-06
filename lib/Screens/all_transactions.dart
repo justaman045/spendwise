@@ -22,6 +22,7 @@ class AllTransactions extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // debugPrint(transactioncustom.length.toString());
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -35,35 +36,45 @@ class AllTransactions extends StatelessWidget {
         ),
       ),
       body: SafeArea(
-          child: Column(
-        children: [
-          TransactionCharts(
-            chartTitleCustom: chartTitle,
-            chartNameOne: chartType,
-            chartOne: transactioncustom,
-          ),
-          Expanded(
-            child: ListView.builder(
-              itemCount:
-                  transactioncustom.length, // Use todaysTransactions length
-              itemBuilder: (context, index) {
-                final transaction = transactioncustom[index];
-                return TransactionWidget(
-                  expenseType: transaction.expenseType,
-                  width: getScreenWidth(context),
-                  amount: transaction.amount,
-                  dateAndTime: transaction.dateAndTime,
-                  name: transaction.name,
-                  typeOfTransaction: transaction.typeOfTransaction,
-                  height: getScreenHeight(context),
-                  transactionReferanceNumber:
-                      transaction.transactionReferanceNumber,
-                );
-              },
-            ),
-          ),
-        ],
-      )),
+        child: transactioncustom.isEmpty
+            ? Center(
+                child: Text(
+                  "No Transactions Recorded",
+                  style: TextStyle(
+                    fontSize: 20.r,
+                  ),
+                ),
+              )
+            : Column(
+                children: [
+                  TransactionCharts(
+                    chartTitleCustom: chartTitle,
+                    chartNameOne: chartType,
+                    chartOne: transactioncustom,
+                  ),
+                  Expanded(
+                    child: ListView.builder(
+                      itemCount: transactioncustom
+                          .length, // Use todaysTransactions length
+                      itemBuilder: (context, index) {
+                        final transaction = transactioncustom[index];
+                        return TransactionWidget(
+                          expenseType: transaction.expenseType,
+                          width: getScreenWidth(context),
+                          amount: transaction.amount.toInt(),
+                          dateAndTime: transaction.dateAndTime,
+                          name: transaction.name,
+                          typeOfTransaction: transaction.typeOfTransaction,
+                          height: getScreenHeight(context),
+                          transactionReferanceNumber:
+                              transaction.transactionReferanceNumber,
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              ),
+      ),
     );
   }
 }

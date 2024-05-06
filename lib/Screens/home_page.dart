@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_sms_inbox/flutter_sms_inbox.dart';
 import 'package:get/get.dart';
 import 'package:spendwise/Components/available_balance.dart';
 import 'package:spendwise/Components/current_flow.dart';
@@ -16,12 +15,10 @@ import 'package:spendwise/Screens/cash_entry.dart';
 class HomePage extends StatelessWidget {
   const HomePage({super.key, required this.bankTransaction});
 
-  final List<SmsMessage> bankTransaction;
+  final List<Transaction> bankTransaction;
 
   @override
   Widget build(BuildContext context) {
-    final todaysTransactions =
-        transactions.where(isTransactionForToday).toList();
     GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
     return Scaffold(
@@ -35,18 +32,19 @@ class HomePage extends StatelessWidget {
           children: [
             AvailableBalance(
               width: 300.h,
-              intakeamount: totalIncomeThisMonth().toInt(),
-              expense: totalExpenseThisMonth().toInt(),
+              intakeamount: totalIncomeThisMonth(bankTransaction).toInt(),
+              expense: totalExpenseThisMonth(bankTransaction).toInt(),
+              bankTransaction: bankTransaction,
             ),
             CurrentFlow(
               width: getScreenWidth(context),
-              income: totalIncomeThisMonth(),
-              expense: totalExpenseThisMonth(),
+              bankTransactions: bankTransaction,
             ),
             RecentTransactionHeader(
+              bankTransactions: bankTransaction,
               width: getScreenWidth(context),
             ),
-            if (todaysTransactions.isEmpty) ...[
+            if (bankTransaction.isEmpty) ...[
               Expanded(
                 child: Center(
                   child: Text(
@@ -61,14 +59,14 @@ class HomePage extends StatelessWidget {
             ] else ...[
               Expanded(
                 child: ListView.builder(
-                  itemCount: todaysTransactions
-                      .length, // Use todaysTransactions length
+                  itemCount:
+                      bankTransaction.length, // Use todaysTransactions length
                   itemBuilder: (context, index) {
-                    final transaction = todaysTransactions[index];
+                    final transaction = bankTransaction[index];
                     return TransactionWidget(
                       expenseType: transaction.expenseType,
                       width: 100.w,
-                      amount: transaction.amount,
+                      amount: transaction.amount.toInt(),
                       dateAndTime: transaction.dateAndTime,
                       name: transaction.name,
                       typeOfTransaction: transaction.typeOfTransaction,

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "436894081806",
+    "project_id": "spendwise-eef57",
+    "storage_bucket": "spendwise-eef57.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:436894081806:android:de80525cf27d160848ad5f",
+        "android_client_info": {
+          "package_name": "app.vercel.justaman045.spendwise"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAVCotiuS8GEej_FYeYMBpT4kbMvLdRif0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

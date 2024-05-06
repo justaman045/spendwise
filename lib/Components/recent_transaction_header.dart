@@ -9,9 +9,11 @@ class RecentTransactionHeader extends StatelessWidget {
   const RecentTransactionHeader({
     super.key,
     required this.width,
+    required this.bankTransactions,
   });
 
   final double width;
+  final List<Transaction> bankTransactions;
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +40,7 @@ class RecentTransactionHeader extends StatelessWidget {
                   pageTitle: "All Transactions",
                   chartTitle: "All Transactions from SMS",
                   chartType: "Transaction",
-                  transactioncustom: transactions,
+                  transactioncustom: bankTransactions,
                 ),
                 transition: customTrans,
                 curve: customCurve,

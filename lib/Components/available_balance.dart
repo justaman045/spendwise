@@ -12,11 +12,13 @@ class AvailableBalance extends StatelessWidget {
     required this.width,
     required this.intakeamount,
     required this.expense,
+    required this.bankTransaction,
   });
 
   final double width;
   final int intakeamount;
   final int expense;
+  final List<Transaction> bankTransaction;
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +30,7 @@ class AvailableBalance extends StatelessWidget {
           chartTitle: "This months Transactions from SMS",
           chartType: "Transaction",
           transactioncustom:
-              transactions.where(isTransactionForThisMonth).toList(),
+              bankTransaction.where(isTransactionForThisMonth).toList(),
         ),
         transition: customTrans,
         curve: customCurve,

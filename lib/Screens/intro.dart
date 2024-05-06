@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_sms_inbox/flutter_sms_inbox.dart';
 import 'package:get/get.dart';
 import 'package:spendwise/Components/responsive_methods.dart';
 import 'package:spendwise/Requirements/data.dart';
+import 'package:spendwise/Requirements/transaction.dart';
 import 'package:spendwise/Screens/login.dart';
 
 class Intro extends StatelessWidget {
   const Intro({super.key, required this.bankTransaction});
 
-  final List<SmsMessage> bankTransaction;
+  final List<Transaction> bankTransaction;
 
   @override
   Widget build(BuildContext context) {

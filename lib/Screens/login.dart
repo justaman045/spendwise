@@ -1,20 +1,32 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_sms_inbox/flutter_sms_inbox.dart';
 import 'package:get/get.dart';
 import 'package:spendwise/Components/gradient_color.dart';
 import 'package:spendwise/Requirements/data.dart';
+import 'package:spendwise/Requirements/transaction.dart';
 import 'package:spendwise/Screens/home_page.dart';
 import 'package:spendwise/Screens/reset_password.dart';
 import 'package:spendwise/Screens/signup.dart';
 
-class Login extends StatelessWidget {
+final _formKey = GlobalKey<FormState>();
+
+class Login extends StatefulWidget {
   const Login({super.key, required this.bankTransaction});
 
-  final List<SmsMessage> bankTransaction;
+  final List<Transaction> bankTransaction;
 
   @override
+  State<Login> createState() => _LoginState();
+}
+
+class _LoginState extends State<Login> {
+  @override
   Widget build(BuildContext context) {
+    final TextEditingController emailEditingController =
+        TextEditingController();
+    final TextEditingController passwordEditingController =
+        TextEditingController();
     return Scaffold(
       body: Stack(
         children: [
@@ -106,27 +118,50 @@ class Login extends StatelessWidget {
                     ),
                   ),
                 ),
-                Padding(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 20.w,
-                    vertical: 20.h,
-                  ),
-                  child: TextFormField(
-                    decoration: const InputDecoration(
-                      hintText: "Email",
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 20.w,
-                    vertical: 20.h,
-                  ),
-                  child: TextFormField(
-                    obscureText: true,
-                    decoration: const InputDecoration(
-                      hintText: "Password",
-                    ),
+                Form(
+                  key: _formKey,
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 20.w,
+                          vertical: 20.h,
+                        ),
+                        child: TextFormField(
+                          validator: (value) {
+                            if (!value!.contains("@") && value.contains(".")) {
+                              return "Enter correct email";
+                            }
+                            return null;
+                          },
+                          controller: emailEditingController,
+                          keyboardType: TextInputType.emailAddress,
+                          decoration: const InputDecoration(
+                            hintText: "Email",
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 20.w,
+                          vertical: 20.h,
+                        ),
+                        child: TextFormField(
+                          validator: (value) {
+                            if (value!.length < 8) {
+                              return "Password length should be at least 8 Charecters";
+                            }
+                            return null;
+                          },
+                          keyboardType: TextInputType.text,
+                          controller: passwordEditingController,
+                          obscureText: true,
+                          decoration: const InputDecoration(
+                            hintText: "Password",
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
                 Padding(
@@ -142,7 +177,7 @@ class Login extends StatelessWidget {
                           Get.off(
                             routeName: routes[2],
                             () => SignUp(
-                              bankTransaction: bankTransaction,
+                              bankTransaction: widget.bankTransaction,
                             ),
                             transition: customTrans,
                             curve: customCurve,
@@ -167,16 +202,23 @@ class Login extends StatelessWidget {
                         ),
                         width: 80.w,
                         child: TextButton(
-                          onPressed: () {
-                            Get.to(
-                              routeName: routes[3],
-                              () => HomePage(
-                                bankTransaction: bankTransaction,
-                              ),
-                              transition: customTrans,
-                              curve: customCurve,
-                              duration: duration,
-                            );
+                          onPressed: () async {
+                            if (_formKey.currentState!.validate()) {
+                              final userCredentials = await FirebaseAuth
+                                  .instance
+                                  .signInWithEmailAndPassword(
+                                      email: emailEditingController.text,
+                                      password: passwordEditingController.text);
+                              Get.to(
+                                routeName: routes[3],
+                                () => HomePage(
+                                  bankTransaction: widget.bankTransaction,
+                                ),
+                                transition: customTrans,
+                                curve: customCurve,
+                                duration: duration,
+                              );
+                            }
                           },
                           child: Text(
                             "Login",

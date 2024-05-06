@@ -1,3 +1,4 @@
+import "package:firebase_auth/firebase_auth.dart";
 import "package:flutter/material.dart";
 import "package:flutter_screenutil/flutter_screenutil.dart";
 import "package:get/get.dart";
@@ -8,9 +9,11 @@ import "package:spendwise/Screens/all_transactions.dart";
 import "package:spendwise/Screens/change_password.dart";
 import "package:spendwise/Screens/delete_account.dart";
 import "package:spendwise/Screens/edit_user_profile.dart";
+import "package:spendwise/Screens/intro.dart";
 
 class UserProfile extends StatelessWidget {
-  const UserProfile({super.key});
+  const UserProfile({super.key, required this.bankTransaction});
+  final List<Transaction> bankTransaction;
 
   @override
   Widget build(BuildContext context) {
@@ -120,7 +123,7 @@ class UserProfile extends StatelessWidget {
                     chartTitle: "Payments",
                     chartType: "Payments",
                     transactioncustom:
-                        transactions.where(isExpenseForThisMonth).toList(),
+                        bankTransaction.where(isExpenseForThisMonth).toList(),
                   ),
                   curve: customCurve,
                   transition: customTrans,
@@ -141,7 +144,7 @@ class UserProfile extends StatelessWidget {
                   routeName: "Monthly Income",
                   () => AllTransactions(
                     transactioncustom:
-                        transactions.where(isIncomeForThisMonth).toList(),
+                        bankTransaction.where(isIncomeForThisMonth).toList(),
                     pageTitle: "All Income",
                     chartTitle: "Income",
                     chartType: "Income",
@@ -198,7 +201,18 @@ class UserProfile extends StatelessWidget {
                 horizontal: 20.w,
               ),
               child: TextButton(
-                onPressed: () {},
+                onPressed: () async {
+                  await FirebaseAuth.instance.signOut();
+                  Get.offAll(
+                    routeName: routes[3],
+                    () => Intro(
+                      bankTransaction: bankTransaction,
+                    ),
+                    transition: customTrans,
+                    curve: customCurve,
+                    duration: duration,
+                  );
+                },
                 child: Text(
                   "Sign Out...",
                   style: TextStyle(fontSize: 15.r),

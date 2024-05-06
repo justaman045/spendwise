@@ -84,7 +84,7 @@ class TransactionWidget extends StatelessWidget {
                     SizedBox(
                       width: 150.w,
                       child: Text(
-                        name!,
+                        name.toString(),
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 15.r,
