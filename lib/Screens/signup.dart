@@ -147,10 +147,14 @@ class SignUp extends StatelessWidget {
                         child: TextFormField(
                           controller: emailEditingController,
                           validator: (value) {
-                            if (!value!.contains("@") && value.contains(".")) {
+                            if (!value!.contains("@")) {
                               return "Enter correct email";
+                            } else if (RegExp(
+                                    r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                                .hasMatch(emailEditingController.text)) {
+                              return null;
                             }
-                            return null;
+                            return "Please Enter correct Email ID";
                           },
                           decoration: const InputDecoration(
                             hintText: "Email",
