@@ -12,7 +12,7 @@ class DeleteAccount extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    TextEditingController PasswordEditingController = TextEditingController();
+    TextEditingController passwordEditingController = TextEditingController();
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(
@@ -63,7 +63,7 @@ class DeleteAccount extends StatelessWidget {
                     top: 10.h,
                   ),
                   child: TextFormField(
-                    controller: PasswordEditingController,
+                    controller: passwordEditingController,
                     validator: (value) {
                       if (value!.length < 8) {
                         return "Password should be atleast 8 Charcters";
@@ -120,7 +120,7 @@ class DeleteAccount extends StatelessWidget {
                           final user = FirebaseAuth.instance.currentUser;
                           final credential = EmailAuthProvider.credential(
                               email: user!.email.toString(),
-                              password: PasswordEditingController.text);
+                              password: passwordEditingController.text);
                           await user.reauthenticateWithCredential(credential);
                           await FirebaseAuth.instance.currentUser!
                               .delete()

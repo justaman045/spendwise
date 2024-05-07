@@ -13,7 +13,7 @@ class RecentTransactionHeader extends StatelessWidget {
   });
 
   final double width;
-  final List<Transaction> bankTransactions;
+  final List<CusTransaction> bankTransactions;
 
   @override
   Widget build(BuildContext context) {

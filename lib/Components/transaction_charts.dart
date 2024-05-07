@@ -10,7 +10,7 @@ class TransactionCharts extends StatelessWidget {
       required this.chartNameOne,
       required this.chartTitleCustom});
 
-  final List<Transaction> chartOne;
+  final List<CusTransaction> chartOne;
   final String chartNameOne;
   final String chartTitleCustom;
 

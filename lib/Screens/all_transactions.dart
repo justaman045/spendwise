@@ -28,7 +28,7 @@ class AllTransactions extends StatelessWidget {
       future: querySmsMessages(),
       builder: (BuildContext context, AsyncSnapshot snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
-          List<Transaction> bankTransactions = [];
+          List<CusTransaction> bankTransactions = [];
           if (type == "income") {
             bankTransactions = allIncomeThisMonth(snapshot.data);
           } else if (type == "expense") {

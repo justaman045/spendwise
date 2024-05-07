@@ -1,9 +1,9 @@
 import 'package:flutter_sms_inbox/flutter_sms_inbox.dart';
 
 final SmsQuery query = SmsQuery();
-List<Transaction> transactions = [];
+List<CusTransaction> transactions = [];
 
-class Transaction {
+class CusTransaction {
   final double amount;
   final DateTime dateAndTime;
   final String name;
@@ -11,7 +11,7 @@ class Transaction {
   final String expenseType;
   final int transactionReferanceNumber;
 
-  Transaction({
+  CusTransaction({
     required this.amount,
     required this.dateAndTime,
     required this.name,
@@ -35,7 +35,7 @@ class Account {
 
 final transactionss = [
   // Existing transactions with "expenseType" added
-  Transaction(
+  CusTransaction(
     amount: 22600,
     dateAndTime: DateTime(2024, 5, 1, 7, 00),
     name: "Salary",
@@ -43,7 +43,7 @@ final transactionss = [
     expenseType: "income",
     transactionReferanceNumber: 548354912476,
   ),
-  Transaction(
+  CusTransaction(
     amount: 5000,
     dateAndTime: DateTime(2024, 5, 3, 7, 00),
     name: "Credit Card Payment of ICIC Mine Credit Card",
@@ -61,53 +61,54 @@ final accounts = [
   ),
 ];
 
-bool isTransactionForToday(Transaction transaction) {
+bool isTransactionForToday(CusTransaction transaction) {
   final today = DateTime.now();
   return transaction.dateAndTime.year == today.year &&
       transaction.dateAndTime.month == today.month &&
       transaction.dateAndTime.day == today.day;
 }
 
-bool isTransactionForThisMonth(Transaction transaction) {
+bool isTransactionForThisMonth(CusTransaction transaction) {
   final today = DateTime.now();
   return transaction.dateAndTime.year == today.year &&
       transaction.dateAndTime.month == today.month;
 }
 
-bool isExpenseForThisMonth(Transaction transaction) {
+bool isExpenseForThisMonth(CusTransaction transaction) {
   final today = DateTime.now();
   return transaction.dateAndTime.year == today.year &&
       transaction.dateAndTime.month == today.month &&
       transaction.expenseType == "expense";
 }
 
-bool isIncomeForThisMonth(Transaction transaction) {
+bool isIncomeForThisMonth(CusTransaction transaction) {
   final today = DateTime.now();
   return transaction.dateAndTime.year == today.year &&
       transaction.dateAndTime.month == today.month &&
       transaction.expenseType == "income";
 }
 
-List<Transaction> countTransactionsThisMonth(List<Transaction> transactions) {
+List<CusTransaction> countTransactionsThisMonth(
+    List<CusTransaction> transactions) {
   final currentMonth = DateTime.now().month;
   return transactions
       .where((transaction) => transaction.dateAndTime.month == currentMonth)
       .toList();
 }
 
-List<Transaction> allIncomeThisMonth(List<Transaction> transactions) {
+List<CusTransaction> allIncomeThisMonth(List<CusTransaction> transactions) {
   return transactions
       .where((transaction) => isIncomeForThisMonth(transaction))
       .toList();
 }
 
-List<Transaction> allExpenseThisMonth(List<Transaction> transactions) {
+List<CusTransaction> allExpenseThisMonth(List<CusTransaction> transactions) {
   return transactions
       .where((transaction) => isExpenseForThisMonth(transaction))
       .toList();
 }
 
-double totalExpenseThisMonth(List<Transaction> transactions) {
+double totalExpenseThisMonth(List<CusTransaction> transactions) {
   final currentMonth = DateTime.now().month;
   double expense = 0;
   for (var element in transactions) {
@@ -120,7 +121,7 @@ double totalExpenseThisMonth(List<Transaction> transactions) {
   return expense;
 }
 
-double totalIncomeThisMonth(List<Transaction> transactions) {
+double totalIncomeThisMonth(List<CusTransaction> transactions) {
   final currentMonth = DateTime.now().month;
   double income = 0;
   for (var element in transactions) {
@@ -133,7 +134,7 @@ double totalIncomeThisMonth(List<Transaction> transactions) {
   return income;
 }
 
-List<ExpenseData> expenseChart(List<Transaction> transactions) {
+List<ExpenseData> expenseChart(List<CusTransaction> transactions) {
   final filteredTransactions = transactions
       .where((transaction) => transaction.expenseType == "expense")
       .toList();
@@ -144,7 +145,7 @@ List<ExpenseData> expenseChart(List<Transaction> transactions) {
   }).toList();
 }
 
-List<ExpenseData> prepareChartData(List<Transaction> transactions) {
+List<ExpenseData> prepareChartData(List<CusTransaction> transactions) {
   return transactions.map((transaction) {
     final date = transaction.dateAndTime.day;
     final expense = transaction.amount.toInt();
@@ -159,7 +160,7 @@ class ExpenseData {
   ExpenseData(this.date, this.expense);
 }
 
-Future<List<Transaction>> querySmsMessages() async {
+Future<List<CusTransaction>> querySmsMessages() async {
   // final message = await query.querySms(
   //   kinds: [
   //     SmsQueryKind.inbox,

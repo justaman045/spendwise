@@ -1,3 +1,4 @@
+import "package:cloud_firestore/cloud_firestore.dart";
 import "package:firebase_auth/firebase_auth.dart";
 import "package:flutter/material.dart";
 import "package:flutter_screenutil/flutter_screenutil.dart";
@@ -21,6 +22,9 @@ class SignUp extends StatelessWidget {
         TextEditingController();
     final TextEditingController cpasswordEditingController =
         TextEditingController();
+    final TextEditingController dreamSavingsController =
+        TextEditingController();
+    final TextEditingController userNameController = TextEditingController();
     return Scaffold(
       body: Stack(
         children: [
@@ -82,195 +86,266 @@ class SignUp extends StatelessWidget {
               ),
             ),
           ),
-          SafeArea(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: EdgeInsets.only(
-                    left: 20.w,
-                    top: 80.h,
-                  ),
-                  child: Text(
-                    "Create Account",
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 30.r,
+          SingleChildScrollView(
+            child: SafeArea(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(
+                      left: 20.w,
+                      top: 80.h,
                     ),
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(
-                    left: 20.w,
-                    top: 5.h,
-                  ),
-                  child: Text(
-                    "Create a Account to keep a track of your money",
-                    style: TextStyle(
-                      fontSize: 15.r,
-                    ),
-                  ),
-                ),
-                Form(
-                  key: _formKey,
-                  child: Column(
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.only(
-                          left: 20.w,
-                          right: 20.w,
-                          top: 50.h,
-                          bottom: 10.h,
-                        ),
-                        child: TextFormField(
-                          controller: nameEditingController,
-                          validator: (value) {
-                            if (value!.length < 4) {
-                              return "Enter Correct Name";
-                            } else if (value.length > 20) {
-                              return "Name can only be atleast 20 charecters";
-                            }
-                            return null;
-                          },
-                          decoration: const InputDecoration(
-                            hintText: "Full Name",
-                          ),
-                        ),
+                    child: Text(
+                      "Create Account",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 30.r,
                       ),
-                      Padding(
-                        padding: EdgeInsets.only(
-                          left: 20.w,
-                          right: 20.w,
-                          top: 10.h,
-                          bottom: 10.h,
-                        ),
-                        child: TextFormField(
-                          controller: emailEditingController,
-                          validator: (value) {
-                            if (!value!.contains("@")) {
-                              return "Enter correct email";
-                            } else if (RegExp(
-                                    r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
-                                .hasMatch(emailEditingController.text)) {
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(
+                      left: 20.w,
+                      top: 5.h,
+                    ),
+                    child: Text(
+                      "Create a Account to keep a track of your money",
+                      style: TextStyle(
+                        fontSize: 15.r,
+                      ),
+                    ),
+                  ),
+                  Form(
+                    key: _formKey,
+                    child: Column(
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.only(
+                            left: 20.w,
+                            right: 20.w,
+                            top: 50.h,
+                            bottom: 10.h,
+                          ),
+                          child: TextFormField(
+                            controller: nameEditingController,
+                            validator: (value) {
+                              if (value!.length < 4) {
+                                return "Enter Correct Name";
+                              } else if (value.length > 20) {
+                                return "Name can only be atleast 20 charecters";
+                              }
                               return null;
-                            }
-                            return "Please Enter correct Email ID";
-                          },
-                          decoration: const InputDecoration(
-                            hintText: "Email",
+                            },
+                            decoration: const InputDecoration(
+                              hintText: "Full Name",
+                            ),
                           ),
                         ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(
-                          left: 20.w,
-                          right: 20.w,
-                          top: 10.h,
-                          bottom: 10.h,
-                        ),
-                        child: TextFormField(
-                          controller: passwordEditingController,
-                          validator: (value) {
-                            if (value!.length < 8) {
-                              return "Password length should be at least 8 Charecters";
-                            }
-                            return null;
-                          },
-                          obscureText: true,
-                          decoration: const InputDecoration(
-                            hintText: "Password",
+                        Padding(
+                          padding: EdgeInsets.only(
+                            left: 20.w,
+                            right: 20.w,
+                            top: 10.h,
+                            bottom: 10.h,
+                          ),
+                          child: TextFormField(
+                            controller: emailEditingController,
+                            validator: (value) {
+                              if (!value!.contains("@")) {
+                                return "Enter correct email";
+                              } else if (RegExp(
+                                      r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                                  .hasMatch(emailEditingController.text)) {
+                                return null;
+                              }
+                              return "Please Enter correct Email ID";
+                            },
+                            decoration: const InputDecoration(
+                              hintText: "Email",
+                            ),
                           ),
                         ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(
-                          left: 20.w,
-                          right: 20.w,
-                          top: 10.h,
-                          bottom: 10.h,
-                        ),
-                        child: TextFormField(
-                          controller: cpasswordEditingController,
-                          validator: (value) {
-                            if (value!.length < 8) {
-                              return "Password length should be at least 8 Charecters";
-                            }
-                            if (value != passwordEditingController.text) {
-                              return "Passwords do not match";
-                            }
-                            return null;
-                          },
-                          obscureText: true,
-                          decoration: const InputDecoration(
-                            hintText: "Confirm Password",
+                        Padding(
+                          padding: EdgeInsets.only(
+                            left: 20.w,
+                            right: 20.w,
+                            top: 10.h,
+                            bottom: 10.h,
+                          ),
+                          child: TextFormField(
+                            controller: passwordEditingController,
+                            validator: (value) {
+                              if (value!.length < 8) {
+                                return "Password length should be at least 8 Charecters";
+                              }
+                              return null;
+                            },
+                            obscureText: true,
+                            decoration: const InputDecoration(
+                              hintText: "Password",
+                            ),
                           ),
                         ),
-                      ),
-                    ],
+                        Padding(
+                          padding: EdgeInsets.only(
+                            left: 20.w,
+                            right: 20.w,
+                            top: 10.h,
+                            bottom: 10.h,
+                          ),
+                          child: TextFormField(
+                            controller: cpasswordEditingController,
+                            validator: (value) {
+                              if (value!.length < 8) {
+                                return "Password length should be at least 8 Charecters";
+                              }
+                              if (value != passwordEditingController.text) {
+                                return "Passwords do not match";
+                              }
+                              return null;
+                            },
+                            obscureText: true,
+                            decoration: const InputDecoration(
+                              hintText: "Confirm Password",
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(
+                            left: 20.w,
+                            right: 20.w,
+                            top: 10.h,
+                            bottom: 10.h,
+                          ),
+                          child: TextFormField(
+                            controller: userNameController,
+                            decoration: const InputDecoration(
+                              hintText: "Username (optional)",
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(
+                            left: 20.w,
+                            right: 20.w,
+                            top: 10.h,
+                            bottom: 10.h,
+                          ),
+                          child: TextFormField(
+                            keyboardType: TextInputType.number,
+                            controller: dreamSavingsController,
+                            validator: (value) {
+                              if (value!.isEmpty) {
+                                return "You have to give a Amount between 50 - 100000";
+                              }
+                              return null;
+                            },
+                            decoration: const InputDecoration(
+                              hintText: "Dream Amount to Save",
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(
-                    top: 60.h,
-                    right: 20.w,
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      TextButton(
-                        onPressed: () {
-                          Get.off(
-                            routeName: routes[1],
-                            () => const Login(),
-                            transition: customTrans,
-                            curve: customCurve,
-                            duration: duration,
-                          );
-                        },
-                        child: Text(
-                          "Login",
-                          style: TextStyle(
-                            fontSize: 13.r,
-                          ),
-                        ),
-                      ),
-                      Container(
-                        decoration: BoxDecoration(
-                          gradient: colorsOfGradient(),
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(10.w),
-                          ),
-                        ),
-                        width: 150.w,
-                        child: TextButton(
-                          onPressed: () async {
-                            if (_formKey.currentState!.validate()) {
-                              await FirebaseAuth.instance
-                                  .createUserWithEmailAndPassword(
-                                      email: emailEditingController.text,
-                                      password: passwordEditingController.text);
-                              Get.offAll(
-                                routeName: routes[3],
-                                () => const HomePage(),
-                                transition: customTrans,
-                                curve: customCurve,
-                                duration: duration,
-                              );
-                            }
+                  Padding(
+                    padding: EdgeInsets.only(
+                      top: 60.h,
+                      right: 20.w,
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        TextButton(
+                          onPressed: () {
+                            Get.off(
+                              routeName: routes[1],
+                              () => const Login(),
+                              transition: customTrans,
+                              curve: customCurve,
+                              duration: duration,
+                            );
                           },
                           child: Text(
-                            "Create Account",
+                            "Login",
                             style: TextStyle(
-                              color: Colors.white,
                               fontSize: 13.r,
                             ),
                           ),
                         ),
-                      ),
-                    ],
+                        Container(
+                          decoration: BoxDecoration(
+                            gradient: colorsOfGradient(),
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(10.w),
+                            ),
+                          ),
+                          width: 150.w,
+                          child: TextButton(
+                            onPressed: () async {
+                              if (_formKey.currentState!.validate()) {
+                                try {
+                                  await FirebaseAuth.instance
+                                      .createUserWithEmailAndPassword(
+                                          email: emailEditingController.text,
+                                          password:
+                                              passwordEditingController.text)
+                                      .then(
+                                    (value) async {
+                                      await value.user?.updateDisplayName(
+                                          nameEditingController.text);
+                                      await FirebaseFirestore.instance
+                                          .collection("Users")
+                                          .doc(value.user!.uid)
+                                          .set({
+                                        "email": value.user!.email,
+                                        "name": nameEditingController.text,
+                                        "username": userNameController
+                                                .text.isEmpty
+                                            ? value.user!.email!.split("@")[0]
+                                            : userNameController.text,
+                                        "dreamToSave":
+                                            dreamSavingsController.text,
+                                        "dateOfJoining": DateTime.now()
+                                      }).then(
+                                        (value) => Get.offAll(
+                                          routeName: routes[3],
+                                          () => const HomePage(),
+                                          transition: customTrans,
+                                          curve: customCurve,
+                                          duration: duration,
+                                        ),
+                                      );
+                                    },
+                                  );
+                                } on FirebaseAuthException catch (e) {
+                                  if (e.code == "email-already-in-use") {
+                                    Get.snackbar(
+                                      "Error",
+                                      "Email already being used by some user, Try resetting the password.",
+                                      snackPosition: SnackPosition.TOP,
+                                    );
+                                  } else {
+                                    debugPrint(e.code);
+                                  }
+                                }
+                              }
+                            },
+                            child: Text(
+                              "Create Account",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 13.r,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ],

@@ -14,7 +14,7 @@ class AvailableBalance extends StatelessWidget {
   });
 
   final double width;
-  final List<Transaction> bankTransaction;
+  final List<CusTransaction> bankTransaction;
 
   @override
   Widget build(BuildContext context) {

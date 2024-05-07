@@ -3,11 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:spendwise/Requirements/data.dart';
 import 'package:spendwise/Screens/home_page.dart';
 import 'package:spendwise/Screens/intro.dart';
-import 'package:spendwise/Screens/login.dart';
-import 'package:spendwise/Screens/signup.dart';
 import 'package:flutter_sms_inbox/flutter_sms_inbox.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
@@ -57,12 +54,6 @@ class _SpendWiseState extends State<SpendWise> {
         return GetMaterialApp(
           title: "SpendWise",
           debugShowCheckedModeBanner: false,
-          routes: {
-            routes[0]: (context) => const Intro(),
-            routes[1]: (context) => const Login(),
-            routes[2]: (context) => const SignUp(),
-            routes[3]: (context) => const HomePage(),
-          },
           home: currentUser != null ? const HomePage() : const Intro(),
         );
       },

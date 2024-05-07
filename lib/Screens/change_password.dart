@@ -185,38 +185,6 @@ class ChangePassword extends StatelessWidget {
               ],
             ),
           ),
-          Padding(
-            padding: EdgeInsets.only(
-              right: 20.w,
-              top: 20.h,
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Container(
-                  width: 60.w,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10.r),
-                    gradient: LinearGradient(
-                      begin: Alignment.topRight,
-                      end: Alignment.bottomLeft,
-                      colors: [
-                        Colors.blue.shade300,
-                        Colors.blue.shade700,
-                      ],
-                    ),
-                  ),
-                  child: IconButton(
-                    onPressed: () {},
-                    icon: Icon(
-                      Icons.arrow_right_alt_outlined,
-                      size: 40.w,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
           Stack(
             children: [
               Padding(

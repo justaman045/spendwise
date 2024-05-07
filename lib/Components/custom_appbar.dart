@@ -7,16 +7,18 @@ import "package:spendwise/Screens/recognized_accounts.dart";
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   const CustomAppBar({
     super.key,
+    required this.username,
   });
 
   // final GlobalKey scaffolKey;
+  final String username;
 
   @override
   Widget build(BuildContext context) {
     return AppBar(
       title: Text(
-        "Welcome, $userName",
-        style: TextStyle(fontSize: 20.w),
+        "Welcome, $username",
+        style: TextStyle(fontSize: 20.r),
       ),
       centerTitle: false,
       // leading: IconButton(

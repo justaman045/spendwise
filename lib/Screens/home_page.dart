@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -20,19 +22,42 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  Future? _future;
+
+  Future<dynamic> getData() async {
+    final users = await FirebaseFirestore.instance.collection("Users").get();
+    final bankTransactions = await querySmsMessages();
+    return [users, bankTransactions];
+  }
+
+  @override
+  void initState() {
+    _future = getData();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
-    List<Transaction> bankTransaction = [];
+    List<CusTransaction> bankTransaction = [];
 
     return FutureBuilder(
-      future: querySmsMessages(),
+      future: _future,
       initialData: bankTransaction,
       builder: (BuildContext context, AsyncSnapshot snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
-          bankTransaction = snapshot.data;
+          bankTransaction = snapshot.data[1];
+          dynamic user;
+          for (dynamic use in snapshot.data[0].docs) {
+            if (use["email"].toString() ==
+                FirebaseAuth.instance.currentUser!.email) {
+              user = use;
+            }
+          }
           return Scaffold(
-            appBar: const CustomAppBar(),
+            appBar: CustomAppBar(
+              username: user["username"],
+            ),
             drawer: CustomDrawer(
               scaffoldKey: scaffoldKey,
             ),
