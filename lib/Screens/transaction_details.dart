@@ -2,7 +2,10 @@ import "package:flutter/material.dart";
 import "package:flutter_screenutil/flutter_screenutil.dart";
 import "package:get/get.dart";
 import "package:intl/intl.dart";
+import "package:spendwise/Components/details_button.dart";
 import "package:spendwise/Components/responsive_methods.dart";
+import "package:spendwise/Requirements/data.dart";
+import "package:spendwise/Screens/edit_transaction.dart";
 
 class TransactionDetails extends StatelessWidget {
   const TransactionDetails({
@@ -12,6 +15,7 @@ class TransactionDetails extends StatelessWidget {
     required this.dateTime,
     required this.transactionReferanceNumber,
     required this.expenseType,
+    required this.transactionType,
   });
 
   final String? toName;
@@ -19,6 +23,7 @@ class TransactionDetails extends StatelessWidget {
   final DateTime? dateTime;
   final int? transactionReferanceNumber;
   final String? expenseType;
+  final String transactionType;
 
   @override
   Widget build(BuildContext context) {
@@ -30,9 +35,10 @@ class TransactionDetails extends StatelessWidget {
               padding: EdgeInsets.only(top: 90.h),
               child: SizedBox(
                 width: 150.r,
-                child: const Center(
-                  child: Image(
-                    image: AssetImage("assets/resources/success.gif"),
+                child: Center(
+                  child: Image.asset(
+                    "assets/resources/Success2.gif",
+                    repeat: ImageRepeat.repeat,
                   ),
                 ),
               ),
@@ -95,11 +101,13 @@ class TransactionDetails extends StatelessWidget {
                     width: getScreenWidth(context),
                     btnText: "Share",
                     icon: const Icon(Icons.share),
+                    ontapFunc: () {},
                   ),
                   DetailsButton(
                     width: getScreenWidth(context),
                     btnText: "Print",
                     icon: const Icon(Icons.print),
+                    ontapFunc: () {},
                   ),
                 ],
               ),
@@ -224,7 +232,56 @@ class TransactionDetails extends StatelessWidget {
               ),
             ),
             Padding(
-              padding: EdgeInsets.symmetric(vertical: 35.h),
+              padding: EdgeInsets.only(
+                top: 50.h,
+                bottom: 10.h,
+              ),
+              child: Container(
+                width: 250.w,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(
+                      13.h,
+                    ),
+                  ),
+                  gradient: const LinearGradient(
+                    begin: Alignment.topRight,
+                    end: Alignment.bottomLeft,
+                    colors: [
+                      Colors.black54,
+                      Colors.black87,
+                    ],
+                  ),
+                ),
+                child: TextButton(
+                  onPressed: () {
+                    Get.to(
+                      routeName: "editTransaction",
+                      () => EditTransaction(
+                        amount: amount!,
+                        dateTime: dateTime!,
+                        expenseType: expenseType!,
+                        toName: toName!,
+                        transactionReferanceNumber: transactionReferanceNumber!,
+                        transactionType: transactionType,
+                      ),
+                      curve: customCurve,
+                      transition: customTrans,
+                      duration: duration,
+                    );
+                  },
+                  child: Text(
+                    "Edit Transaction",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 13.r,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(top: 10.h),
               child: Container(
                 width: 250.w,
                 decoration: BoxDecoration(
@@ -255,46 +312,6 @@ class TransactionDetails extends StatelessWidget {
                   ),
                 ),
               ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class DetailsButton extends StatelessWidget {
-  const DetailsButton({
-    super.key,
-    required this.width,
-    required this.btnText,
-    required this.icon,
-  });
-
-  final double width;
-  final String btnText;
-  final Icon icon;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(width * 0.04),
-        border: Border.all(
-          width: 1.w,
-        ),
-      ),
-      child: Padding(
-        padding: EdgeInsets.all(10.w),
-        child: Row(
-          children: [
-            icon,
-            SizedBox(
-              width: 7.w,
-            ),
-            Text(
-              btnText,
-              style: TextStyle(fontSize: 15.r),
             ),
           ],
         ),

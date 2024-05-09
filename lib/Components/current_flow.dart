@@ -38,7 +38,7 @@ class CurrentFlow extends StatelessWidget {
           child: CashFlow(
             width: width,
             flowText: "Income this Month",
-            flowAmount: income.toInt(),
+            flowAmount: totalIncomeThisMonth(bankTransactions).toInt(),
           ),
         ),
         GestureDetector(

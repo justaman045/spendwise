@@ -70,7 +70,13 @@ class AvailableBalance extends StatelessWidget {
                         "Rs. ",
                         style: TextStyle(
                           fontSize: 25.r,
-                          color: Colors.green,
+                          color: (totalIncomeThisMonth(bankTransaction) -
+                                          totalExpenseThisMonth(
+                                              bankTransaction))
+                                      .toDouble() >
+                                  0
+                              ? Colors.green
+                              : Colors.redAccent,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -82,7 +88,13 @@ class AvailableBalance extends StatelessWidget {
                             .toDouble(),
                         style: TextStyle(
                           fontSize: width * 0.12,
-                          color: Colors.green,
+                          color: (totalIncomeThisMonth(bankTransaction) -
+                                          totalExpenseThisMonth(
+                                              bankTransaction))
+                                      .toDouble() >
+                                  0
+                              ? Colors.green
+                              : Colors.redAccent,
                           fontWeight: FontWeight.bold,
                         ),
                       )

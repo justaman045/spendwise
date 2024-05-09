@@ -1,4 +1,8 @@
+import 'dart:math';
+
+import 'package:flutter/material.dart';
 import 'package:flutter_sms_inbox/flutter_sms_inbox.dart';
+import 'package:sqflite/sqflite.dart';
 
 final SmsQuery query = SmsQuery();
 List<CusTransaction> transactions = [];
@@ -10,6 +14,7 @@ class CusTransaction {
   final String typeOfTransaction;
   final String expenseType;
   final int transactionReferanceNumber;
+  final int toInclude;
 
   CusTransaction({
     required this.amount,
@@ -18,7 +23,183 @@ class CusTransaction {
     required this.typeOfTransaction,
     required this.expenseType,
     required this.transactionReferanceNumber,
+    this.toInclude = 1, // Set default value to true
   });
+
+  // Factory constructor to create a CusTransaction from a Map (used for database results)
+  factory CusTransaction.fromMap(Map<String, dynamic> map) => CusTransaction(
+        amount: map['amount'] as double,
+        dateAndTime: DateTime.parse(map['dateAndTime'] as String),
+        name: map['name'] as String,
+        typeOfTransaction: map['typeOfTransaction'] as String,
+        expenseType: map['expenseType'] as String,
+        transactionReferanceNumber: map['transactionReferanceNumber'] as int,
+        toInclude:
+            map['toInclude'] == 0 ? 0 : 1, // Handle null value with default
+      );
+
+  // Method to convert the CusTransaction object to a Map (used for database insertion)
+  Map<String, dynamic> toMap() => {
+        'amount': amount,
+        'dateAndTime': dateAndTime.toString(),
+        'name': name,
+        'typeOfTransaction': typeOfTransaction,
+        'expenseType': expenseType,
+        'transactionReferanceNumber': transactionReferanceNumber,
+        'toInclude': toInclude == 0 ? 0 : 1,
+      };
+
+  // Assuming you have a DatabaseHelper class (not shown here) that manages database operations
+
+  // **Create (Insert)**
+  static Future<void> insertTransaction(
+      Database db, CusTransaction transaction) async {
+    await db.insert(
+      'transactions', // Replace 'transactions' with your actual table name
+      transaction.toMap(),
+      conflictAlgorithm: ConflictAlgorithm.replace, // Replace on conflict
+    );
+  }
+
+  // **Read (Fetch All)**
+  static Future<List<CusTransaction>> getAllTransactions(Database db) async {
+    final List<Map<String, dynamic>> maps = await db.query('transactions');
+    return List.generate(maps.length, (i) => CusTransaction.fromMap(maps[i]));
+  }
+
+  // **Read (Fetch One by Reference Number)**
+  static Future<CusTransaction?> getTransactionByRef(
+      Database db, int refNumber) async {
+    final List<Map<String, dynamic>> maps = await db.query(
+      'transactions',
+      where: 'transactionReferanceNumber = ?',
+      whereArgs: [refNumber],
+    );
+    if (maps.isNotEmpty) {
+      return CusTransaction.fromMap(maps.first);
+    }
+    return null;
+  }
+
+  // **Update**
+  static Future<void> updateTransaction(
+      Database db, CusTransaction transaction) async {
+    await db.update(
+      'transactions',
+      transaction.toMap(),
+      where: 'transactionReferanceNumber = ?',
+      whereArgs: [transaction.transactionReferanceNumber],
+    );
+  }
+
+  // **Delete**
+  static Future<void> deleteTransaction(Database db, int refNumber) async {
+    await db.delete(
+      'transactions',
+      where: 'transactionReferanceNumber = ?',
+      whereArgs: [refNumber],
+    );
+  }
+}
+
+class DatabaseHelper {
+  static final DatabaseHelper _instance = DatabaseHelper._internal();
+
+  factory DatabaseHelper() {
+    return _instance;
+  }
+
+  DatabaseHelper._internal();
+
+  static const String tableName = 'transactions';
+
+  Database? _database;
+
+  Future<Database> get database async {
+    _database ??= await _initDatabase();
+    return _database!;
+  }
+
+  Future<Database> _initDatabase() async {
+    final dbPath = await getDatabasesPath();
+    final path = '$dbPath/spendwise.db';
+
+    // Create the database table with the new 'toInclude' column
+    final db = await openDatabase(path, onCreate: (db, version) {
+      db.execute('''
+        CREATE TABLE $tableName (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          amount REAL NOT NULL,
+          dateAndTime TEXT NOT NULL,
+          name TEXT NOT NULL,
+          typeOfTransaction TEXT NOT NULL,
+          expenseType TEXT,
+          transactionReferanceNumber INTEGER UNIQUE NOT NULL,
+          toInclude BOOLEAN DEFAULT TRUE  -- Add the new column with default value
+        )
+      ''');
+    }, version: 1);
+    return db;
+  }
+
+  // **Create (Insert)**
+  Future<void> insertTransaction(CusTransaction transaction) async {
+    final db = await database;
+    await db.insert(
+      tableName,
+      transaction.toMap(),
+      conflictAlgorithm: ConflictAlgorithm.replace, // Replace on conflict
+    );
+  }
+
+  // **Read (Fetch All)**
+  Future<List<CusTransaction>> getAllTransactions() async {
+    final db = await database;
+    final List<Map<String, dynamic>> maps = await db.query(tableName);
+    return List.generate(maps.length, (i) => CusTransaction.fromMap(maps[i]));
+  }
+
+  // **Read (Fetch One by Reference Number)**
+  Future<CusTransaction?> getTransactionByRef(int refNumber) async {
+    final db = await database;
+    final List<Map<String, dynamic>> maps = await db.query(
+      tableName,
+      where: 'transactionReferanceNumber = ?',
+      whereArgs: [refNumber],
+    );
+    if (maps.isNotEmpty) {
+      return CusTransaction.fromMap(maps.first);
+    }
+    return null;
+  }
+
+  // **Update**
+  Future<void> updateTransaction(CusTransaction transaction) async {
+    final db = await database;
+    await db.update(
+      tableName,
+      transaction.toMap(),
+      where: 'transactionReferanceNumber = ?',
+      whereArgs: [transaction.transactionReferanceNumber],
+    );
+  }
+
+  // **Delete**
+  Future<void> deleteTransaction(int refNumber) async {
+    final db = await database;
+    await db.delete(
+      tableName,
+      where: 'transactionReferanceNumber = ?',
+      whereArgs: [refNumber],
+    );
+  }
+}
+
+int generateUniqueRefNumber() {
+  // Combine current timestamp in milliseconds with a random number for uniqueness
+  final currentTime = DateTime.now().millisecondsSinceEpoch;
+  final random = Random();
+  return currentTime * 1000 + random.nextInt(1000);
 }
 
 class Account {
@@ -51,6 +232,14 @@ final transactionss = [
     expenseType: "expense",
     transactionReferanceNumber: 548354912476,
   ),
+  CusTransaction(
+    amount: 5000,
+    dateAndTime: DateTime(2024, 4, 3, 7, 00),
+    name: "Credit Card Payment of ICIC Mine Credit Card",
+    typeOfTransaction: "EMI",
+    expenseType: "expense",
+    transactionReferanceNumber: 548354912476,
+  ),
 ];
 
 final accounts = [
@@ -61,11 +250,14 @@ final accounts = [
   ),
 ];
 
-bool isTransactionForToday(CusTransaction transaction) {
+List<CusTransaction> allTodaysTransactions(List<CusTransaction> transaction) {
   final today = DateTime.now();
-  return transaction.dateAndTime.year == today.year &&
-      transaction.dateAndTime.month == today.month &&
-      transaction.dateAndTime.day == today.day;
+  return transaction
+      .where((transaction) =>
+          transaction.dateAndTime.month == today.month &&
+          transaction.dateAndTime.day == today.day &&
+          transaction.dateAndTime.year == today.year)
+      .toList();
 }
 
 bool isTransactionForThisMonth(CusTransaction transaction) {
@@ -78,14 +270,14 @@ bool isExpenseForThisMonth(CusTransaction transaction) {
   final today = DateTime.now();
   return transaction.dateAndTime.year == today.year &&
       transaction.dateAndTime.month == today.month &&
-      transaction.expenseType == "expense";
+      transaction.typeOfTransaction == "expense";
 }
 
 bool isIncomeForThisMonth(CusTransaction transaction) {
   final today = DateTime.now();
   return transaction.dateAndTime.year == today.year &&
       transaction.dateAndTime.month == today.month &&
-      transaction.expenseType == "income";
+      transaction.typeOfTransaction == "income";
 }
 
 List<CusTransaction> countTransactionsThisMonth(
@@ -113,7 +305,7 @@ double totalExpenseThisMonth(List<CusTransaction> transactions) {
   double expense = 0;
   for (var element in transactions) {
     if (element.dateAndTime.month == currentMonth) {
-      if (element.expenseType == "expense") {
+      if (element.typeOfTransaction == "expense") {
         expense += element.amount;
       }
     }
@@ -126,7 +318,7 @@ double totalIncomeThisMonth(List<CusTransaction> transactions) {
   double income = 0;
   for (var element in transactions) {
     if (element.dateAndTime.month == currentMonth) {
-      if (element.expenseType == "income") {
+      if (element.typeOfTransaction == "income") {
         income += element.amount;
       }
     }
@@ -134,9 +326,21 @@ double totalIncomeThisMonth(List<CusTransaction> transactions) {
   return income;
 }
 
+double totalAvailableBalance(List<CusTransaction> transactions) {
+  double income = 0;
+  for (var element in transactions) {
+    if (element.typeOfTransaction == "income") {
+      income += element.amount;
+    } else if (element.typeOfTransaction == "expense") {
+      income -= element.amount;
+    }
+  }
+  return income;
+}
+
 List<ExpenseData> expenseChart(List<CusTransaction> transactions) {
   final filteredTransactions = transactions
-      .where((transaction) => transaction.expenseType == "expense")
+      .where((transaction) => transaction.typeOfTransaction == "expense")
       .toList();
   return filteredTransactions.map((transaction) {
     final date = transaction.dateAndTime.day;
@@ -161,14 +365,20 @@ class ExpenseData {
 }
 
 Future<List<CusTransaction>> querySmsMessages() async {
-  // final message = await query.querySms(
-  //   kinds: [
-  //     SmsQueryKind.inbox,
-  //     SmsQueryKind.sent,
-  //   ],
-  //   count: 50000,
-  // );
-  // debugPrint('sms inbox messages: ${message.length}');
+  final message = await query.querySms(
+    kinds: [
+      SmsQueryKind.inbox,
+      SmsQueryKind.sent,
+    ],
+    count: 50000,
+  );
+  debugPrint('sms inbox messages: ${message.length}');
+
+  // debugPrint(onlineTransactions.docs.toString());
+
+  // transaction.map((onTrans) => debugPrint(onTrans.amount.toString()));
+
+  final dbTransactions = await DatabaseHelper().getAllTransactions();
 
   transactions = transactionss;
 
@@ -184,7 +394,7 @@ Future<List<CusTransaction>> querySmsMessages() async {
   // final testTrans = parseBankTransactions(filteredMessages);
   // ------------------------------------------------Area to test my Code----------------------------------
 
-  return transactions;
+  return dbTransactions;
 }
 
 final bankTransactionRegex = RegExp(
@@ -279,4 +489,3 @@ List<SmsMessage> filterBankTransactions(List<SmsMessage> messages) {
 //   print("Transaction Reference Number: ${transaction.transactionReferanceNumber}");
 //   print("----------------------");
 // }
-

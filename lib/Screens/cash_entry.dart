@@ -1,7 +1,9 @@
 import "package:flutter/material.dart";
+import "package:flutter/services.dart";
 import "package:flutter_screenutil/flutter_screenutil.dart";
 import "package:get/get.dart";
 import "package:spendwise/Requirements/data.dart";
+import "package:spendwise/Requirements/transaction.dart";
 
 final _formKey = GlobalKey<FormState>();
 
@@ -23,7 +25,7 @@ class _AddCashEntryState extends State<AddCashEntry> {
   String transactionReferanceNumber = "";
   @override
   void initState() {
-    expenseTypeEditingController.text = expenseType[0];
+    expenseTypeEditingController.text = typeOfExpense[0];
     typeOftransactionEditingController.text = typeOfTransaction[0];
     super.initState();
   }
@@ -69,6 +71,17 @@ class _AddCashEntryState extends State<AddCashEntry> {
                       height: 60.h,
                       child: TextFormField(
                         controller: nameEditingController,
+                        inputFormatters: <TextInputFormatter>[
+                          FilteringTextInputFormatter.allow(RegExp('[a-z A-Z]'))
+                        ],
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            return "Add a Recipient name";
+                          } else if (value.length < 4) {
+                            return "Name must be atleast 4 charecters";
+                          }
+                          return null;
+                        },
                         decoration: InputDecoration(
                           label: Text(
                             "Recipient Name",
@@ -93,7 +106,19 @@ class _AddCashEntryState extends State<AddCashEntry> {
                       height: 60.h,
                       child: TextFormField(
                         controller: amountEditingController,
-                        keyboardType: TextInputType.number,
+                        keyboardType: const TextInputType.numberWithOptions(
+                            decimal: true, signed: true),
+                        inputFormatters: [
+                          FilteringTextInputFormatter.allow(RegExp(r'^\+?\d*'))
+                        ],
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            return "Enter a amount that have been paid or recived";
+                          } else if (int.parse(value) <= 1) {
+                            return "Amount cannot be in negetive";
+                          }
+                          return null;
+                        },
                         decoration: InputDecoration(
                           label: Text(
                             "Amount",
@@ -119,7 +144,7 @@ class _AddCashEntryState extends State<AddCashEntry> {
                       child: DropdownButtonFormField(
                         decoration: InputDecoration(
                           label: Text(
-                            "Income/Expense",
+                            "Type of Expense",
                             style: TextStyle(
                               fontSize: 13.r,
                             ),
@@ -128,8 +153,7 @@ class _AddCashEntryState extends State<AddCashEntry> {
                             borderRadius: BorderRadius.circular(15.h),
                           ),
                         ),
-                        value: typeOfexp,
-                        items: expenseType
+                        items: typeOfExpense
                             .map(
                               (e) => DropdownMenuItem(
                                 value: e,
@@ -161,7 +185,7 @@ class _AddCashEntryState extends State<AddCashEntry> {
                       child: DropdownButtonFormField(
                         decoration: InputDecoration(
                           label: Text(
-                            "Type Of Transaction",
+                            "Income/Expense",
                             style: TextStyle(
                               fontSize: 13.r,
                             ),
@@ -170,7 +194,6 @@ class _AddCashEntryState extends State<AddCashEntry> {
                             borderRadius: BorderRadius.circular(15.h),
                           ),
                         ),
-                        value: typeOftransaction,
                         items: typeOfTransaction
                             .map(
                               (e) => DropdownMenuItem(
@@ -201,14 +224,49 @@ class _AddCashEntryState extends State<AddCashEntry> {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   GestureDetector(
-                    onTap: () {
-                      Get.off(
-                        routeName: "saveAndAdd",
-                        () => const AddCashEntry(),
-                        curve: customCurve,
-                        transition: customTrans,
-                        duration: duration,
-                      );
+                    onTap: () async {
+                      if (_formKey.currentState!.validate()) {
+                        debugPrint(typeOftransaction.length.toString());
+                        // final user = FirebaseAuth.instance.currentUser;
+                        // await FirebaseFirestore.instance
+                        //     .collection("Transaction")
+                        //     .doc(user!.uid)
+                        //     .collection("transactions")
+                        //     .doc()
+                        //     .set({
+                        //   "amount": amountEditingController.text,
+                        //   "dateAndTime": DateTime.now(),
+                        //   "expenseType": typeOfexp,
+                        //   "name": nameEditingController.text,
+                        //   "typeOfTransaction": typeOftransaction,
+                        //   "transactionReferanceNumber": 0,
+                        // }).then((value) => Get.off(
+                        //           routeName: "saveAndAdd",
+                        //           () => const AddCashEntry(),
+                        //           curve: customCurve,
+                        //           transition: customTrans,
+                        //           duration: duration,
+                        //         ));
+                        CusTransaction transaction = CusTransaction(
+                          amount: double.parse(amountEditingController.text),
+                          dateAndTime: DateTime.now(),
+                          name: nameEditingController.text,
+                          typeOfTransaction: typeOftransaction,
+                          expenseType: typeOfexp,
+                          transactionReferanceNumber: generateUniqueRefNumber(),
+                        );
+                        await DatabaseHelper()
+                            .insertTransaction(transaction)
+                            .then(
+                              (value) => Get.off(
+                                routeName: "saveAndAdd",
+                                () => const AddCashEntry(),
+                                curve: customCurve,
+                                transition: customTrans,
+                                duration: duration,
+                              ),
+                            );
+                      }
                     },
                     child: Container(
                       decoration: BoxDecoration(
@@ -233,8 +291,39 @@ class _AddCashEntryState extends State<AddCashEntry> {
                     ),
                   ),
                   GestureDetector(
-                    onTap: () {
+                    onTap: () async {
                       // FirebaseF
+                      if (_formKey.currentState!.validate()) {
+                        debugPrint(typeOftransaction.length.toString());
+                        // final user = FirebaseAuth.instance.currentUser;
+                        // await FirebaseFirestore.instance
+                        //     .collection("Transaction")
+                        //     .doc(user!.uid)
+                        //     .collection("transactions")
+                        //     .doc()
+                        //     .set({
+                        //   "amount": amountEditingController.text,
+                        //   "dateAndTime": DateTime.now(),
+                        //   "expenseType": typeOfexp,
+                        //   "name": nameEditingController.text,
+                        //   "typeOfTransaction": typeOftransaction,
+                        //   "transactionReferanceNumber": 0,
+                        // }).then((value) => Get.back());
+
+                        CusTransaction transaction = CusTransaction(
+                          amount: double.parse(amountEditingController.text),
+                          dateAndTime: DateTime.now(),
+                          name: nameEditingController.text,
+                          typeOfTransaction: typeOftransaction,
+                          expenseType: typeOfexp,
+                          transactionReferanceNumber: generateUniqueRefNumber(),
+                        );
+                        await DatabaseHelper()
+                            .insertTransaction(transaction)
+                            .then(
+                              (value) => Get.back(),
+                            );
+                      }
                     },
                     child: Container(
                       decoration: BoxDecoration(

@@ -5,29 +5,49 @@ import "package:flutter_screenutil/flutter_screenutil.dart";
 import "package:get/get.dart";
 import "package:spendwise/Components/responsive_methods.dart";
 import "package:spendwise/Requirements/data.dart";
+import "package:spendwise/Requirements/transaction.dart";
 import "package:spendwise/Screens/all_transactions.dart";
 import "package:spendwise/Screens/change_password.dart";
 import "package:spendwise/Screens/delete_account.dart";
 import "package:spendwise/Screens/edit_user_profile.dart";
 import "package:spendwise/Screens/intro.dart";
 
-class UserProfile extends StatelessWidget {
+class UserProfile extends StatefulWidget {
   const UserProfile({super.key});
+
+  @override
+  State<UserProfile> createState() => _UserProfileState();
+}
+
+class _UserProfileState extends State<UserProfile> {
+  Future? _future;
+
+  Future<dynamic> getData() async {
+    final users = await FirebaseFirestore.instance.collection("Users").get();
+    final bankTransactions = await querySmsMessages();
+    return [users, bankTransactions];
+  }
+
+  @override
+  void initState() {
+    _future = getData();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: FirebaseFirestore.instance.collection("Users").get(),
+      future: _future,
       builder: (BuildContext context, AsyncSnapshot snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
           dynamic user;
-          for (dynamic use in snapshot.data.docs) {
+          for (dynamic use in snapshot.data[0].docs) {
             if (use["email"].toString() ==
                 FirebaseAuth.instance.currentUser!.email) {
               user = use;
             }
           }
-          // debugPrint(user.toString());
+          List<CusTransaction> bankTransaction = snapshot.data[1];
           return Scaffold(
             appBar: AppBar(
               title: Text(
@@ -86,7 +106,7 @@ class UserProfile extends StatelessWidget {
                                     SizedBox(
                                       width: 150.w,
                                       child: Text(
-                                        "Dream of Savings\nRs. ${int.parse(user["dreamToSave"])}",
+                                        "Rs. ${int.parse(user["dreamToSave"]) - totalAvailableBalance(bankTransaction)} more to Save",
                                         style: TextStyle(fontSize: 13.r),
                                       ),
                                     ),
