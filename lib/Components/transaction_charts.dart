@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:spendwise/Models/cus_transaction.dart';
+import 'package:spendwise/Models/expense.dart';
 import 'package:spendwise/Requirements/transaction.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 

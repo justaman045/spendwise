@@ -2,6 +2,8 @@ import "package:flutter/material.dart";
 import "package:flutter/services.dart";
 import "package:flutter_screenutil/flutter_screenutil.dart";
 import "package:get/get.dart";
+import "package:spendwise/Models/cus_transaction.dart";
+import "package:spendwise/Models/db_helper.dart";
 import "package:spendwise/Requirements/data.dart";
 import "package:spendwise/Requirements/transaction.dart";
 
@@ -321,7 +323,7 @@ class _AddCashEntryState extends State<AddCashEntry> {
                         await DatabaseHelper()
                             .insertTransaction(transaction)
                             .then(
-                              (value) => Get.back(),
+                              (value) => Get.back(result: "refresh"),
                             );
                       }
                     },
@@ -374,7 +376,7 @@ class _AddCashEntryState extends State<AddCashEntry> {
                       child: Text("Go Back"),
                     ),
                   ),
-                  onTap: () => Get.back(),
+                  onTap: () => Get.back(result: "refresh"),
                 ),
               ),
             ),

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:spendwise/Requirements/transaction.dart';
+import 'package:spendwise/TestData/test_transactions.dart';
 
 class RecognizedAccounts extends StatelessWidget {
   const RecognizedAccounts({super.key});

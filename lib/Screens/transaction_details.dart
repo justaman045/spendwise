@@ -16,6 +16,7 @@ class TransactionDetails extends StatelessWidget {
     required this.transactionReferanceNumber,
     required this.expenseType,
     required this.transactionType,
+    required this.toIncl,
   });
 
   final String? toName;
@@ -24,6 +25,7 @@ class TransactionDetails extends StatelessWidget {
   final int? transactionReferanceNumber;
   final String? expenseType;
   final String transactionType;
+  final int toIncl;
 
   @override
   Widget build(BuildContext context) {
@@ -264,6 +266,7 @@ class TransactionDetails extends StatelessWidget {
                         toName: toName!,
                         transactionReferanceNumber: transactionReferanceNumber!,
                         transactionType: transactionType,
+                        toIncl: toIncl,
                       ),
                       curve: customCurve,
                       transition: customTrans,

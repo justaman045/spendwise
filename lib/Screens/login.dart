@@ -209,7 +209,7 @@ class _LoginState extends State<Login> {
                                         email: emailEditingController.text,
                                         password:
                                             passwordEditingController.text);
-                                Get.to(
+                                Get.offAll(
                                   routeName: routes[3],
                                   () => const HomePage(),
                                   transition: customTrans,

@@ -3,6 +3,7 @@ import "package:flutter/material.dart";
 import "package:flutter/widgets.dart";
 import "package:get/get.dart";
 import "package:spendwise/Components/cash_flow.dart";
+import "package:spendwise/Models/cus_transaction.dart";
 import "package:spendwise/Requirements/data.dart";
 import "package:spendwise/Requirements/transaction.dart";
 import "package:spendwise/Screens/all_transactions.dart";

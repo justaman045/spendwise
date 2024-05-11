@@ -1,8 +1,8 @@
 import "package:flutter/material.dart";
 import "package:flutter_screenutil/flutter_screenutil.dart";
 import "package:get/get.dart";
+import "package:spendwise/Models/cus_transaction.dart";
 import "package:spendwise/Requirements/data.dart";
-import "package:spendwise/Requirements/transaction.dart";
 import "package:spendwise/Screens/all_transactions.dart";
 
 class RecentTransactionHeader extends StatelessWidget {

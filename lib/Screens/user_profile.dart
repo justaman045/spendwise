@@ -4,6 +4,7 @@ import "package:flutter/material.dart";
 import "package:flutter_screenutil/flutter_screenutil.dart";
 import "package:get/get.dart";
 import "package:spendwise/Components/responsive_methods.dart";
+import "package:spendwise/Models/cus_transaction.dart";
 import "package:spendwise/Requirements/data.dart";
 import "package:spendwise/Requirements/transaction.dart";
 import "package:spendwise/Screens/all_transactions.dart";
@@ -153,7 +154,7 @@ class _UserProfileState extends State<UserProfile> {
                       Get.to(
                         routeName: routes[4],
                         () => const AllTransactions(
-                          type: "expense",
+                          type: "expensea",
                           pageTitle: "All Payments",
                           chartTitle: "Payments",
                           chartType: "Payments",
@@ -176,7 +177,7 @@ class _UserProfileState extends State<UserProfile> {
                       Get.to(
                         routeName: "Monthly Income",
                         () => const AllTransactions(
-                          type: "income",
+                          type: "incomea",
                           pageTitle: "All Income",
                           chartTitle: "Income",
                           chartType: "Income",

@@ -2,6 +2,7 @@ import "package:countup/countup.dart";
 import "package:flutter/material.dart";
 import "package:flutter_screenutil/flutter_screenutil.dart";
 import "package:get/get.dart";
+import "package:spendwise/Models/cus_transaction.dart";
 import "package:spendwise/Requirements/data.dart";
 import "package:spendwise/Requirements/transaction.dart";
 import "package:spendwise/Screens/all_transactions.dart";
@@ -73,7 +74,7 @@ class AvailableBalance extends StatelessWidget {
                           color: (totalIncomeThisMonth(bankTransaction) -
                                           totalExpenseThisMonth(
                                               bankTransaction))
-                                      .toDouble() >
+                                      .toDouble() >=
                                   0
                               ? Colors.green
                               : Colors.redAccent,
@@ -92,7 +93,7 @@ class AvailableBalance extends StatelessWidget {
                                           totalExpenseThisMonth(
                                               bankTransaction))
                                       .toDouble() >
-                                  0
+                                  -1
                               ? Colors.green
                               : Colors.redAccent,
                           fontWeight: FontWeight.bold,

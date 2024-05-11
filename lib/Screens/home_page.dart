@@ -11,6 +11,7 @@ import 'package:spendwise/Components/gradient_color.dart';
 import 'package:spendwise/Components/recent_transaction_header.dart';
 import 'package:spendwise/Components/responsive_methods.dart';
 import 'package:spendwise/Components/transaction_widget.dart';
+import 'package:spendwise/Models/cus_transaction.dart';
 import 'package:spendwise/Requirements/data.dart';
 import 'package:spendwise/Requirements/transaction.dart';
 import 'package:spendwise/Screens/cash_entry.dart';
@@ -74,84 +75,88 @@ class _HomePageState extends State<HomePage> {
                 scaffoldKey: scaffoldKey,
               ),
               body: SafeArea(
-                child: Column(
-                  children: [
-                    AvailableBalance(
-                      width: 300.h,
-                      bankTransaction: bankTransaction,
-                    ),
-                    CurrentFlow(
-                      width: getScreenWidth(context),
-                      bankTransactions: bankTransaction,
-                    ),
-                    RecentTransactionHeader(
-                      bankTransactions: bankTransaction,
-                      width: getScreenWidth(context),
-                    ),
-                    if (allTodaysTransactions(bankTransaction).isEmpty) ...[
-                      Expanded(
-                        child: Center(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                "No Transactions Today",
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 20.r,
+                child: GestureDetector(
+                  onVerticalDragEnd: (details) => _refreshData(),
+                  child: Column(
+                    children: [
+                      AvailableBalance(
+                        width: 300.h,
+                        bankTransaction: bankTransaction,
+                      ),
+                      CurrentFlow(
+                        width: getScreenWidth(context),
+                        bankTransactions: bankTransaction,
+                      ),
+                      RecentTransactionHeader(
+                        bankTransactions: bankTransaction,
+                        width: getScreenWidth(context),
+                      ),
+                      if (allTodaysTransactions(bankTransaction).isEmpty) ...[
+                        Expanded(
+                          child: Center(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  "No Transactions Today",
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 20.r,
+                                  ),
                                 ),
-                              ),
-                              Container(
-                                decoration: BoxDecoration(
-                                  gradient: colorsOfGradient(),
-                                  borderRadius: BorderRadius.circular(10.r),
-                                ),
-                                child: TextButton(
-                                  onPressed: () {
-                                    setState(() {
-                                      _refreshData();
-                                    });
-                                  },
-                                  child: Text(
-                                    "Refresh",
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 13.r,
+                                Container(
+                                  decoration: BoxDecoration(
+                                    gradient: colorsOfGradient(),
+                                    borderRadius: BorderRadius.circular(10.r),
+                                  ),
+                                  child: TextButton(
+                                    onPressed: () {
+                                      setState(() {
+                                        _refreshData();
+                                      });
+                                    },
+                                    child: Text(
+                                      "Refresh",
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 13.r,
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ),
-                      ),
-                    ] else ...[
-                      Expanded(
-                        child: ListView.builder(
-                          itemCount: allTodaysTransactions(bankTransaction)
-                              .reversed
-                              .toList()
-                              .length, // Use todaysTransactions length
-                          itemBuilder: (context, index) {
-                            final transaction =
-                                allTodaysTransactions(bankTransaction);
-                            return TransactionWidget(
-                              expenseType: transaction[index].expenseType,
-                              width: 100.w,
-                              amount: transaction[index].amount.toInt(),
-                              dateAndTime: transaction[index].dateAndTime,
-                              name: transaction[index].name,
-                              typeOfTransaction:
-                                  transaction[index].typeOfTransaction,
-                              height: 100.h,
-                              transactionReferanceNumber:
-                                  transaction[index].transactionReferanceNumber,
-                            );
-                          },
+                      ] else ...[
+                        Expanded(
+                          child: ListView.builder(
+                            itemCount: allTodaysTransactions(bankTransaction)
+                                .reversed
+                                .toList()
+                                .length, // Use todaysTransactions length
+                            itemBuilder: (context, index) {
+                              final transaction =
+                                  allTodaysTransactions(bankTransaction);
+                              return TransactionWidget(
+                                expenseType: transaction[index].expenseType,
+                                width: 100.w,
+                                amount: transaction[index].amount.toInt(),
+                                dateAndTime: transaction[index].dateAndTime,
+                                name: transaction[index].name,
+                                typeOfTransaction:
+                                    transaction[index].typeOfTransaction,
+                                height: 100.h,
+                                transactionReferanceNumber: transaction[index]
+                                    .transactionReferanceNumber,
+                                toIncl: transaction[index].toInclude,
+                              );
+                            },
+                          ),
                         ),
-                      ),
-                    ]
-                  ],
+                      ]
+                    ],
+                  ),
                 ),
               ),
               floatingActionButton: FloatingActionButton.extended(

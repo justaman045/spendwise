@@ -2,8 +2,9 @@ import "package:flutter/material.dart";
 import "package:flutter_screenutil/flutter_screenutil.dart";
 import "package:get/get.dart";
 import "package:intl/intl.dart";
+import "package:spendwise/Models/cus_transaction.dart";
+import "package:spendwise/Models/db_helper.dart";
 import "package:spendwise/Requirements/data.dart";
-import "package:spendwise/Requirements/transaction.dart";
 
 final _formKey = GlobalKey<FormState>();
 
@@ -16,6 +17,7 @@ class EditTransaction extends StatefulWidget {
     required this.transactionReferanceNumber,
     required this.expenseType,
     required this.transactionType,
+    required this.toIncl,
   });
 
   final String toName;
@@ -24,17 +26,28 @@ class EditTransaction extends StatefulWidget {
   final int transactionReferanceNumber;
   final String expenseType;
   final String transactionType;
+  final int toIncl;
 
   @override
   State<EditTransaction> createState() => _EditTransactionState();
 }
 
 class _EditTransactionState extends State<EditTransaction> {
+  String _expType = "";
+  String _toExclude = "";
+
+  void updateTransaction(String expenseType) {
+    _expType = expenseType;
+  }
+
+  void updatetoInclude(String toExclude) {
+    _toExclude = toExclude;
+  }
+
   @override
   Widget build(BuildContext context) {
     List<String> typeOfTransaction = typeOfExpense;
     // TextEditingController expenseEditingController = TextEditingController();
-    String _expType = "";
 
     return Scaffold(
       appBar: AppBar(
@@ -201,11 +214,12 @@ class _EditTransactionState extends State<EditTransaction> {
                             ),
                           )
                           .toList(),
-                      onChanged: (String? value) => setState(() {
+                      onChanged: (String? value) {
                         if (value != null) {
-                          // expType = value;
+                          // Call updateTransaction with the selected value
+                          updateTransaction(value);
                         }
-                      }),
+                      },
                       value: widget.expenseType,
                     ),
                   ),
@@ -243,12 +257,13 @@ class _EditTransactionState extends State<EditTransaction> {
                             ),
                           )
                           .toList(),
-                      onChanged: (String? value) => setState(() {
+                      onChanged: (String? value) {
                         if (value != null) {
-                          _expType = value;
+                          // Call updateTransaction with the selected value
+                          updatetoInclude(value);
                         }
-                      }),
-                      value: "No",
+                      },
+                      value: widget.toIncl == 1 ? "No" : "Yes",
                     ),
                   ),
                 ),
@@ -291,15 +306,18 @@ class _EditTransactionState extends State<EditTransaction> {
                         if (_formKey.currentState!.validate()) {
                           debugPrint(_expType.toString());
                         }
-                        if (_expType.isNotEmpty) {
+                        if (_expType.isNotEmpty || _toExclude.isNotEmpty) {
                           CusTransaction transaction = CusTransaction(
                             amount: widget.amount.toDouble(),
                             dateAndTime: widget.dateTime,
                             name: widget.toName,
                             typeOfTransaction: widget.transactionType,
-                            expenseType: _expType,
+                            expenseType: _expType.isEmpty
+                                ? widget.expenseType
+                                : _expType,
                             transactionReferanceNumber:
                                 widget.transactionReferanceNumber,
+                            toInclude: _toExclude == "No" ? 1 : 0,
                           );
                           await DatabaseHelper()
                               .updateTransaction(transaction)

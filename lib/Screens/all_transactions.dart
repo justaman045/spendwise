@@ -4,6 +4,7 @@ import "package:get/get.dart";
 import "package:spendwise/Components/responsive_methods.dart";
 import "package:spendwise/Components/transaction_charts.dart";
 import "package:spendwise/Components/transaction_widget.dart";
+import "package:spendwise/Models/cus_transaction.dart";
 import "package:spendwise/Requirements/transaction.dart";
 
 class AllTransactions extends StatefulWidget {
@@ -26,16 +27,32 @@ class AllTransactions extends StatefulWidget {
 }
 
 class _AllTransactionsState extends State<AllTransactions> {
+  Future? _future;
+
+  Future<dynamic> getData() async {
+    final bankTransactions = await querySmsMessages();
+    return bankTransactions;
+  }
+
+  Future<void> _refreshData() async {
+    setState(() {
+      _future = getData();
+    });
+  }
+
+  @override
+  void initState() {
+    _future = getData();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     // debugPrint(transactioncustom.length.toString());
     return RefreshIndicator(
-      onRefresh: () => querySmsMessages().then((value) {
-        setState(() {});
-        return value;
-      }),
+      onRefresh: () => _refreshData(),
       child: FutureBuilder(
-        future: querySmsMessages(),
+        future: _future,
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
             List<CusTransaction> bankTransactions = [];
@@ -43,6 +60,10 @@ class _AllTransactionsState extends State<AllTransactions> {
               bankTransactions = allIncomeThisMonth(snapshot.data);
             } else if (widget.type == "expense") {
               bankTransactions = allExpenseThisMonth(snapshot.data);
+            } else if (widget.type == "incomea") {
+              bankTransactions = allaIncomeThisMonth(snapshot.data);
+            } else if (widget.type == "expensea") {
+              bankTransactions = allaExpenseThisMonth(snapshot.data);
             } else {
               bankTransactions = snapshot.data;
             }
@@ -55,7 +76,7 @@ class _AllTransactionsState extends State<AllTransactions> {
                 centerTitle: true,
                 leading: IconButton(
                   icon: const Icon(Icons.arrow_back, color: Colors.black),
-                  onPressed: () => {Get.back()},
+                  onPressed: () => {Get.back(result: "refresh")},
                 ),
               ),
               body: SafeArea(
@@ -92,6 +113,7 @@ class _AllTransactionsState extends State<AllTransactions> {
                                   height: getScreenHeight(context),
                                   transactionReferanceNumber:
                                       transaction.transactionReferanceNumber,
+                                  toIncl: transaction.toInclude,
                                 );
                               },
                             ),
@@ -103,7 +125,7 @@ class _AllTransactionsState extends State<AllTransactions> {
           } else {
             return const Scaffold(
               body: SafeArea(
-                child: CircularProgressIndicator(),
+                child: Center(child: CircularProgressIndicator()),
               ),
             );
           }
