@@ -5,6 +5,7 @@ import 'package:spendwise/Models/cus_transaction.dart';
 import 'package:spendwise/Models/db_helper.dart';
 import 'package:spendwise/Models/expense.dart';
 
+// TODO: Reduce Lines of Code
 final SmsQuery query = SmsQuery();
 List<CusTransaction> transactions = [];
 
@@ -22,6 +23,23 @@ List<CusTransaction> allTodaysTransactions(List<CusTransaction> transaction) {
           transaction.dateAndTime.day == today.day &&
           transaction.dateAndTime.year == today.year &&
           transaction.toInclude == 1)
+      .toList();
+}
+
+List<CusTransaction> allTransactionsThisMonth(
+    List<CusTransaction> transaction) {
+  final today = DateTime.now();
+  return transaction
+      .where((transaction) =>
+          transaction.dateAndTime.month == today.month &&
+          transaction.dateAndTime.year == today.year &&
+          transaction.toInclude == 1)
+      .toList();
+}
+
+List<CusTransaction> allTransactions(List<CusTransaction> transaction) {
+  return transaction
+      .where((transaction) => transaction.toInclude == 1)
       .toList();
 }
 

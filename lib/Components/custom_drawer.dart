@@ -7,13 +7,14 @@ import "package:spendwise/Screens/home_page.dart";
 import "package:spendwise/Screens/settings.dart";
 import "package:spendwise/Screens/user_profile.dart";
 
+// TODO: Reduce Lines of Code
 class CustomDrawer extends StatelessWidget {
   const CustomDrawer({
     super.key,
     required this.scaffoldKey,
   });
 
-  // final List<Transaction> bankTransaction;
+  // a local variable to recive scaffold key to build a custom drawer of the app
   final GlobalKey scaffoldKey;
 
   @override
@@ -23,6 +24,8 @@ class CustomDrawer extends StatelessWidget {
       elevation: 10.h,
       child: ListView(
         children: [
+          // header of the drawer
+          // TODO : Edit the Drawer Header to a more meaningfull header
           DrawerHeader(
             decoration: const BoxDecoration(
               gradient: LinearGradient(
@@ -52,6 +55,8 @@ class CustomDrawer extends StatelessWidget {
               ],
             ),
           ),
+
+          // Routes and buttons of the app Drawer
           ListTile(
             title: Center(
               child: Text(
@@ -61,7 +66,6 @@ class CustomDrawer extends StatelessWidget {
             ),
             onTap: () {
               if (ModalRoute.of(context)?.settings.name != "/") {
-                // print(ModalRoute.of(context)?.settings.name);
                 Get.to(
                   routeName: "/",
                   () => const HomePage(),
@@ -81,12 +85,10 @@ class CustomDrawer extends StatelessWidget {
             ),
             onTap: () {
               if (ModalRoute.of(context)?.settings.name != routes[4]) {
-                // print(ModalRoute.of(context)?.settings.name);
-
                 Get.to(
                   routeName: routes[4],
                   () => const AllTransactions(
-                    type: "",
+                    type: "trans",
                     pageTitle: "All Transactions",
                     chartTitle: "All Transactions from SMS",
                     chartType: "Transaction",

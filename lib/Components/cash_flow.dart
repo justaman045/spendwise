@@ -3,6 +3,7 @@ import "package:flutter/material.dart";
 import "package:flutter_screenutil/flutter_screenutil.dart";
 import "package:spendwise/Requirements/data.dart";
 
+// TODO: Reduce Lines of Code
 class CashFlow extends StatelessWidget {
   const CashFlow({
     super.key,

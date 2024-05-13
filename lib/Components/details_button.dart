@@ -1,6 +1,7 @@
 import "package:flutter/material.dart";
 import "package:flutter_screenutil/flutter_screenutil.dart";
 
+// TODO: Reduce Lines of Code
 class DetailsButton extends StatelessWidget {
   const DetailsButton({
     super.key,

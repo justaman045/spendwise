@@ -7,6 +7,7 @@ import 'package:spendwise/Screens/intro.dart';
 
 final _formKey = GlobalKey<FormState>();
 
+// TODO: Reduce Lines of Code
 class DeleteAccount extends StatelessWidget {
   const DeleteAccount({super.key});
 

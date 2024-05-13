@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:spendwise/Models/cus_transaction.dart';
 import 'package:sqflite/sqflite.dart';
 
+// TODO: Reduce Lines of Code
 class DatabaseHelper {
   static final DatabaseHelper _instance = DatabaseHelper._internal();
 

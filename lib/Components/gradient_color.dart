@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+// TODO: Reduce Lines of Code
 LinearGradient colorsOfGradient() {
   return const LinearGradient(
     begin: Alignment.topLeft,

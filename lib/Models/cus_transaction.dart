@@ -1,5 +1,6 @@
 import 'package:sqflite/sqflite.dart';
 
+// TODO: Reduce Lines of Code
 class CusTransaction {
   final double amount;
   final DateTime dateAndTime;

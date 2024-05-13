@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:spendwise/Requirements/data.dart';
 import 'package:spendwise/Screens/transaction_details.dart';
 
+// TODO: Reduce Lines of Code
 class TransactionWidget extends StatelessWidget {
   const TransactionWidget({
     super.key,

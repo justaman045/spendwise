@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+// TODO: Reduce Lines of Code
 double getResponsiveWidth(BuildContext context) {
   // Get the screen size using MediaQuery
   final screenWidth = MediaQuery.of(context).size.width;

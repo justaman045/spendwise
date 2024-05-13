@@ -5,6 +5,7 @@ import 'package:spendwise/Components/responsive_methods.dart';
 import 'package:spendwise/Requirements/data.dart';
 import 'package:spendwise/Screens/login.dart';
 
+// TODO: Reduce Lines of Code
 class Intro extends StatelessWidget {
   const Intro({super.key});
 

@@ -1,6 +1,7 @@
 import 'package:spendwise/Models/account.dart';
 import 'package:spendwise/Models/cus_transaction.dart';
 
+// TODO: Reduce Lines of Code
 final transactionss = [
   // Existing transactions with "expenseType" added
   CusTransaction(

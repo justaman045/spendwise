@@ -1,5 +1,6 @@
 import "package:flutter/material.dart";
 
+// TODO: Reduce Lines of Code
 class BottomNavBar extends StatelessWidget {
   const BottomNavBar({
     super.key,

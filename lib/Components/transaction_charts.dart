@@ -5,6 +5,7 @@ import 'package:spendwise/Models/expense.dart';
 import 'package:spendwise/Requirements/transaction.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
+// TODO: Reduce Lines of Code
 class TransactionCharts extends StatelessWidget {
   const TransactionCharts(
       {super.key,

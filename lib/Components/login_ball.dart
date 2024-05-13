@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:spendwise/Components/gradient_color.dart';
 
+// TODO: Reduce Lines of Code
 class LoginBall extends StatelessWidget {
   const LoginBall({
     super.key,

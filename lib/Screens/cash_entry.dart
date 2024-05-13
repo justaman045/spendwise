@@ -7,6 +7,7 @@ import "package:spendwise/Models/db_helper.dart";
 import "package:spendwise/Requirements/data.dart";
 import "package:spendwise/Requirements/transaction.dart";
 
+// TODO: Reduce Lines of Code
 final _formKey = GlobalKey<FormState>();
 
 class AddCashEntry extends StatefulWidget {
@@ -376,7 +377,7 @@ class _AddCashEntryState extends State<AddCashEntry> {
                       child: Text("Go Back"),
                     ),
                   ),
-                  onTap: () => Get.back(result: "refresh"),
+                  onTap: () => Get.back(),
                 ),
               ),
             ),

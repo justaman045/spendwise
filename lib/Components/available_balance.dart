@@ -7,6 +7,7 @@ import "package:spendwise/Requirements/data.dart";
 import "package:spendwise/Requirements/transaction.dart";
 import "package:spendwise/Screens/all_transactions.dart";
 
+// TODO: Reduce Lines of Code
 class AvailableBalance extends StatelessWidget {
   const AvailableBalance({
     super.key,
@@ -19,7 +20,7 @@ class AvailableBalance extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // debugPrint((totalIncomeThisMonth(bankTransaction)).toString());
+    // GestureDetector to run a function when a certain gesture is detected over this widget
     return GestureDetector(
       onTap: () => Get.to(
         routeName: routes[5],
@@ -27,7 +28,7 @@ class AvailableBalance extends StatelessWidget {
           pageTitle: "Monthly Transactions",
           chartTitle: "This months Transactions from SMS",
           chartType: "Transaction",
-          type: "",
+          type: "transmonth",
         ),
         transition: customTrans,
         curve: customCurve,
@@ -52,7 +53,6 @@ class AvailableBalance extends StatelessWidget {
               Radius.circular(20.w),
             ),
           ),
-          // width: width,
           child: Center(
             child: Padding(
               padding: EdgeInsets.all(40.r),

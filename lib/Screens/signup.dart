@@ -10,6 +10,7 @@ import "package:spendwise/Screens/login.dart";
 
 final _formKey = GlobalKey<FormState>();
 
+// TODO: Reduce Lines of Code
 class SignUp extends StatelessWidget {
   const SignUp({super.key});
 

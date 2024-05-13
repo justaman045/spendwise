@@ -13,6 +13,7 @@ import "package:spendwise/Screens/delete_account.dart";
 import "package:spendwise/Screens/edit_user_profile.dart";
 import "package:spendwise/Screens/intro.dart";
 
+// TODO: Reduce Lines of Code
 class UserProfile extends StatefulWidget {
   const UserProfile({super.key});
 

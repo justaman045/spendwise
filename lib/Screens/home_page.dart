@@ -16,6 +16,7 @@ import 'package:spendwise/Requirements/data.dart';
 import 'package:spendwise/Requirements/transaction.dart';
 import 'package:spendwise/Screens/cash_entry.dart';
 
+// TODO: Reduce Lines of Code
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
@@ -26,19 +27,22 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   Future? _future;
 
+  // Function to returive data from android msg and FireStore data
   Future<dynamic> getData() async {
     final users = await FirebaseFirestore.instance.collection("Users").get();
     final bankTransactions = await querySmsMessages();
-    debugPrint(bankTransactions.toString());
+    // debugPrint(bankTransactions.toString());
     return [users, bankTransactions];
   }
 
+  // Function to run everytime a user expects to refresh the data
   Future<void> _refreshData() async {
     setState(() {
       _future = getData();
     });
   }
 
+  // Override default method to get the initial data beforehand only
   @override
   void initState() {
     _future = getData();
@@ -56,10 +60,9 @@ class _HomePageState extends State<HomePage> {
         future: _future,
         initialData: bankTransaction,
         builder: (BuildContext context, AsyncSnapshot snapshot) {
+          // if the connection is done and the data is succesfully retirved then return the screen else return loading screen
           if (snapshot.connectionState == ConnectionState.done) {
             bankTransaction = snapshot.data[1];
-            // debugPrint(snapshot.data.toString());
-            // bankTransaction = [];
             dynamic user;
             for (dynamic use in snapshot.data[0].docs) {
               if (use["email"].toString() ==
@@ -67,6 +70,8 @@ class _HomePageState extends State<HomePage> {
                 user = use;
               }
             }
+
+            // return homepage screen
             return Scaffold(
               appBar: CustomAppBar(
                 username: user["username"],
@@ -91,6 +96,8 @@ class _HomePageState extends State<HomePage> {
                         bankTransactions: bankTransaction,
                         width: getScreenWidth(context),
                       ),
+
+                      // if there are no transactions made today then show there are no transactions today
                       if (allTodaysTransactions(bankTransaction).isEmpty) ...[
                         Expanded(
                           child: Center(
@@ -128,6 +135,8 @@ class _HomePageState extends State<HomePage> {
                             ),
                           ),
                         ),
+
+                        // else show all the transactions made today
                       ] else ...[
                         Expanded(
                           child: ListView.builder(
@@ -159,19 +168,28 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
               ),
+
+              // a floating action button to add the cash entry
               floatingActionButton: FloatingActionButton.extended(
                 label: const Icon(Icons.add),
-                onPressed: () {
-                  Get.to(
+                onPressed: () async {
+                  final toreload = await Get.to(
                     routeName: routes[12],
                     () => const AddCashEntry(),
                     curve: customCurve,
                     transition: customTrans,
                     duration: duration,
                   );
+
+                  if (toreload != null) {
+                    debugPrint(toreload.toString());
+                    _refreshData();
+                  }
                 },
               ),
             );
+
+            // loading screen to only show while the connection is waiting
           } else {
             return const Scaffold(
               body: SafeArea(

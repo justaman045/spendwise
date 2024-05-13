@@ -7,6 +7,7 @@ import "package:spendwise/Components/responsive_methods.dart";
 import "package:spendwise/Requirements/data.dart";
 import "package:spendwise/Screens/edit_transaction.dart";
 
+// TODO: Reduce Lines of Code
 class TransactionDetails extends StatelessWidget {
   const TransactionDetails({
     super.key,

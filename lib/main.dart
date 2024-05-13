@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:spendwise/Models/db_helper.dart';
+import 'package:spendwise/Requirements/data.dart';
 import 'package:spendwise/Screens/home_page.dart';
 import 'package:spendwise/Screens/intro.dart';
 import 'package:flutter_sms_inbox/flutter_sms_inbox.dart';
@@ -31,7 +32,6 @@ class _SpendWiseState extends State<SpendWise> {
   List<SmsMessage> messages = [];
 
   dynamic currentUser;
-  dynamic message;
 
   @override
   void initState() {
@@ -55,7 +55,7 @@ class _SpendWiseState extends State<SpendWise> {
     return ScreenUtilInit(
       builder: (_, child) {
         return GetMaterialApp(
-          title: "SpendWise",
+          title: appName,
           debugShowCheckedModeBanner: false,
           home: currentUser != null ? const HomePage() : const Intro(),
         );

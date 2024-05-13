@@ -5,6 +5,7 @@ import "package:spendwise/Models/cus_transaction.dart";
 import "package:spendwise/Requirements/data.dart";
 import "package:spendwise/Screens/all_transactions.dart";
 
+// TODO: Reduce Lines of Code
 class RecentTransactionHeader extends StatelessWidget {
   const RecentTransactionHeader({
     super.key,
@@ -37,7 +38,7 @@ class RecentTransactionHeader extends StatelessWidget {
               Get.to(
                 routeName: routes[4],
                 () => const AllTransactions(
-                  type: "",
+                  type: "trans",
                   pageTitle: "All Transactions",
                   chartTitle: "All Transactions from SMS",
                   chartType: "Transaction",

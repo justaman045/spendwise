@@ -8,6 +8,7 @@ import "package:spendwise/Requirements/data.dart";
 import "package:spendwise/Requirements/transaction.dart";
 import "package:spendwise/Screens/all_transactions.dart";
 
+// TODO: Reduce Lines of Code
 class CurrentFlow extends StatelessWidget {
   const CurrentFlow({
     super.key,

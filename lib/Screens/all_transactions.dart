@@ -7,6 +7,7 @@ import "package:spendwise/Components/transaction_widget.dart";
 import "package:spendwise/Models/cus_transaction.dart";
 import "package:spendwise/Requirements/transaction.dart";
 
+// TODO: Reduce Lines of Code
 class AllTransactions extends StatefulWidget {
   const AllTransactions({
     super.key,
@@ -56,16 +57,18 @@ class _AllTransactionsState extends State<AllTransactions> {
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
             List<CusTransaction> bankTransactions = [];
-            if (widget.type == "income") {
+            if (widget.type.toLowerCase() == "income") {
               bankTransactions = allIncomeThisMonth(snapshot.data);
-            } else if (widget.type == "expense") {
+            } else if (widget.type.toLowerCase() == "expense") {
               bankTransactions = allExpenseThisMonth(snapshot.data);
-            } else if (widget.type == "incomea") {
+            } else if (widget.type.toLowerCase() == "incomea") {
               bankTransactions = allaIncomeThisMonth(snapshot.data);
-            } else if (widget.type == "expensea") {
+            } else if (widget.type.toLowerCase() == "expensea") {
               bankTransactions = allaExpenseThisMonth(snapshot.data);
-            } else {
-              bankTransactions = snapshot.data;
+            } else if (widget.type.toLowerCase() == "trans") {
+              bankTransactions = allTransactions(snapshot.data);
+            } else if (widget.type.toLowerCase() == "transmonth") {
+              bankTransactions = allTransactionsThisMonth(snapshot.data);
             }
             return Scaffold(
               appBar: AppBar(

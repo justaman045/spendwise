@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:spendwise/TestData/test_transactions.dart';
 
+// TODO: Reduce Lines of Code
 class RecognizedAccounts extends StatelessWidget {
   const RecognizedAccounts({super.key});
 

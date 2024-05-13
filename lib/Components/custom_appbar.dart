@@ -4,6 +4,7 @@ import "package:get/get.dart";
 import "package:spendwise/Requirements/data.dart";
 import "package:spendwise/Screens/recognized_accounts.dart";
 
+// TODO: Reduce Lines of Code
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   const CustomAppBar({
     super.key,
