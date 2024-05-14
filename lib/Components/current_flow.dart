@@ -28,7 +28,7 @@ class CurrentFlow extends StatelessWidget {
           onTap: () => Get.to(
             routeName: "Monthly Income",
             () => const AllTransactions(
-              type: "income",
+              type: "thismonthincome",
               pageTitle: "All Income this Month",
               chartTitle: "Income Read from SMS",
               chartType: "Income",
@@ -47,7 +47,7 @@ class CurrentFlow extends StatelessWidget {
           onTap: () => Get.to(
             routeName: "Monthly Expense",
             () => const AllTransactions(
-              type: "expense",
+              type: "thismonthexpense",
               pageTitle: "All Expense this Month",
               chartTitle: "Expense Read from SMS",
               chartType: "Expense",

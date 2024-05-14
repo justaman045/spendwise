@@ -88,7 +88,7 @@ class CustomDrawer extends StatelessWidget {
                 Get.to(
                   routeName: routes[4],
                   () => const AllTransactions(
-                    type: "trans",
+                    type: "allTransactions",
                     pageTitle: "All Transactions",
                     chartTitle: "All Transactions from SMS",
                     chartType: "Transaction",

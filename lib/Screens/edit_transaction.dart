@@ -322,7 +322,8 @@ class _EditTransactionState extends State<EditTransaction> {
                           );
                           await DatabaseHelper()
                               .updateTransaction(transaction)
-                              .then((value) => Get.back());
+                              .then((value) => Get.back())
+                              .then((value) => Get.back(result: "refresh"));
                         } else {
                           Get.snackbar(
                             "Error",
@@ -362,8 +363,7 @@ class _EditTransactionState extends State<EditTransaction> {
                       await DatabaseHelper()
                           .deleteTransaction(widget.transactionReferanceNumber)
                           .then((value) => Get.back())
-                          .then((value) => Get.back())
-                          .then((value) => setState(() {}));
+                          .then((value) => Get.back(result: "refresh"));
                     },
                     child: Container(
                       decoration: BoxDecoration(

@@ -28,7 +28,7 @@ class AvailableBalance extends StatelessWidget {
           pageTitle: "Monthly Transactions",
           chartTitle: "This months Transactions from SMS",
           chartType: "Transaction",
-          type: "transmonth",
+          type: "thisMonthTransactions",
         ),
         transition: customTrans,
         curve: customCurve,

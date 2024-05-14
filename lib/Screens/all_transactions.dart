@@ -49,6 +49,7 @@ class _AllTransactionsState extends State<AllTransactions> {
 
   @override
   Widget build(BuildContext context) {
+    List<CusTransaction> bankTransactions = [];
     // debugPrint(transactioncustom.length.toString());
     return RefreshIndicator(
       onRefresh: () => _refreshData(),
@@ -56,19 +57,32 @@ class _AllTransactionsState extends State<AllTransactions> {
         future: _future,
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
-            List<CusTransaction> bankTransactions = [];
-            if (widget.type.toLowerCase() == "income") {
-              bankTransactions = allIncomeThisMonth(snapshot.data);
-            } else if (widget.type.toLowerCase() == "expense") {
-              bankTransactions = allExpenseThisMonth(snapshot.data);
-            } else if (widget.type.toLowerCase() == "incomea") {
-              bankTransactions = allaIncomeThisMonth(snapshot.data);
-            } else if (widget.type.toLowerCase() == "expensea") {
-              bankTransactions = allaExpenseThisMonth(snapshot.data);
-            } else if (widget.type.toLowerCase() == "trans") {
-              bankTransactions = allTransactions(snapshot.data);
-            } else if (widget.type.toLowerCase() == "transmonth") {
-              bankTransactions = allTransactionsThisMonth(snapshot.data);
+            dynamic data = [];
+            final parsedmsg = parseTransactions(snapshot.data[1]);
+            data = combineTransactions(snapshot.data[0], parsedmsg);
+            if (widget.type.toLowerCase() == "thismonthIncome".toLowerCase()) {
+              bankTransactions =
+                  allTransactions(data, income: true, thisMonth: true);
+            } else if (widget.type.toLowerCase() ==
+                "thismonthexpense".toLowerCase()) {
+              bankTransactions =
+                  allTransactions(data, expense: true, thisMonth: true);
+            } else if (widget.type.toLowerCase() ==
+                "withhiddenIncome".toLowerCase()) {
+              bankTransactions =
+                  allTransactions(data, showHidden: true, income: true);
+            } else if (widget.type.toLowerCase() ==
+                "withHiddenExpense".toLowerCase()) {
+              bankTransactions =
+                  allTransactions(data, expense: true, showHidden: true);
+            } else if (widget.type.toLowerCase() ==
+                "allTransactions".toLowerCase()) {
+              bankTransactions = allTransactions(
+                data,
+              );
+            } else if (widget.type.toLowerCase() ==
+                "thisMonthTransactions".toLowerCase()) {
+              bankTransactions = allTransactions(data, thisMonth: true);
             }
             return Scaffold(
               appBar: AppBar(

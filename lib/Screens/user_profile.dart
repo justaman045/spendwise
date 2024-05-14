@@ -38,10 +38,13 @@ class _UserProfileState extends State<UserProfile> {
 
   @override
   Widget build(BuildContext context) {
+    List<CusTransaction> bankTransaction = [];
     return FutureBuilder(
       future: _future,
       builder: (BuildContext context, AsyncSnapshot snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
+          final parsedmsg = parseTransactions(snapshot.data[1][1]);
+          bankTransaction = combineTransactions(snapshot.data[1][0], parsedmsg);
           dynamic user;
           for (dynamic use in snapshot.data[0].docs) {
             if (use["email"].toString() ==
@@ -49,7 +52,6 @@ class _UserProfileState extends State<UserProfile> {
               user = use;
             }
           }
-          List<CusTransaction> bankTransaction = snapshot.data[1];
           return Scaffold(
             appBar: AppBar(
               title: Text(
@@ -155,7 +157,7 @@ class _UserProfileState extends State<UserProfile> {
                       Get.to(
                         routeName: routes[4],
                         () => const AllTransactions(
-                          type: "expensea",
+                          type: "withhiddenexpense",
                           pageTitle: "All Payments",
                           chartTitle: "Payments",
                           chartType: "Payments",
@@ -178,7 +180,7 @@ class _UserProfileState extends State<UserProfile> {
                       Get.to(
                         routeName: "Monthly Income",
                         () => const AllTransactions(
-                          type: "incomea",
+                          type: "withhiddenincome",
                           pageTitle: "All Income",
                           chartTitle: "Income",
                           chartType: "Income",

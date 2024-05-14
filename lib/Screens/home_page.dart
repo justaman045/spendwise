@@ -31,7 +31,6 @@ class _HomePageState extends State<HomePage> {
   Future<dynamic> getData() async {
     final users = await FirebaseFirestore.instance.collection("Users").get();
     final bankTransactions = await querySmsMessages();
-    // debugPrint(bankTransactions.toString());
     return [users, bankTransactions];
   }
 
@@ -58,11 +57,12 @@ class _HomePageState extends State<HomePage> {
       onRefresh: _refreshData,
       child: FutureBuilder(
         future: _future,
-        initialData: bankTransaction,
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           // if the connection is done and the data is succesfully retirved then return the screen else return loading screen
           if (snapshot.connectionState == ConnectionState.done) {
-            bankTransaction = snapshot.data[1];
+            final parsedmsg = parseTransactions(snapshot.data[1][1]);
+            bankTransaction =
+                combineTransactions(snapshot.data[1][0], parsedmsg);
             dynamic user;
             for (dynamic use in snapshot.data[0].docs) {
               if (use["email"].toString() ==
@@ -98,7 +98,7 @@ class _HomePageState extends State<HomePage> {
                       ),
 
                       // if there are no transactions made today then show there are no transactions today
-                      if (allTodaysTransactions(bankTransaction).isEmpty) ...[
+                      if (allTransactions(bankTransaction).isEmpty) ...[
                         Expanded(
                           child: Center(
                             child: Column(
@@ -140,13 +140,13 @@ class _HomePageState extends State<HomePage> {
                       ] else ...[
                         Expanded(
                           child: ListView.builder(
-                            itemCount: allTodaysTransactions(bankTransaction)
+                            itemCount: allTransactions(bankTransaction)
                                 .reversed
                                 .toList()
                                 .length, // Use todaysTransactions length
                             itemBuilder: (context, index) {
                               final transaction =
-                                  allTodaysTransactions(bankTransaction);
+                                  allTransactions(bankTransaction);
                               return TransactionWidget(
                                 expenseType: transaction[index].expenseType,
                                 width: 100.w,

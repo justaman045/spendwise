@@ -34,21 +34,23 @@ class TransactionWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => Get.to(
-        routeName: "Transaction Details",
-        () => TransactionDetails(
-          amount: amount,
-          dateTime: dateAndTime,
-          toName: name,
-          transactionReferanceNumber: transactionReferanceNumber,
-          expenseType: expenseType,
-          transactionType: typeOfTransaction,
-          toIncl: toIncl,
-        ),
-        transition: customTrans,
-        curve: customCurve,
-        duration: duration,
-      ),
+      onTap: () {
+        final refresh = Get.to(
+          routeName: "Transaction Details",
+          () => TransactionDetails(
+            amount: amount,
+            dateTime: dateAndTime,
+            toName: name,
+            transactionReferanceNumber: transactionReferanceNumber,
+            expenseType: expenseType,
+            transactionType: typeOfTransaction,
+            toIncl: toIncl,
+          ),
+          transition: customTrans,
+          curve: customCurve,
+          duration: duration,
+        );
+      },
       child: Row(
         children: [
           Padding(
