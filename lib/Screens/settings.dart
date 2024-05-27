@@ -1,12 +1,20 @@
 import "package:flutter/material.dart";
 import "package:flutter_screenutil/flutter_screenutil.dart";
+import "package:get/get.dart";
+import "package:spendwise/Utils/methods.dart";
 
 // TODO: Reduce Lines of Code
-class Settings extends StatelessWidget {
+class Settings extends StatefulWidget {
   const Settings({super.key});
 
   @override
+  State<Settings> createState() => _SettingsState();
+}
+
+class _SettingsState extends State<Settings> {
+  @override
   Widget build(BuildContext context) {
+    final themeController = Get.find<ThemeModeController>();
     return Scaffold(
       appBar: AppBar(),
       body: SafeArea(
@@ -36,9 +44,18 @@ class Settings extends StatelessWidget {
                     "Dark Mode",
                     style: TextStyle(fontSize: 20.r),
                   ),
-                  Icon(
-                    Icons.toggle_off,
-                    size: 40.r,
+                  GestureDetector(
+                    onTap: () {
+                      themeController.toggleThemeMode();
+                      setState(() {});
+                    },
+                    child: Icon(
+                      Get.find<ThemeModeController>().themeMode ==
+                              ThemeMode.dark
+                          ? Icons.toggle_on
+                          : Icons.toggle_off,
+                      size: 40.r,
+                    ),
                   ),
                 ],
               ),

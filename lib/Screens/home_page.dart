@@ -15,6 +15,7 @@ import 'package:spendwise/Models/cus_transaction.dart';
 import 'package:spendwise/Requirements/data.dart';
 import 'package:spendwise/Requirements/transaction.dart';
 import 'package:spendwise/Screens/cash_entry.dart';
+import 'package:spendwise/Utils/methods.dart';
 
 // TODO: Reduce Lines of Code
 class HomePage extends StatefulWidget {
@@ -25,63 +26,68 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  List<CusTransaction> bankTransaction = [];
   Future? _future;
-
-  // Function to returive data from android msg and FireStore data
-  Future<dynamic> getData() async {
-    final users = await FirebaseFirestore.instance.collection("Users").get();
-    final bankTransactions = await querySmsMessages();
-    return [users, bankTransactions];
-  }
+  dynamic _user;
+  dynamic username;
 
   // Function to run everytime a user expects to refresh the data
   Future<void> _refreshData() async {
     setState(() {
-      _future = getData();
+      _future = getTransactions();
     });
+  }
+
+  Future<void> _getData() async {
+    dynamic getUserData = await getUser();
+    if (_user == null) {
+      setState(() {
+        _user = getUserData;
+      });
+    }
   }
 
   // Override default method to get the initial data beforehand only
   @override
   void initState() {
-    _future = getData();
+    // _getData();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
-    List<CusTransaction> bankTransaction = [];
+    GlobalKey<ScaffoldState> scaffoldKey = GlobalKey();
+    _getData();
 
     return RefreshIndicator(
       onRefresh: _refreshData,
       child: FutureBuilder(
-        future: _future,
+        future: getTransactions(),
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           // if the connection is done and the data is succesfully retirved then return the screen else return loading screen
-          if (snapshot.connectionState == ConnectionState.done) {
-            final parsedmsg = parseTransactions(snapshot.data[1][1]);
-            bankTransaction =
-                combineTransactions(snapshot.data[1][0], parsedmsg);
-            dynamic user;
-            for (dynamic use in snapshot.data[0].docs) {
-              if (use["email"].toString() ==
+          if ((snapshot.connectionState == ConnectionState.done) &&
+              (_user != null)) {
+            bankTransaction = snapshot.data;
+            // debugPrint(_user.docs.toString());
+            // bankTransaction = snapshot.data[1];
+            for (dynamic user in _user.docs) {
+              if (user["email"].toString() ==
                   FirebaseAuth.instance.currentUser!.email) {
-                user = use;
+                username = user;
               }
             }
 
             // return homepage screen
             return Scaffold(
               appBar: CustomAppBar(
-                username: user["username"],
+                username: userName.toString(),
               ),
               drawer: CustomDrawer(
                 scaffoldKey: scaffoldKey,
               ),
               body: SafeArea(
                 child: GestureDetector(
-                  onVerticalDragEnd: (details) => _refreshData(),
+                  // onVerticalDragEnd: (details) => _refreshData(),
                   child: Column(
                     children: [
                       AvailableBalance(
@@ -140,13 +146,15 @@ class _HomePageState extends State<HomePage> {
                       ] else ...[
                         Expanded(
                           child: ListView.builder(
-                            itemCount: allTransactions(bankTransaction)
-                                .reversed
-                                .toList()
+                            // reverse: true,
+                            itemCount: allTransactions(bankTransaction,
+                                    thisMonth: true, todayTrans: true)
                                 .length, // Use todaysTransactions length
                             itemBuilder: (context, index) {
-                              final transaction =
-                                  allTransactions(bankTransaction);
+                              final transaction = allTransactions(
+                                  bankTransaction,
+                                  thisMonth: true,
+                                  todayTrans: true);
                               return TransactionWidget(
                                 expenseType: transaction[index].expenseType,
                                 width: 100.w,
@@ -182,7 +190,7 @@ class _HomePageState extends State<HomePage> {
                   );
 
                   if (toreload != null) {
-                    debugPrint(toreload.toString());
+                    // debugPrint(toreload.toString());
                     _refreshData();
                   }
                 },
@@ -191,9 +199,20 @@ class _HomePageState extends State<HomePage> {
 
             // loading screen to only show while the connection is waiting
           } else {
-            return const Scaffold(
+            return Scaffold(
               body: SafeArea(
-                child: Center(child: CircularProgressIndicator()),
+                child: Center(
+                    child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    const CircularProgressIndicator(),
+                    SizedBox(
+                      height: 10.r,
+                    ),
+                    const Text("Loading User Data"),
+                  ],
+                )),
               ),
             );
           }

@@ -30,6 +30,8 @@ List<CusTransaction> allTransactions(
     debugPrint("from showhidden");
     return transactions
         .where((transaction) => transaction.toInclude == 1)
+        .toList()
+        .reversed
         .toList();
   } else if (thisMonth == true &&
       income == true &&
@@ -43,6 +45,8 @@ List<CusTransaction> allTransactions(
             transaction.dateAndTime.month == today.month &&
             transaction.typeOfTransaction == "income".toLowerCase() &&
             transaction.toInclude == 1)
+        .toList()
+        .reversed
         .toList();
   } else if (thisMonth == true &&
       expense == true &&
@@ -56,6 +60,8 @@ List<CusTransaction> allTransactions(
             transaction.dateAndTime.month == today.month &&
             transaction.typeOfTransaction == "expense".toLowerCase() &&
             transaction.toInclude == 1)
+        .toList()
+        .reversed
         .toList();
   } else if (income == true &&
       showHidden == true &&
@@ -66,6 +72,8 @@ List<CusTransaction> allTransactions(
     return transactions
         .where((transaction) =>
             transaction.typeOfTransaction == "income".toLowerCase())
+        .toList()
+        .reversed
         .toList();
   } else if (expense == true &&
       showHidden == true &&
@@ -76,6 +84,8 @@ List<CusTransaction> allTransactions(
     return transactions
         .where((transaction) =>
             transaction.typeOfTransaction == "expense".toLowerCase())
+        .toList()
+        .reversed
         .toList();
   } else if (thisMonth == true &&
       expense == true &&
@@ -87,7 +97,25 @@ List<CusTransaction> allTransactions(
         .where((transaction) =>
             transaction.dateAndTime.month == today.month &&
             transaction.dateAndTime.year == today.year &&
+            transaction.expenseType == "expense".toLowerCase() &&
             transaction.toInclude == 1)
+        .toList()
+        .reversed
+        .toList();
+  } else if (thisMonth == true &&
+      expense == false &&
+      showHidden == false &&
+      todayTrans == true &&
+      income == false) {
+    debugPrint("from todayTrans");
+    return transactions
+        .where((transaction) =>
+            transaction.dateAndTime.month == today.month &&
+            transaction.dateAndTime.year == today.year &&
+            transaction.dateAndTime.day == today.day &&
+            transaction.toInclude == 1)
+        .toList()
+        .reversed
         .toList();
   } else {
     // debugPrint(expense.toString());
@@ -96,9 +124,10 @@ List<CusTransaction> allTransactions(
     return transactions
         .where((transaction) =>
             transaction.dateAndTime.month == today.month &&
-            transaction.dateAndTime.day == today.day &&
             transaction.dateAndTime.year == today.year &&
             transaction.toInclude == 1)
+        .toList()
+        .reversed
         .toList();
   }
 }
@@ -248,16 +277,12 @@ List<CusTransaction> parseTransactions(List<SmsMessage> messages) {
 
     // Extract relevant information
     dynamic amount;
-    dynamic date = DateTime.now();
+    dynamic date;
     dynamic toFrom = "";
     dynamic typeOfTransaction = "";
     dynamic upiRefNo;
     dynamic isIncluded = true; // Assuming all transactions should be included
 
-    // Extract relevant information
-    // amount = double.tryParse(
-    //         extractA(parts, 'Rs') ?? extractValue(parts, 'Rs.').toString()) ??
-    //     0.0;
     try {
       amount = double.parse(extractAmount(parts, "Rs").toString());
     } catch (e) {
@@ -277,12 +302,13 @@ List<CusTransaction> parseTransactions(List<SmsMessage> messages) {
         date = DateFormat.yMMMMd('en_US')
             .format(DateTime.parse(extractDate(parts, "on").toString()));
       } catch (e) {
-        date = DateFormat.yMMMd('en_US')
-            .format(DateTime.parse(extractDate(parts, "on").toString()));
+        if (e.toString().isNotEmpty) {
+          date = DateFormat('d-M-y')
+              .format(DateTime.parse(extractDate(parts, "on").toString()));
+        }
       }
-      debugPrint(date);
     } catch (e) {
-      debugPrint(e.toString() + "0000000");
+      debugPrint("${e}0000000");
     }
 
     if (amount != 0) {

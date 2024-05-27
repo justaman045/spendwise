@@ -6,6 +6,7 @@ import "package:spendwise/Components/details_button.dart";
 import "package:spendwise/Components/responsive_methods.dart";
 import "package:spendwise/Requirements/data.dart";
 import "package:spendwise/Screens/edit_transaction.dart";
+import "package:spendwise/Utils/theme.dart";
 
 // TODO: Reduce Lines of Code
 class TransactionDetails extends StatelessWidget {
@@ -35,7 +36,7 @@ class TransactionDetails extends StatelessWidget {
         child: Column(
           children: [
             Padding(
-              padding: EdgeInsets.only(top: 90.h),
+              padding: EdgeInsets.only(top: 50.h),
               child: SizedBox(
                 width: 150.r,
                 child: Center(
@@ -235,8 +236,38 @@ class TransactionDetails extends StatelessWidget {
               ),
             ),
             Padding(
+              padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
+              child: const Divider(
+                color: Colors.black,
+              ),
+            ),
+            Padding(
               padding: EdgeInsets.only(
-                top: 50.h,
+                left: 30.w,
+                right: 30.w,
+                top: 5.h,
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    "Total",
+                    style: TextStyle(
+                      fontSize: 13.r,
+                    ),
+                  ),
+                  Text(
+                    "Rs. $amount",
+                    style: TextStyle(
+                      fontSize: 13.r,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(
+                top: 30.h,
                 bottom: 10.h,
               ),
               child: Container(

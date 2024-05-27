@@ -7,6 +7,7 @@ import "package:spendwise/Components/gradient_color.dart";
 import "package:spendwise/Requirements/data.dart";
 import "package:spendwise/Screens/home_page.dart";
 import "package:spendwise/Screens/login.dart";
+import "package:spendwise/Utils/theme.dart";
 
 final _formKey = GlobalKey<FormState>();
 
@@ -29,54 +30,16 @@ class SignUp extends StatelessWidget {
     return Scaffold(
       body: Stack(
         children: [
-          Container(
-            height: 150.h,
-            width: 150.w,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.only(
-                bottomRight: Radius.circular(150.h),
-              ),
-              gradient: const LinearGradient(
-                begin: Alignment.topRight,
-                end: Alignment.bottomLeft,
-                colors: [
-                  Color.fromRGBO(210, 209, 254, 1),
-                  Color.fromRGBO(243, 203, 237, 1),
-                ],
-              ),
-            ),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Container(
-                height: 250.w,
-                width: 125.w,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(200.w),
-                    bottomLeft: Radius.circular(200.w),
-                  ),
-                  gradient: const LinearGradient(
-                    begin: Alignment.topRight,
-                    end: Alignment.bottomLeft,
-                    colors: [
-                      Color.fromRGBO(210, 209, 254, 1),
-                      Color.fromRGBO(243, 203, 237, 1),
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ),
-          Padding(
-            padding: EdgeInsets.only(top: 550.h, left: 10.w),
+          Opacity(
+            opacity: 0.6,
             child: Container(
-              height: 250.w,
-              width: 250.w,
-              decoration: const BoxDecoration(
-                shape: BoxShape.circle,
-                gradient: LinearGradient(
+              height: 150.h,
+              width: 150.w,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.only(
+                  bottomRight: Radius.circular(150.h),
+                ),
+                gradient: const LinearGradient(
                   begin: Alignment.topRight,
                   end: Alignment.bottomLeft,
                   colors: [
@@ -87,7 +50,48 @@ class SignUp extends StatelessWidget {
               ),
             ),
           ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Opacity(
+                opacity: 0.6,
+                child: Container(
+                  height: 250.w,
+                  width: 125.w,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(200.w),
+                      bottomLeft: Radius.circular(200.w),
+                    ),
+                    gradient: const LinearGradient(
+                      begin: Alignment.topRight,
+                      end: Alignment.bottomLeft,
+                      colors: [
+                        Color.fromRGBO(210, 209, 254, 1),
+                        Color.fromRGBO(243, 203, 237, 1),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          Padding(
+            padding: EdgeInsets.only(top: 550.h, left: 10.w),
+            child: Opacity(
+              opacity: 0.6,
+              child: Container(
+                height: 250.w,
+                width: 250.w,
+                decoration: const BoxDecoration(
+                  shape: BoxShape.circle,
+                  gradient: MyAppColors.avaiableBalanceColor,
+                ),
+              ),
+            ),
+          ),
           SingleChildScrollView(
+            physics: const BouncingScrollPhysics(),
             child: SafeArea(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -272,6 +276,11 @@ class SignUp extends StatelessWidget {
                             "Login",
                             style: TextStyle(
                               fontSize: 13.r,
+                              color: Get.isDarkMode
+                                  ? MyAppColors
+                                      .normalColoredWidgetTextColorDarkMode
+                                  : MyAppColors
+                                      .normalColoredWidgetTextColorLightMode,
                             ),
                           ),
                         ),

@@ -7,7 +7,7 @@ import 'package:spendwise/Requirements/data.dart';
 import 'package:spendwise/Screens/transaction_details.dart';
 
 // TODO: Reduce Lines of Code
-class TransactionWidget extends StatelessWidget {
+class TransactionWidget extends StatefulWidget {
   const TransactionWidget({
     super.key,
     required this.width,
@@ -32,24 +32,33 @@ class TransactionWidget extends StatelessWidget {
   final int toIncl;
 
   @override
+  State<TransactionWidget> createState() => _TransactionWidgetState();
+}
+
+class _TransactionWidgetState extends State<TransactionWidget> {
+  @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
         final refresh = Get.to(
           routeName: "Transaction Details",
           () => TransactionDetails(
-            amount: amount,
-            dateTime: dateAndTime,
-            toName: name,
-            transactionReferanceNumber: transactionReferanceNumber,
-            expenseType: expenseType,
-            transactionType: typeOfTransaction,
-            toIncl: toIncl,
+            amount: widget.amount,
+            dateTime: widget.dateAndTime,
+            toName: widget.name,
+            transactionReferanceNumber: widget.transactionReferanceNumber,
+            expenseType: widget.expenseType,
+            transactionType: widget.typeOfTransaction,
+            toIncl: widget.toIncl,
           ),
           transition: customTrans,
           curve: customCurve,
           duration: duration,
         );
+
+        if (refresh != null) {
+          setState(() {});
+        }
       },
       child: Row(
         children: [
@@ -91,7 +100,7 @@ class TransactionWidget extends StatelessWidget {
                     SizedBox(
                       width: 150.w,
                       child: Text(
-                        name.toString(),
+                        widget.name.toString(),
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 15.r,
@@ -100,7 +109,7 @@ class TransactionWidget extends StatelessWidget {
                     ),
                     Row(
                       children: [
-                        if (typeOfTransaction == "expense") ...[
+                        if (widget.typeOfTransaction == "expense") ...[
                           Text(
                             "Rs. -",
                             style: TextStyle(
@@ -119,10 +128,10 @@ class TransactionWidget extends StatelessWidget {
                             ),
                           ),
                         ],
-                        if (typeOfTransaction == "expense") ...[
+                        if (widget.typeOfTransaction == "expense") ...[
                           Countup(
                             begin: 0,
-                            end: amount.toDouble(),
+                            end: widget.amount.toDouble(),
                             style: TextStyle(
                               color: Colors.redAccent,
                               fontSize: 20.r,
@@ -132,7 +141,7 @@ class TransactionWidget extends StatelessWidget {
                         ] else ...[
                           Countup(
                             begin: 0,
-                            end: amount.toDouble(),
+                            end: widget.amount.toDouble(),
                             style: TextStyle(
                               color: Colors.green,
                               fontSize: 20.r,
@@ -148,7 +157,7 @@ class TransactionWidget extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      expenseType,
+                      widget.expenseType,
                       style: TextStyle(
                         fontSize: 13.r,
                       ),
@@ -157,7 +166,7 @@ class TransactionWidget extends StatelessWidget {
                       children: [
                         Text(
                           DateFormat.yMMMMd('en_US')
-                              .format(dateAndTime)
+                              .format(widget.dateAndTime)
                               .toString(),
                           style: TextStyle(fontSize: 11.r),
                         ),
@@ -166,7 +175,7 @@ class TransactionWidget extends StatelessWidget {
                               fontSize: 11.r,
                             )),
                         Text(
-                          DateFormat.jm().format(dateAndTime).toString(),
+                          DateFormat.jm().format(widget.dateAndTime).toString(),
                           style: TextStyle(
                             fontSize: 11.r,
                           ),

@@ -6,6 +6,7 @@ import "package:spendwise/Screens/all_transactions.dart";
 import "package:spendwise/Screens/home_page.dart";
 import "package:spendwise/Screens/settings.dart";
 import "package:spendwise/Screens/user_profile.dart";
+import "package:spendwise/Utils/theme.dart";
 
 // TODO: Reduce Lines of Code
 class CustomDrawer extends StatelessWidget {
@@ -15,7 +16,7 @@ class CustomDrawer extends StatelessWidget {
   });
 
   // a local variable to recive scaffold key to build a custom drawer of the app
-  final GlobalKey scaffoldKey;
+  final GlobalKey<ScaffoldState> scaffoldKey;
 
   @override
   Widget build(BuildContext context) {
@@ -28,26 +29,23 @@ class CustomDrawer extends StatelessWidget {
           // TODO : Edit the Drawer Header to a more meaningfull header
           DrawerHeader(
             decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topRight,
-                end: Alignment.bottomLeft,
-                colors: [
-                  Color.fromRGBO(210, 209, 254, 1),
-                  Color.fromRGBO(243, 203, 237, 1),
-                ],
-              ),
+              gradient: MyAppColors.avaiableBalanceColor,
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Icon(Icons.person_2_sharp),
+                const Icon(
+                  Icons.person_2_sharp,
+                  color: MyAppColors.normalColoredWidgetTextColorDarkMode,
+                ),
                 Column(
                   children: [
                     Text(
                       userName,
                       style: TextStyle(
                         fontSize: 20.w,
+                        color: MyAppColors.normalColoredWidgetTextColorDarkMode,
                       ),
                     ),
                   ],
@@ -58,14 +56,19 @@ class CustomDrawer extends StatelessWidget {
 
           // Routes and buttons of the app Drawer
           ListTile(
-            title: Center(
-              child: Text(
-                navBars[0],
-                style: TextStyle(fontSize: 15.w),
-              ),
+            minTileHeight: 25.h,
+          ),
+
+          ListTile(
+            title: Text(
+              navBars[0],
+              style: TextStyle(fontSize: 15.w),
             ),
             onTap: () {
               if (ModalRoute.of(context)?.settings.name != "/") {
+                if (Scaffold.of(context).isDrawerOpen) {
+                  Scaffold.of(context).closeDrawer();
+                }
                 Get.to(
                   routeName: "/",
                   () => const HomePage(),
@@ -77,11 +80,9 @@ class CustomDrawer extends StatelessWidget {
             },
           ),
           ListTile(
-            title: Center(
-              child: Text(
-                navBars[1],
-                style: TextStyle(fontSize: 15.w),
-              ),
+            title: Text(
+              navBars[1],
+              style: TextStyle(fontSize: 15.w),
             ),
             onTap: () {
               if (ModalRoute.of(context)?.settings.name != routes[4]) {
@@ -97,20 +98,24 @@ class CustomDrawer extends StatelessWidget {
                   transition: customTrans,
                   duration: duration,
                 );
+                if (Scaffold.of(context).isDrawerOpen) {
+                  Scaffold.of(context).closeDrawer();
+                }
               }
             },
           ),
           ListTile(
-            title: Center(
-              child: Text(
-                navBars[2],
-                style: TextStyle(
-                  fontSize: 15.w,
-                ),
+            title: Text(
+              navBars[2],
+              style: TextStyle(
+                fontSize: 15.w,
               ),
             ),
             onTap: () {
               if (ModalRoute.of(context)?.settings.name != routes[6]) {
+                if (Scaffold.of(context).isDrawerOpen) {
+                  Scaffold.of(context).closeDrawer();
+                }
                 Get.to(
                   routeName: routes[6],
                   () => const UserProfile(),
@@ -122,12 +127,32 @@ class CustomDrawer extends StatelessWidget {
             },
           ),
           ListTile(
-            title: Center(
-              child: Text(
-                navBars[3],
-                style: TextStyle(
-                  fontSize: 15.w,
-                ),
+            title: Text(
+              "Subscription Manager",
+              style: TextStyle(
+                fontSize: 15.w,
+              ),
+            ),
+            onTap: () {
+              if (ModalRoute.of(context)?.settings.name != routes[6]) {
+                Get.to(
+                  routeName: routes[6],
+                  () => const UserProfile(),
+                  curve: customCurve,
+                  transition: customTrans,
+                  duration: duration,
+                );
+                if (Scaffold.of(context).isDrawerOpen) {
+                  Scaffold.of(context).closeDrawer();
+                }
+              }
+            },
+          ),
+          ListTile(
+            title: Text(
+              navBars[3],
+              style: TextStyle(
+                fontSize: 15.w,
               ),
             ),
             onTap: () {
@@ -139,6 +164,9 @@ class CustomDrawer extends StatelessWidget {
                   transition: customTrans,
                   duration: duration,
                 );
+                if (Scaffold.of(context).isDrawerOpen) {
+                  Scaffold.of(context).closeDrawer();
+                }
               }
             },
           ),

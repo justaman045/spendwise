@@ -2,6 +2,7 @@ import "package:countup/countup.dart";
 import "package:flutter/material.dart";
 import "package:flutter_screenutil/flutter_screenutil.dart";
 import "package:spendwise/Requirements/data.dart";
+import "package:spendwise/Utils/theme.dart";
 
 // TODO: Reduce Lines of Code
 class CashFlow extends StatelessWidget {
@@ -26,14 +27,7 @@ class CashFlow extends StatelessWidget {
             width: (150.w),
             // color: Colors.black,
             decoration: BoxDecoration(
-              gradient: const LinearGradient(
-                begin: Alignment.topRight,
-                end: Alignment.bottomLeft,
-                colors: [
-                  Color.fromRGBO(230, 247, 241, 1),
-                  Color.fromRGBO(228, 243, 243, 1),
-                ],
-              ),
+              gradient: MyAppColors.currentFlowcolor,
               borderRadius: BorderRadius.all(
                 Radius.circular(20.r),
               ),
@@ -47,6 +41,7 @@ class CashFlow extends StatelessWidget {
                     padding: EdgeInsets.all(5.r),
                     child: const Icon(
                       Icons.attach_money,
+                      color: MyAppColors.normalColoredWidgetTextColorDarkMode,
                     ),
                   ),
                   Text(
@@ -54,6 +49,7 @@ class CashFlow extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 16.r,
                       fontWeight: FontWeight.w500,
+                      color: MyAppColors.normalColoredWidgetTextColorDarkMode,
                     ),
                   ),
                   Row(
@@ -63,6 +59,8 @@ class CashFlow extends StatelessWidget {
                         style: TextStyle(
                           fontSize: 15.r,
                           fontWeight: FontWeight.bold,
+                          color:
+                              MyAppColors.normalColoredWidgetTextColorDarkMode,
                         ),
                       ),
                       Countup(
@@ -72,6 +70,8 @@ class CashFlow extends StatelessWidget {
                         style: TextStyle(
                           fontSize: 25.r,
                           fontWeight: FontWeight.bold,
+                          color:
+                              MyAppColors.normalColoredWidgetTextColorDarkMode,
                         ),
                       )
                     ],

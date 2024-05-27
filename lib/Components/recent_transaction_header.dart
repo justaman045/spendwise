@@ -4,6 +4,7 @@ import "package:get/get.dart";
 import "package:spendwise/Models/cus_transaction.dart";
 import "package:spendwise/Requirements/data.dart";
 import "package:spendwise/Screens/all_transactions.dart";
+import "package:spendwise/Utils/theme.dart";
 
 // TODO: Reduce Lines of Code
 class RecentTransactionHeader extends StatelessWidget {
@@ -50,7 +51,10 @@ class RecentTransactionHeader extends StatelessWidget {
             },
             child: Text(
               "See All..",
-              style: TextStyle(fontSize: 15.r),
+              style: TextStyle(
+                fontSize: 15.r,
+                color: MyAppColors.normalColoredWidgetTextColorDarkMode,
+              ),
             ),
           ),
         ],

@@ -6,6 +6,7 @@ import "package:spendwise/Models/cus_transaction.dart";
 import "package:spendwise/Models/db_helper.dart";
 import "package:spendwise/Requirements/data.dart";
 import "package:spendwise/Requirements/transaction.dart";
+import "package:spendwise/Utils/theme.dart";
 
 // TODO: Reduce Lines of Code
 final _formKey = GlobalKey<FormState>();
@@ -288,7 +289,14 @@ class _AddCashEntryState extends State<AddCashEntry> {
                       child: Center(
                         child: Text(
                           "Save and Add another",
-                          style: TextStyle(fontSize: 13.r),
+                          style: TextStyle(
+                            fontSize: 13.r,
+                            color: Get.isDarkMode
+                                ? MyAppColors
+                                    .normalColoredWidgetTextColorDarkMode
+                                : MyAppColors
+                                    .normalColoredWidgetTextColorLightMode,
+                          ),
                         ),
                       ),
                     ),
@@ -347,6 +355,11 @@ class _AddCashEntryState extends State<AddCashEntry> {
                           "Add Payment",
                           style: TextStyle(
                             fontSize: 13.r,
+                            color: Get.isDarkMode
+                                ? MyAppColors
+                                    .normalColoredWidgetTextColorDarkMode
+                                : MyAppColors
+                                    .normalColoredWidgetTextColorLightMode,
                           ),
                         ),
                       ),
@@ -373,8 +386,16 @@ class _AddCashEntryState extends State<AddCashEntry> {
                     ),
                     width: 100.w,
                     height: 50.h,
-                    child: const Center(
-                      child: Text("Go Back"),
+                    child: Center(
+                      child: Text(
+                        "Go Back",
+                        style: TextStyle(
+                          color: Get.isDarkMode
+                              ? MyAppColors.normalColoredWidgetTextColorDarkMode
+                              : MyAppColors
+                                  .normalColoredWidgetTextColorLightMode,
+                        ),
+                      ),
                     ),
                   ),
                   onTap: () => Get.back(),

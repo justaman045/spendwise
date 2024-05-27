@@ -6,6 +6,7 @@ import "package:spendwise/Components/transaction_charts.dart";
 import "package:spendwise/Components/transaction_widget.dart";
 import "package:spendwise/Models/cus_transaction.dart";
 import "package:spendwise/Requirements/transaction.dart";
+import "package:spendwise/Utils/theme.dart";
 
 // TODO: Reduce Lines of Code
 class AllTransactions extends StatefulWidget {
@@ -92,7 +93,10 @@ class _AllTransactionsState extends State<AllTransactions> {
                 ),
                 centerTitle: true,
                 leading: IconButton(
-                  icon: const Icon(Icons.arrow_back, color: Colors.black),
+                  icon: Icon(Icons.arrow_back,
+                      color: Get.isDarkMode
+                          ? MyAppColors.normalColoredWidgetTextColorLightMode
+                          : MyAppColors.normalColoredWidgetTextColorDarkMode),
                   onPressed: () => {Get.back(result: "refresh")},
                 ),
               ),

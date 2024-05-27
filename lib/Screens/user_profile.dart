@@ -12,6 +12,7 @@ import "package:spendwise/Screens/change_password.dart";
 import "package:spendwise/Screens/delete_account.dart";
 import "package:spendwise/Screens/edit_user_profile.dart";
 import "package:spendwise/Screens/intro.dart";
+import "package:spendwise/Utils/theme.dart";
 
 // TODO: Reduce Lines of Code
 class UserProfile extends StatefulWidget {
@@ -76,14 +77,7 @@ class _UserProfileState extends State<UserProfile> {
                             Container(
                               decoration: const BoxDecoration(
                                 shape: BoxShape.circle,
-                                gradient: LinearGradient(
-                                  begin: Alignment.topRight,
-                                  end: Alignment.bottomLeft,
-                                  colors: [
-                                    Color.fromRGBO(210, 209, 254, 1),
-                                    Color.fromRGBO(243, 203, 237, 1),
-                                  ],
-                                ),
+                                gradient: MyAppColors.avaiableBalanceColor,
                               ),
                               width: 120.w,
                               height: 120.h,
@@ -169,10 +163,7 @@ class _UserProfileState extends State<UserProfile> {
                     },
                     width: getScreenWidth(context),
                     height: getScreenHeight(context),
-                    icons: Icon(
-                      Icons.wallet_rounded,
-                      size: 20.r,
-                    ),
+                    icons: Icons.wallet_rounded,
                     text: "All Payments",
                   ),
                   MyProfileButtons(
@@ -192,10 +183,7 @@ class _UserProfileState extends State<UserProfile> {
                     },
                     width: getScreenWidth(context),
                     height: getScreenHeight(context),
-                    icons: Icon(
-                      Icons.wallet_rounded,
-                      size: 20.r,
-                    ),
+                    icons: Icons.wallet_rounded,
                     text: "All Income",
                   ),
                   MyProfileButtons(
@@ -210,10 +198,7 @@ class _UserProfileState extends State<UserProfile> {
                     },
                     width: getScreenWidth(context),
                     height: getScreenHeight(context),
-                    icons: Icon(
-                      Icons.wallet_rounded,
-                      size: 20.r,
-                    ),
+                    icons: Icons.wallet_rounded,
                     text: "Change Password",
                   ),
                   Padding(
@@ -301,7 +286,7 @@ class MyProfileButtons extends StatelessWidget {
 
   final double width;
   final double height;
-  final Icon icons;
+  final IconData icons;
   final String text;
   final Function fn;
 
@@ -333,14 +318,23 @@ class MyProfileButtons extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                icons,
+                Icon(
+                  icons,
+                  color: Get.isDarkMode ? Colors.black : Colors.white,
+                ),
                 Text(
                   text,
-                  style: TextStyle(fontSize: 13.r),
+                  style: TextStyle(
+                    fontSize: 13.r,
+                    color: Get.isDarkMode
+                        ? MyAppColors.normalColoredWidgetTextColorDarkMode
+                        : MyAppColors.normalColoredWidgetTextColorLightMode,
+                  ),
                 ),
                 Icon(
                   Icons.chevron_right_sharp,
                   size: 20.r,
+                  color: Get.isDarkMode ? Colors.black : Colors.white,
                 ),
               ],
             ),

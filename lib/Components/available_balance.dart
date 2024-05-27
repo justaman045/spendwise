@@ -6,6 +6,7 @@ import "package:spendwise/Models/cus_transaction.dart";
 import "package:spendwise/Requirements/data.dart";
 import "package:spendwise/Requirements/transaction.dart";
 import "package:spendwise/Screens/all_transactions.dart";
+import "package:spendwise/Utils/theme.dart";
 
 // TODO: Reduce Lines of Code
 class AvailableBalance extends StatelessWidget {
@@ -41,14 +42,7 @@ class AvailableBalance extends StatelessWidget {
         ),
         child: Container(
           decoration: BoxDecoration(
-            gradient: const LinearGradient(
-              begin: Alignment.topRight,
-              end: Alignment.bottomLeft,
-              colors: [
-                Color.fromRGBO(210, 209, 254, 1),
-                Color.fromRGBO(243, 203, 237, 1),
-              ],
-            ),
+            gradient: MyAppColors.avaiableBalanceColor,
             borderRadius: BorderRadius.all(
               Radius.circular(20.w),
             ),
@@ -62,6 +56,7 @@ class AvailableBalance extends StatelessWidget {
                     "Available Balance",
                     style: TextStyle(
                       fontSize: 15.w,
+                      color: MyAppColors.normalColoredWidgetTextColorDarkMode,
                     ),
                   ),
                   Row(

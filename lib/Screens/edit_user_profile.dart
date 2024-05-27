@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:spendwise/Utils/theme.dart';
 
 final _formKey = GlobalKey<FormState>();
 
@@ -250,7 +251,14 @@ class _EditUserProfileState extends State<EditUserProfile> {
                             child: Center(
                                 child: Text(
                               "Save Changes",
-                              style: TextStyle(fontSize: 15.r),
+                              style: TextStyle(
+                                fontSize: 15.r,
+                                color: Get.isDarkMode
+                                    ? MyAppColors
+                                        .normalColoredWidgetTextColorDarkMode
+                                    : MyAppColors
+                                        .normalColoredWidgetTextColorLightMode,
+                              ),
                             )),
                           ),
                         ),
@@ -271,7 +279,14 @@ class _EditUserProfileState extends State<EditUserProfile> {
                           child: Center(
                             child: Text(
                               "Discard Changes",
-                              style: TextStyle(fontSize: 15.r),
+                              style: TextStyle(
+                                fontSize: 15.r,
+                                color: Get.isDarkMode
+                                    ? MyAppColors
+                                        .normalColoredWidgetTextColorDarkMode
+                                    : MyAppColors
+                                        .normalColoredWidgetTextColorLightMode,
+                              ),
                             ),
                           ),
                         ),

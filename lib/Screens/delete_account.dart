@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:spendwise/Requirements/data.dart';
 import 'package:spendwise/Screens/intro.dart';
+import 'package:spendwise/Utils/theme.dart';
 
 final _formKey = GlobalKey<FormState>();
 
@@ -110,7 +111,14 @@ class DeleteAccount extends StatelessWidget {
                         child: Center(
                           child: Text(
                             "Go Back",
-                            style: TextStyle(fontSize: 13.r),
+                            style: TextStyle(
+                              fontSize: 13.r,
+                              color: Get.isDarkMode
+                                  ? MyAppColors
+                                      .normalColoredWidgetTextColorDarkMode
+                                  : MyAppColors
+                                      .normalColoredWidgetTextColorLightMode,
+                            ),
                           ),
                         ),
                       ),
@@ -155,6 +163,11 @@ class DeleteAccount extends StatelessWidget {
                             "Delete Account",
                             style: TextStyle(
                               fontSize: 13.r,
+                              color: Get.isDarkMode
+                                  ? MyAppColors
+                                      .normalColoredWidgetTextColorDarkMode
+                                  : MyAppColors
+                                      .normalColoredWidgetTextColorLightMode,
                             ),
                           ),
                         ),

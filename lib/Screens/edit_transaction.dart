@@ -308,6 +308,10 @@ class _EditTransactionState extends State<EditTransaction> {
                           debugPrint(_expType.toString());
                         }
                         if (_expType.isNotEmpty || _toExclude.isNotEmpty) {
+                          debugPrint(_toExclude);
+                          if (_toExclude != "Yes") {
+                            _toExclude = "No";
+                          }
                           CusTransaction transaction = CusTransaction(
                             amount: widget.amount.toDouble(),
                             dateAndTime: widget.dateTime,

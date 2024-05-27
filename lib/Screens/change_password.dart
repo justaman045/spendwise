@@ -2,6 +2,7 @@ import "package:firebase_auth/firebase_auth.dart";
 import "package:flutter/material.dart";
 import "package:flutter_screenutil/flutter_screenutil.dart";
 import "package:get/get.dart";
+import "package:spendwise/Utils/theme.dart";
 
 final _formKey = GlobalKey<FormState>();
 
@@ -240,7 +241,14 @@ class ChangePassword extends StatelessWidget {
                         child: Center(
                           child: Text(
                             "Go Back",
-                            style: TextStyle(fontSize: 13.r),
+                            style: TextStyle(
+                              fontSize: 13.r,
+                              color: Get.isDarkMode
+                                  ? MyAppColors
+                                      .normalColoredWidgetTextColorDarkMode
+                                  : MyAppColors
+                                      .normalColoredWidgetTextColorLightMode,
+                            ),
                           ),
                         ),
                       ),
@@ -278,7 +286,14 @@ class ChangePassword extends StatelessWidget {
                         child: Center(
                           child: Text(
                             "Save Changes",
-                            style: TextStyle(fontSize: 13.r),
+                            style: TextStyle(
+                              fontSize: 13.r,
+                              color: Get.isDarkMode
+                                  ? MyAppColors
+                                      .normalColoredWidgetTextColorDarkMode
+                                  : MyAppColors
+                                      .normalColoredWidgetTextColorLightMode,
+                            ),
                           ),
                         ),
                       ),
