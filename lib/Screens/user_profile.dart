@@ -320,7 +320,9 @@ class MyProfileButtons extends StatelessWidget {
               children: [
                 Icon(
                   icons,
-                  color: Get.isDarkMode ? Colors.black : Colors.white,
+                  color: Get.isDarkMode
+                      ? MyAppColors.normalColoredWidgetTextColorDarkMode
+                      : MyAppColors.normalColoredWidgetTextColorDarkMode,
                 ),
                 Text(
                   text,
@@ -328,13 +330,15 @@ class MyProfileButtons extends StatelessWidget {
                     fontSize: 13.r,
                     color: Get.isDarkMode
                         ? MyAppColors.normalColoredWidgetTextColorDarkMode
-                        : MyAppColors.normalColoredWidgetTextColorLightMode,
+                        : MyAppColors.normalColoredWidgetTextColorDarkMode,
                   ),
                 ),
                 Icon(
                   Icons.chevron_right_sharp,
                   size: 20.r,
-                  color: Get.isDarkMode ? Colors.black : Colors.white,
+                  color: Get.isDarkMode
+                      ? MyAppColors.normalColoredWidgetTextColorDarkMode
+                      : MyAppColors.normalColoredWidgetTextColorDarkMode,
                 ),
               ],
             ),

@@ -237,8 +237,10 @@ class TransactionDetails extends StatelessWidget {
             ),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
-              child: const Divider(
-                color: Colors.black,
+              child: Divider(
+                color: Get.isDarkMode
+                    ? MyAppColors.normalColoredWidgetTextColorLightMode
+                    : MyAppColors.normalColoredWidgetTextColorDarkMode,
               ),
             ),
             Padding(

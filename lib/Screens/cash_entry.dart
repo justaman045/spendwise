@@ -295,7 +295,7 @@ class _AddCashEntryState extends State<AddCashEntry> {
                                 ? MyAppColors
                                     .normalColoredWidgetTextColorDarkMode
                                 : MyAppColors
-                                    .normalColoredWidgetTextColorLightMode,
+                                    .normalColoredWidgetTextColorDarkMode,
                           ),
                         ),
                       ),
@@ -359,7 +359,7 @@ class _AddCashEntryState extends State<AddCashEntry> {
                                 ? MyAppColors
                                     .normalColoredWidgetTextColorDarkMode
                                 : MyAppColors
-                                    .normalColoredWidgetTextColorLightMode,
+                                    .normalColoredWidgetTextColorDarkMode,
                           ),
                         ),
                       ),
@@ -393,7 +393,7 @@ class _AddCashEntryState extends State<AddCashEntry> {
                           color: Get.isDarkMode
                               ? MyAppColors.normalColoredWidgetTextColorDarkMode
                               : MyAppColors
-                                  .normalColoredWidgetTextColorLightMode,
+                                  .normalColoredWidgetTextColorDarkMode,
                         ),
                       ),
                     ),

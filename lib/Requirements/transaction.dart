@@ -219,7 +219,6 @@ double getBalance(List<CusTransaction> transactions, {String type = ""}) {
   return expense;
 }
 
-// TODO: give he total expense made per day
 List<ExpenseData> expenseChart(List<CusTransaction> transactions) {
   final filteredTransactions = transactions
       .where((transaction) => transaction.typeOfTransaction == "expense")
@@ -232,10 +231,20 @@ List<ExpenseData> expenseChart(List<CusTransaction> transactions) {
 }
 
 List<ExpenseData> prepareChartData(List<CusTransaction> transactions) {
-  return transactions.map((transaction) {
-    final date = transaction.dateAndTime.day;
+  final Map<int, double> dayToTotalExpense = {}; // Map to store daily sums
+
+  // Loop through transactions and accumulate daily sums
+  for (final transaction in transactions) {
+    final day = transaction.dateAndTime.day;
     final expense = transaction.amount.toInt();
-    return ExpenseData(date, expense);
+    dayToTotalExpense[day] = (dayToTotalExpense[day] ?? 0) + expense;
+  }
+
+  // Create ExpenseData objects from the map
+  return dayToTotalExpense.entries.map((entry) {
+    final date = entry.key;
+    final totalExpense = entry.value.toInt();
+    return ExpenseData(date, totalExpense);
   }).toList();
 }
 

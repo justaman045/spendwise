@@ -230,7 +230,11 @@ class _LoginState extends State<Login> {
                             child: Text(
                               "Login",
                               style: TextStyle(
-                                color: Colors.white,
+                                color: Get.isDarkMode
+                                    ? MyAppColors
+                                        .normalColoredWidgetTextColorDarkMode
+                                    : MyAppColors
+                                        .normalColoredWidgetTextColorLightMode,
                                 fontSize: 15.r,
                               ),
                             ),
@@ -274,6 +278,11 @@ class _LoginState extends State<Login> {
                             "Reset Password",
                             style: TextStyle(
                               fontSize: 13.r,
+                              color: Get.isDarkMode
+                                  ? MyAppColors
+                                      .normalColoredWidgetTextColorDarkMode
+                                  : MyAppColors
+                                      .normalColoredWidgetTextColorLightMode,
                             ),
                           )),
                         ),

@@ -247,7 +247,7 @@ class ChangePassword extends StatelessWidget {
                                   ? MyAppColors
                                       .normalColoredWidgetTextColorDarkMode
                                   : MyAppColors
-                                      .normalColoredWidgetTextColorLightMode,
+                                      .normalColoredWidgetTextColorDarkMode,
                             ),
                           ),
                         ),
@@ -292,7 +292,7 @@ class ChangePassword extends StatelessWidget {
                                   ? MyAppColors
                                       .normalColoredWidgetTextColorDarkMode
                                   : MyAppColors
-                                      .normalColoredWidgetTextColorLightMode,
+                                      .normalColoredWidgetTextColorDarkMode,
                             ),
                           ),
                         ),

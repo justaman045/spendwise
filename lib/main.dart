@@ -29,6 +29,7 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
+  // Initializing Theme Controller
   Get.put(ThemeModeController());
 
   // run the App
@@ -60,6 +61,8 @@ class _SpendWiseState extends State<SpendWise> {
     if (await Permission.sms.request().isGranted) {
       // if the user is logged in then get user session
       final tcurrentUser = FirebaseAuth.instance.currentUser;
+
+      // get the current user that is already logged in and then if it is not null then update the currentUser
       if (tcurrentUser != null) {
         setState(() {
           currentUser = tcurrentUser;

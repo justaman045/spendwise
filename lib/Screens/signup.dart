@@ -280,7 +280,7 @@ class SignUp extends StatelessWidget {
                                   ? MyAppColors
                                       .normalColoredWidgetTextColorDarkMode
                                   : MyAppColors
-                                      .normalColoredWidgetTextColorLightMode,
+                                      .normalColoredWidgetTextColorDarkMode,
                             ),
                           ),
                         ),
@@ -345,7 +345,11 @@ class SignUp extends StatelessWidget {
                             child: Text(
                               "Create Account",
                               style: TextStyle(
-                                color: Colors.white,
+                                color: Get.isDarkMode
+                                    ? MyAppColors
+                                        .normalColoredWidgetTextColorDarkMode
+                                    : MyAppColors
+                                        .normalColoredWidgetTextColorLightMode,
                                 fontSize: 13.r,
                               ),
                             ),

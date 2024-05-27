@@ -5,6 +5,7 @@ import "package:intl/intl.dart";
 import "package:spendwise/Models/cus_transaction.dart";
 import "package:spendwise/Models/db_helper.dart";
 import "package:spendwise/Requirements/data.dart";
+import "package:spendwise/Utils/theme.dart";
 
 final _formKey = GlobalKey<FormState>();
 
@@ -297,7 +298,14 @@ class _EditTransactionState extends State<EditTransaction> {
                         child: Center(
                           child: Text(
                             "Go Back",
-                            style: TextStyle(fontSize: 13.r),
+                            style: TextStyle(
+                              fontSize: 13.r,
+                              color: Get.isDarkMode
+                                  ? MyAppColors
+                                      .normalColoredWidgetTextColorDarkMode
+                                  : MyAppColors
+                                      .normalColoredWidgetTextColorLightMode,
+                            ),
                           ),
                         ),
                       ),
@@ -353,7 +361,14 @@ class _EditTransactionState extends State<EditTransaction> {
                         child: Center(
                           child: Text(
                             "Save Changes",
-                            style: TextStyle(fontSize: 13.r),
+                            style: TextStyle(
+                              fontSize: 13.r,
+                              color: Get.isDarkMode
+                                  ? MyAppColors
+                                      .normalColoredWidgetTextColorDarkMode
+                                  : MyAppColors
+                                      .normalColoredWidgetTextColorLightMode,
+                            ),
                           ),
                         ),
                       ),
@@ -386,7 +401,14 @@ class _EditTransactionState extends State<EditTransaction> {
                       child: Center(
                         child: Text(
                           "Delete Transaction",
-                          style: TextStyle(fontSize: 13.r),
+                          style: TextStyle(
+                            fontSize: 13.r,
+                            color: Get.isDarkMode
+                                ? MyAppColors
+                                    .normalColoredWidgetTextColorDarkMode
+                                : MyAppColors
+                                    .normalColoredWidgetTextColorLightMode,
+                          ),
                         ),
                       ),
                     ),
