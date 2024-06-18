@@ -5,6 +5,7 @@ import "package:spendwise/Requirements/data.dart";
 import "package:spendwise/Screens/all_transactions.dart";
 import "package:spendwise/Screens/home_page.dart";
 import "package:spendwise/Screens/settings.dart";
+import "package:spendwise/Screens/subscription.dart";
 import "package:spendwise/Screens/user_profile.dart";
 import "package:spendwise/Utils/theme.dart";
 
@@ -134,10 +135,10 @@ class CustomDrawer extends StatelessWidget {
               ),
             ),
             onTap: () {
-              if (ModalRoute.of(context)?.settings.name != routes[6]) {
+              if (ModalRoute.of(context)?.settings.name != routes[13]) {
                 Get.to(
-                  routeName: routes[6],
-                  () => const UserProfile(),
+                  routeName: routes[13],
+                  () => const SubscriptionManager(),
                   curve: customCurve,
                   transition: customTrans,
                   duration: duration,

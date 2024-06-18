@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get.dart';
 import 'package:spendwise/TestData/test_transactions.dart';
 import 'package:spendwise/Utils/theme.dart';
 
@@ -58,10 +57,8 @@ class RecognizedAccounts extends StatelessWidget {
                         Icon(
                           Icons.account_balance,
                           size: 25.r,
-                          color: Get.isDarkMode
-                              ? MyAppColors.normalColoredWidgetTextColorDarkMode
-                              : MyAppColors
-                                  .normalColoredWidgetTextColorLightMode,
+                          color:
+                              MyAppColors.normalColoredWidgetTextColorDarkMode,
                         ),
                         Padding(
                           padding: EdgeInsets.only(
@@ -75,22 +72,16 @@ class RecognizedAccounts extends StatelessWidget {
                                 "***** ${accounts[0].accountNumber.toString().substring(accounts[0].accountNumber.toString().length - 5)}",
                                 style: TextStyle(
                                   fontSize: 15.r,
-                                  color: Get.isDarkMode
-                                      ? MyAppColors
-                                          .normalColoredWidgetTextColorDarkMode
-                                      : MyAppColors
-                                          .normalColoredWidgetTextColorLightMode,
+                                  color: MyAppColors
+                                      .normalColoredWidgetTextColorDarkMode,
                                 ),
                               ),
                               Text(
                                 accounts[0].bankName,
                                 style: TextStyle(
                                   fontSize: 13.r,
-                                  color: Get.isDarkMode
-                                      ? MyAppColors
-                                          .normalColoredWidgetTextColorDarkMode
-                                      : MyAppColors
-                                          .normalColoredWidgetTextColorLightMode,
+                                  color: MyAppColors
+                                      .normalColoredWidgetTextColorDarkMode,
                                 ),
                               ),
                             ],

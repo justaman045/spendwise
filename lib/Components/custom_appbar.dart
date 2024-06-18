@@ -3,7 +3,6 @@ import "package:flutter_screenutil/flutter_screenutil.dart";
 import "package:get/get.dart";
 import "package:spendwise/Requirements/data.dart";
 import "package:spendwise/Screens/recognized_accounts.dart";
-import "package:spendwise/Utils/theme.dart";
 
 // TODO: Reduce Lines of Code
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {

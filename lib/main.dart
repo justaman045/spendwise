@@ -12,11 +12,16 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:spendwise/Utils/methods.dart';
 import 'package:spendwise/Utils/theme.dart';
 import 'firebase_options.dart';
+import 'package:flutter/services.dart';
 
 // Main function to run all the app
 void main() async {
   // Firebase ensure initialized
   WidgetsFlutterBinding.ensureInitialized();
+
+  await SystemChrome.setPreferredOrientations(
+    [DeviceOrientation.portraitUp],
+  ); // To turn off landscape mode
 
   // for SQLIte Database to create or open
   final databaseHelper = DatabaseHelper();

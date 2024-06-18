@@ -1,4 +1,3 @@
-import "package:cloud_firestore/cloud_firestore.dart";
 import "package:firebase_auth/firebase_auth.dart";
 import "package:flutter/material.dart";
 import "package:flutter_screenutil/flutter_screenutil.dart";
@@ -12,6 +11,7 @@ import "package:spendwise/Screens/change_password.dart";
 import "package:spendwise/Screens/delete_account.dart";
 import "package:spendwise/Screens/edit_user_profile.dart";
 import "package:spendwise/Screens/intro.dart";
+import "package:spendwise/Utils/methods.dart";
 import "package:spendwise/Utils/theme.dart";
 
 // TODO: Reduce Lines of Code
@@ -23,31 +23,48 @@ class UserProfile extends StatefulWidget {
 }
 
 class _UserProfileState extends State<UserProfile> {
+  // Local Variable Declaration to use it in rendering
+  List<CusTransaction> bankTransaction = [];
+  // ignore: unused_field
   Future? _future;
+  dynamic _user;
+  dynamic username;
 
-  Future<dynamic> getData() async {
-    final users = await FirebaseFirestore.instance.collection("Users").get();
-    final bankTransactions = await querySmsMessages();
-    return [users, bankTransactions];
+  // // Function to run everytime a user expects to refresh the data but the value is not being used
+  // Future<void> _refreshData() async {
+  //   setState(() {
+  //     _future = getTransactions();
+  //   });
+  // }
+
+  // Get the User from the Server and update the Current User only if the User Data have been recived
+  Future<void> _getData() async {
+    dynamic getUserData = await getUser();
+    if (_user == null) {
+      setState(() {
+        _user = getUserData;
+      });
+    }
   }
 
+  // Override default method to get the initial data beforehand only
   @override
   void initState() {
-    _future = getData();
+    // _getData();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     List<CusTransaction> bankTransaction = [];
+    _getData();
     return FutureBuilder(
-      future: _future,
+      future: getTransactions(),
       builder: (BuildContext context, AsyncSnapshot snapshot) {
-        if (snapshot.connectionState == ConnectionState.done) {
-          final parsedmsg = parseTransactions(snapshot.data[1][1]);
-          bankTransaction = combineTransactions(snapshot.data[1][0], parsedmsg);
+        if ((snapshot.connectionState == ConnectionState.done) &&
+            (_user != null)) {
           dynamic user;
-          for (dynamic use in snapshot.data[0].docs) {
+          for (dynamic use in _user.docs) {
             if (use["email"].toString() ==
                 FirebaseAuth.instance.currentUser!.email) {
               user = use;

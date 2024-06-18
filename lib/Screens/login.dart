@@ -22,15 +22,21 @@ class Login extends StatefulWidget {
 class _LoginState extends State<Login> {
   @override
   Widget build(BuildContext context) {
+    // Editing Controller for the Input handleing
     final TextEditingController emailEditingController =
         TextEditingController();
     final TextEditingController passwordEditingController =
         TextEditingController();
+
+    // Render the Login Screen
     return Scaffold(
       body: Stack(
         children: [
+          // TO reduce the Widget Transparancy to make the overlapping widget readable
           Opacity(
             opacity: 0.6,
+
+            // Widget for the BackGround Screen Colorfull
             child: Container(
               height: 150.h,
               width: 150.w,
@@ -42,9 +48,12 @@ class _LoginState extends State<Login> {
               ),
             ),
           ),
+
+          // To display the Colorful widget at the right end of the screen
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
+              // ColorFul Widget
               Container(
                 height: 250.w,
                 width: 125.w,
@@ -65,14 +74,7 @@ class _LoginState extends State<Login> {
               width: 250.w,
               decoration: const BoxDecoration(
                 shape: BoxShape.circle,
-                gradient: LinearGradient(
-                  begin: Alignment.topRight,
-                  end: Alignment.bottomLeft,
-                  colors: [
-                    Color.fromRGBO(210, 209, 254, 1),
-                    Color.fromRGBO(243, 203, 237, 1),
-                  ],
-                ),
+                gradient: MyAppColors.avaiableBalanceColor,
               ),
             ),
           ),

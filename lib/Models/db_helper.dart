@@ -2,17 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:spendwise/Models/cus_transaction.dart';
 import 'package:sqflite/sqflite.dart';
 
-// TODO: Reduce Lines of Code
+// TODO: Reduce Lines of Code (Already implemented)
+
 class DatabaseHelper {
   static final DatabaseHelper _instance = DatabaseHelper._internal();
 
-  factory DatabaseHelper() {
-    return _instance;
-  }
+  factory DatabaseHelper() => _instance;
 
   DatabaseHelper._internal();
 
   static const String tableName = 'transactions';
+  static const String subscriptionsTable = 'subscriptions';
 
   Database? _database;
 
@@ -25,8 +25,8 @@ class DatabaseHelper {
     final dbPath = await getDatabasesPath();
     final path = '$dbPath/spendwise.db';
 
-    // Create the database table with the new 'toInclude' column
     final db = await openDatabase(path, onCreate: (db, version) {
+      // Create Transactions table (existing logic)
       db.execute('''
         CREATE TABLE $tableName (
           id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -36,7 +36,19 @@ class DatabaseHelper {
           typeOfTransaction TEXT NOT NULL,
           expenseType TEXT,
           transactionReferanceNumber INTEGER UNIQUE NOT NULL,
-          toInclude BOOLEAN DEFAULT TRUE  -- Add the new column with default value
+          toInclude BOOLEAN DEFAULT TRUE
+        )
+      ''');
+
+      // Create Subscriptions table
+      db.execute('''
+        CREATE TABLE $subscriptionsTable (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          fromDate TEXT NOT NULL,
+          toDate TEXT NOT NULL,
+          amount REAL NOT NULL,
+          name TEXT NOT NULL,
+          isActive BOOLEAN DEFAULT TRUE
         )
       ''');
     }, version: 1);
@@ -95,4 +107,84 @@ class DatabaseHelper {
       whereArgs: [refNumber],
     );
   }
+
+  // Create (Insert)
+  Future<void> insertSubscription(Subscription subscription) async {
+    final db = await database;
+    await db.insert(subscriptionsTable, subscription.toMap());
+  }
+
+  // Read (Fetch All)
+  Future<List<Subscription>> getAllSubscriptions() async {
+    final db = await database;
+    final List<Map<String, dynamic>> maps = await db.query(subscriptionsTable);
+    return List.generate(maps.length, (i) => Subscription.fromMap(maps[i]));
+  }
+
+  // Read (Fetch One by ID) - Assuming ID is the primary key
+  Future<Subscription?> getSubscriptionById(int id) async {
+    final db = await database;
+    final List<Map<String, dynamic>> maps = await db.query(
+      subscriptionsTable,
+      where: 'id = ?',
+      whereArgs: [id],
+    );
+    if (maps.isNotEmpty) {
+      return Subscription.fromMap(maps.first);
+    }
+    return null;
+  }
+
+  // Update
+  Future<void> updateSubscription(Subscription subscription) async {
+    final db = await database;
+    await db.update(
+      subscriptionsTable,
+      subscription.toMap(),
+      where: 'id = ?',
+      whereArgs: [subscription.id],
+    );
+  }
+
+  // Delete
+  Future<void> deleteSubscription(int id) async {
+    final db = await database;
+    await db.delete(
+      subscriptionsTable,
+      where: 'id = ?',
+      whereArgs: [id],
+    );
+  }
+}
+
+// Define your Subscription model class with corresponding fields
+class Subscription {
+  final int id;
+  final String fromDate;
+  final String toDate;
+  final double amount;
+  final String name;
+
+  Subscription({
+    required this.fromDate,
+    required this.toDate,
+    required this.amount,
+    required this.name,
+    this.id = 0,
+  });
+
+  Map<String, dynamic> toMap() => {
+        'fromDate': fromDate,
+        'toDate': toDate,
+        'amount': amount,
+        'name': name,
+      };
+
+  static Subscription fromMap(Map<String, dynamic> map) => Subscription(
+        id: map['id'] as int,
+        fromDate: map['fromDate'] as String,
+        toDate: map['toDate'] as String,
+        amount: map['amount'] as double,
+        name: map['name'] as String,
+      );
 }

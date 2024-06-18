@@ -17,6 +17,8 @@ const List<String> routes = [
   "wallets",
   "editProfile",
   "cashentry",
+  "subscription",
+  "add_subscription"
 ];
 bool loggedin = false;
 const int balance = 6123;

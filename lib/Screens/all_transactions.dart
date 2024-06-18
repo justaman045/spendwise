@@ -6,6 +6,7 @@ import "package:spendwise/Components/transaction_charts.dart";
 import "package:spendwise/Components/transaction_widget.dart";
 import "package:spendwise/Models/cus_transaction.dart";
 import "package:spendwise/Requirements/transaction.dart";
+import "package:spendwise/Utils/methods.dart";
 import "package:spendwise/Utils/theme.dart";
 
 // TODO: Reduce Lines of Code
@@ -29,61 +30,59 @@ class AllTransactions extends StatefulWidget {
 }
 
 class _AllTransactionsState extends State<AllTransactions> {
+  // Local Variable Declaration to use it in rendering
+  List<CusTransaction> bankTransaction = [];
+  // ignore: unused_field
   Future? _future;
+  dynamic username;
 
-  Future<dynamic> getData() async {
-    final bankTransactions = await querySmsMessages();
-    return bankTransactions;
-  }
-
+  // Function to run everytime a user expects to refresh the data but the value is not being used
   Future<void> _refreshData() async {
     setState(() {
-      _future = getData();
+      _future = getTransactions();
     });
   }
 
+  // Override default method to get the initial data beforehand only
   @override
   void initState() {
-    _future = getData();
+    // _getData();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     List<CusTransaction> bankTransactions = [];
-    // debugPrint(transactioncustom.length.toString());
     return RefreshIndicator(
       onRefresh: () => _refreshData(),
       child: FutureBuilder(
-        future: _future,
+        future: getTransactions(),
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
-            dynamic data = [];
-            final parsedmsg = parseTransactions(snapshot.data[1]);
-            data = combineTransactions(snapshot.data[0], parsedmsg);
             if (widget.type.toLowerCase() == "thismonthIncome".toLowerCase()) {
               bankTransactions =
-                  allTransactions(data, income: true, thisMonth: true);
+                  allTransactions(snapshot.data, income: true, thisMonth: true);
             } else if (widget.type.toLowerCase() ==
                 "thismonthexpense".toLowerCase()) {
-              bankTransactions =
-                  allTransactions(data, expense: true, thisMonth: true);
+              bankTransactions = allTransactions(snapshot.data,
+                  expense: true, thisMonth: true);
             } else if (widget.type.toLowerCase() ==
                 "withhiddenIncome".toLowerCase()) {
-              bankTransactions =
-                  allTransactions(data, showHidden: true, income: true);
+              bankTransactions = allTransactions(snapshot.data,
+                  showHidden: true, income: true);
             } else if (widget.type.toLowerCase() ==
                 "withHiddenExpense".toLowerCase()) {
-              bankTransactions =
-                  allTransactions(data, expense: true, showHidden: true);
+              bankTransactions = allTransactions(snapshot.data,
+                  expense: true, showHidden: true);
             } else if (widget.type.toLowerCase() ==
                 "allTransactions".toLowerCase()) {
               bankTransactions = allTransactions(
-                data,
+                snapshot.data,
               );
             } else if (widget.type.toLowerCase() ==
                 "thisMonthTransactions".toLowerCase()) {
-              bankTransactions = allTransactions(data, thisMonth: true);
+              bankTransactions =
+                  allTransactions(snapshot.data, thisMonth: true);
             }
             return Scaffold(
               appBar: AppBar(
@@ -97,7 +96,9 @@ class _AllTransactionsState extends State<AllTransactions> {
                       color: Get.isDarkMode
                           ? MyAppColors.normalColoredWidgetTextColorLightMode
                           : MyAppColors.normalColoredWidgetTextColorDarkMode),
-                  onPressed: () => {Get.back(result: "refresh")},
+                  onPressed: () => {
+                    Get.back(result: "refresh"),
+                  },
                 ),
               ),
               body: SafeArea(

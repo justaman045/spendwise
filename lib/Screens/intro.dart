@@ -5,17 +5,18 @@ import 'package:spendwise/Components/responsive_methods.dart';
 import 'package:spendwise/Requirements/data.dart';
 import 'package:spendwise/Screens/login.dart';
 
-// TODO: Reduce Lines of Code
 class Intro extends StatelessWidget {
   const Intro({super.key});
 
   @override
   Widget build(BuildContext context) {
+    // Return the Into Page for the App if not Signed In
     return Scaffold(
       body: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // Display the Image of the Intro Page
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -32,6 +33,8 @@ class Intro extends StatelessWidget {
                 ),
               ],
             ),
+
+            // Give a Headline of the App and the Moto for developing the App
             SizedBox(
               width: 330.w,
               child: Padding(
@@ -48,6 +51,8 @@ class Intro extends StatelessWidget {
                 ),
               ),
             ),
+
+            // A Text Intro for the App
             Padding(
               padding: EdgeInsets.symmetric(
                 horizontal: 33.w,
@@ -60,6 +65,8 @@ class Intro extends StatelessWidget {
                 ),
               ),
             ),
+
+            // A button to move on forward in the App
             Padding(
               padding: EdgeInsets.only(top: 50.r),
               child: Row(
@@ -94,6 +101,8 @@ class Intro extends StatelessWidget {
                 ],
               ),
             ),
+
+            // Yet in Testing
             if (skipSignIn) ...[
               TextButton(
                 onPressed: () {},

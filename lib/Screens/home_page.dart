@@ -17,7 +17,6 @@ import 'package:spendwise/Screens/cash_entry.dart';
 import 'package:spendwise/Utils/methods.dart';
 import 'package:spendwise/Utils/theme.dart';
 
-// TODO: Reduce Lines of Code
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
@@ -127,6 +126,7 @@ class _HomePageState extends State<HomePage> {
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
+                                // If there is no Transaction Recorded today then display a text of no transaction
                                 Text(
                                   "No Transactions Today",
                                   style: TextStyle(
@@ -139,6 +139,8 @@ class _HomePageState extends State<HomePage> {
                                             .normalColoredWidgetTextColorDarkMode,
                                   ),
                                 ),
+
+                                // Display a Refresh button because if there is no transaction then it woun't refresh on drag
                                 Padding(
                                   padding: EdgeInsets.only(top: 10.h),
                                   child: Container(
@@ -175,11 +177,15 @@ class _HomePageState extends State<HomePage> {
                             itemCount: allTransactions(bankTransaction,
                                     thisMonth: true, todayTrans: true)
                                 .length, // Use todaysTransactions length
+
+                            // Item builder with a list of Today's transaction of this month
                             itemBuilder: (context, index) {
                               final transaction = allTransactions(
                                   bankTransaction,
                                   thisMonth: true,
                                   todayTrans: true);
+
+                              // Return the Transaction Widget with the transaction details
                               return TransactionWidget(
                                 expenseType: transaction[index].expenseType,
                                 width: 100.w,

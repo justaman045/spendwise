@@ -1,7 +1,6 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_sms_inbox/flutter_sms_inbox.dart';
-import 'package:intl/intl.dart';
 import 'package:spendwise/Models/cus_transaction.dart';
 import 'package:spendwise/Models/db_helper.dart';
 import 'package:spendwise/Models/expense.dart';
@@ -275,66 +274,44 @@ final bankNameRegex = RegExp(
   caseSensitive: false,
 );
 
-List<CusTransaction> parseTransactions(List<SmsMessage> messages) {
-  final bankTransactions =
-      filterBankTransactions(messages.map((m) => m.body.toString()).toList());
-
+List<CusTransaction> parseTransactionsFromSms(List<SmsMessage> messages) {
   final transactions = <CusTransaction>[];
-
-  for (final messageBody in bankTransactions) {
-    final parts = messageBody.split(';'); // Split by ';' to separate details
-
-    // Extract relevant information
-    dynamic amount;
-    dynamic date;
-    dynamic toFrom = "";
-    dynamic typeOfTransaction = "";
-    dynamic upiRefNo;
-    dynamic isIncluded = true; // Assuming all transactions should be included
-
-    try {
-      amount = double.parse(extractAmount(parts, "Rs").toString());
-    } catch (e) {
-      try {
-        amount = double.parse(extractAmount(parts, "Rs. ").toString());
-      } catch (e) {
-        try {
-          amount = double.parse(extractAmount(parts, "by").toString());
-        } catch (e) {
-          amount = 0.0;
-        }
-      }
+  for (final message in messages) {
+    final messageBody = message.body;
+    if (messageBody == null) {
+      continue; // Skip messages not from ICICI Bank
     }
 
-    try {
-      try {
-        date = DateFormat.yMMMMd('en_US')
-            .format(DateTime.parse(extractDate(parts, "on").toString()));
-      } catch (e) {
-        if (e.toString().isNotEmpty) {
-          date = DateFormat('d-M-y')
-              .format(DateTime.parse(extractDate(parts, "on").toString()));
-        }
-      }
-    } catch (e) {
-      debugPrint("${e}0000000");
-    }
+    final transactionType =
+        messageBody.contains('credited') ? 'Credit' : 'Debit';
+    final amount =
+        double.tryParse(messageBody.split('Rs ')[1].split('.')[0]) ?? 0.0;
 
-    if (amount != 0) {
-      transactions.add(CusTransaction(
-        amount: amount,
-        dateAndTime: DateTime.now(),
-        name: toFrom.toString(),
-        typeOfTransaction: typeOfTransaction.toString(),
-        expenseType:
-            '', // Expense type might not be available in all messages (set to empty string)
-        transactionReferanceNumber:
-            upiRefNo == null ? generateUniqueRefNumber() : int.parse(upiRefNo),
-        toInclude: isIncluded == true ? 1 : 0,
-      ));
-    }
+    // Extract date using a regular expression (adapt if date format changes)
+    final dateMatch = RegExp(r'\d{2}-\d{2}-\d{2}').firstMatch(messageBody);
+    final dateString = dateMatch?.group(0);
+    final dateTime = dateString != null
+        ? DateTime.parse('$dateString 2024')
+        : null; // Assuming year is 2024, adjust if needed
+
+    // Extract name based on transaction type (heuristic approach)
+    final name = transactionType == 'Credit'
+        ? messageBody.split('credited.')[0].split(' ').last
+        : messageBody.split('debited for')[1].split(' on')[0].trim();
+
+    // No transaction reference number or expense type available from these messages
+    const transactionRef = null;
+    const expenseType = '';
+
+    transactions.add(CusTransaction(
+      amount: amount,
+      dateAndTime: dateTime ?? DateTime.now(),
+      name: name,
+      typeOfTransaction: transactionType,
+      expenseType: expenseType,
+      transactionReferanceNumber: transactionRef,
+    ));
   }
-
   return transactions;
 }
 
