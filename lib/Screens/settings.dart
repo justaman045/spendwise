@@ -1,7 +1,8 @@
 import "package:flutter/material.dart";
 import "package:flutter_screenutil/flutter_screenutil.dart";
 import "package:get/get.dart";
-import "package:spendwise/Utils/methods.dart";
+import "package:spendwise/Requirements/data.dart";
+import "package:spendwise/Screens/edit_user_profile.dart";
 
 // TODO: Reduce Lines of Code
 class Settings extends StatefulWidget {
@@ -14,7 +15,6 @@ class Settings extends StatefulWidget {
 class _SettingsState extends State<Settings> {
   @override
   Widget build(BuildContext context) {
-    final themeController = Get.find<ThemeModeController>();
     return Scaffold(
       appBar: AppBar(),
       body: SafeArea(
@@ -36,28 +36,21 @@ class _SettingsState extends State<Settings> {
               child: const Divider(),
             ),
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20.w),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    "Dark Mode",
-                    style: TextStyle(fontSize: 20.r),
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      themeController.toggleThemeMode();
-                      setState(() {});
-                    },
-                    child: Icon(
-                      Get.find<ThemeModeController>().themeMode ==
-                              ThemeMode.dark
-                          ? Icons.toggle_on
-                          : Icons.toggle_off,
-                      size: 40.r,
-                    ),
-                  ),
-                ],
+              padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 5.h),
+              child: TextButton(
+                onPressed: () {
+                  Get.to(
+                    routeName: routes[11],
+                    () => const EditUserProfile(),
+                    curve: customCurve,
+                    transition: customTrans,
+                    duration: duration,
+                  );
+                },
+                child: Text(
+                  "Edit Profile",
+                  style: TextStyle(fontSize: 15.r),
+                ),
               ),
             ),
           ],

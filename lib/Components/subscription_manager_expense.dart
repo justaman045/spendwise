@@ -20,7 +20,7 @@ class SuscriptionManagerExpense extends StatefulWidget {
 
 class _SuscriptionManagerExpenseState extends State<SuscriptionManagerExpense> {
   List<dynamic> subscriptions = [];
-  double Expense = 0;
+  double expense = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -34,21 +34,22 @@ class _SuscriptionManagerExpenseState extends State<SuscriptionManagerExpense> {
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           if (ConnectionState.done == snapshot.connectionState) {
             getAllExpense() {
-              List<Subscription> _subs =
+              List<Subscription> subs =
                   snapshot.data!; // Use null-aware operator
 
-              if (_subs != null) {
+              // ignore: unnecessary_null_comparison
+              if (subs != null) {
                 double totalExpense = 0; // Initialize totalExpense to 0
-                _subs.forEach((subscription) {
+                for (var subscription in subs) {
                   try {
                     totalExpense += subscription.amount; // Attempt parsing
                   } on FormatException {
                     // Handle parsing error (e.g., log the error)
-                    print(
+                    debugPrint(
                         "Error parsing subscription amount: ${subscription.amount}");
                   }
-                });
-                Expense =
+                }
+                expense =
                     totalExpense; // Update Expense with the calculated total
               }
             }
@@ -84,7 +85,7 @@ class _SuscriptionManagerExpenseState extends State<SuscriptionManagerExpense> {
                           Countup(
                             duration: duration,
                             begin: 0,
-                            end: Expense,
+                            end: expense,
                             style: TextStyle(
                               fontSize: 25.r,
                               color: MyAppColors
@@ -106,7 +107,7 @@ class _SuscriptionManagerExpenseState extends State<SuscriptionManagerExpense> {
               ),
             );
           }
-          return CircularProgressIndicator();
+          return const CircularProgressIndicator();
         },
       ),
     );

@@ -2,41 +2,44 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:spendwise/Components/responsive_methods.dart';
 import 'package:spendwise/Models/db_helper.dart';
 import 'package:spendwise/Utils/methods.dart';
 
-class Add_Subscriptions extends StatefulWidget {
-  const Add_Subscriptions({super.key});
+class AddSubscriptions extends StatefulWidget {
+  const AddSubscriptions({super.key});
 
   @override
-  State<Add_Subscriptions> createState() => _Add_SubscriptionsState();
+  State<AddSubscriptions> createState() => _AddSubscriptionsState();
 }
 
-class _Add_SubscriptionsState extends State<Add_Subscriptions> {
-  String _dateTime = "";
+class _AddSubscriptionsState extends State<AddSubscriptions> {
+  final String _dateTime = "";
   TextEditingController fromDate = TextEditingController();
   TextEditingController toDate = TextEditingController();
   TextEditingController amount = TextEditingController();
+  TextEditingController endingRecurring = TextEditingController();
   DateTime? fromdate;
   DateTime? todate;
-  List<String> _subs = [];
-  String selected_App = "";
+  DateTime? recurringDate;
+  String selectedApp = "";
   List<Subscription> subsbriptions = [];
   List<String> availableSubscriptions = [];
+  bool isRecurring = false;
 
   void getSubs() async {
     List<String> subs = await getSubscriptionApps();
     subsbriptions = await DatabaseHelper().getAllSubscriptions();
     availableSubscriptions = subs
-        .where((subName) =>
-            !subsbriptions.any((subscribed) => subscribed.name == subName))
+        .where((subName) => !subsbriptions.any((subscribed) =>
+            (subscribed.name == subName) &&
+            (!stringToDateTime(subscribed.toDate)
+                .difference(DateTime.now())
+                .inDays
+                .isLowerThan(0))))
         .toList();
 
     availableSubscriptions.map((e) => debugPrint(e));
-    setState(() {
-      _subs = subs;
-    });
+    setState(() {});
   }
 
   @override
@@ -86,7 +89,7 @@ class _Add_SubscriptionsState extends State<Add_Subscriptions> {
                 }).toList(),
                 onChanged: (element) {
                   if (element != null) {
-                    selected_App = element;
+                    selectedApp = element;
                   }
                 },
               ),
@@ -94,6 +97,7 @@ class _Add_SubscriptionsState extends State<Add_Subscriptions> {
             Padding(
               padding: EdgeInsets.symmetric(vertical: 10.r),
               child: TextFormField(
+                canRequestFocus: false,
                 keyboardType: TextInputType.none,
                 controller: fromDate,
                 decoration: InputDecoration(
@@ -119,6 +123,7 @@ class _Add_SubscriptionsState extends State<Add_Subscriptions> {
             Padding(
               padding: EdgeInsets.symmetric(vertical: 10.r),
               child: TextFormField(
+                canRequestFocus: false,
                 keyboardType: TextInputType.none,
                 controller: toDate,
                 decoration: InputDecoration(
@@ -156,6 +161,50 @@ class _Add_SubscriptionsState extends State<Add_Subscriptions> {
             ),
             Row(
               children: [
+                Checkbox(
+                  value: isRecurring,
+                  onChanged: (bool? value) {
+                    endingRecurring.text = "";
+                    setState(
+                      () {
+                        isRecurring = value!;
+                      },
+                    );
+                  },
+                ),
+                const Text("Is this Subscription Recurring??")
+              ],
+            ),
+            if (isRecurring) ...[
+              Padding(
+                padding: EdgeInsets.symmetric(vertical: 10.r),
+                child: TextFormField(
+                  keyboardType: TextInputType.none,
+                  controller: endingRecurring,
+                  decoration: InputDecoration(
+                    suffixIcon: IconButton(
+                      icon: const Icon(Icons.calendar_month_rounded),
+                      onPressed: () async {
+                        dynamic date = await showDatePicker(
+                            context: context,
+                            firstDate: DateTime(DateTime.now().year - 1),
+                            lastDate: DateTime(2099));
+                        recurringDate = date;
+                        endingRecurring.text = DateFormat.yMMMMd().format(date);
+                      },
+                    ),
+                    label: const Text("Recurring Upto"),
+                    hintText: _dateTime.toString(),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(15.r),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
                 Padding(
                   padding: EdgeInsets.only(top: 10.h),
                   child: Container(
@@ -182,7 +231,7 @@ class _Add_SubscriptionsState extends State<Add_Subscriptions> {
                               fromDate: fromDate.text,
                               toDate: toDate.text,
                               amount: double.parse(amount.text),
-                              name: selected_App);
+                              name: selectedApp);
                           DatabaseHelper()
                               .insertSubscription(subscription)
                               .then((value) => Get.back(result: "refresh"));
@@ -191,7 +240,39 @@ class _Add_SubscriptionsState extends State<Add_Subscriptions> {
                         }
                       },
                       child: const Text(
-                        "Print",
+                        "Add Subscription",
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(top: 10.h),
+                  child: Container(
+                    width: 150.w,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(
+                          13.h,
+                        ),
+                      ),
+                      gradient: const LinearGradient(
+                        begin: Alignment.topRight,
+                        end: Alignment.bottomLeft,
+                        colors: [
+                          Colors.black54,
+                          Colors.black87,
+                        ],
+                      ),
+                    ),
+                    child: TextButton(
+                      onPressed: () {
+                        Get.back();
+                      },
+                      child: const Text(
+                        "Go Back",
                         style: TextStyle(
                           color: Colors.white,
                         ),

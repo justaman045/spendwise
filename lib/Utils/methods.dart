@@ -42,13 +42,6 @@ Future<List<String>> getSubscriptionApps() async {
   return data.cast<String>();
 }
 
-DateTime convertToDatetime() {
-  final dateString = "June 1, 2024";
-
-  final dateTime = DateTime.parse(dateString);
-  return dateTime;
-}
-
 DateTime stringToDateTime(String dateString) {
   // Use intl package for parsing with specific format
 
@@ -58,7 +51,7 @@ DateTime stringToDateTime(String dateString) {
     return format.parse(dateString);
   } on FormatException catch (e) {
     // Handle parsing error (e.g., invalid format)
-    print("Invalid date format: $e");
+    debugPrint("Invalid date format: $e");
     return DateTime.now(); // Or throw an exception if desired
   }
 }
