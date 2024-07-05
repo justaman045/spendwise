@@ -1,8 +1,10 @@
 import "package:flutter/material.dart";
 import "package:flutter_screenutil/flutter_screenutil.dart";
 import "package:get/get.dart";
+import "package:package_info_plus/package_info_plus.dart";
 import "package:spendwise/Requirements/data.dart";
 import "package:spendwise/Screens/edit_user_profile.dart";
+import "package:url_launcher/url_launcher.dart";
 
 // TODO: Reduce Lines of Code
 class Settings extends StatefulWidget {
@@ -13,6 +15,13 @@ class Settings extends StatefulWidget {
 }
 
 class _SettingsState extends State<Settings> {
+  // PackageInfo? packageInfo;
+  @override
+  void initState() {
+    // PackageInfo.fromPlatform().then((value) => packageInfo = value);
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,24 +44,106 @@ class _SettingsState extends State<Settings> {
               ),
               child: const Divider(),
             ),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 5.h),
-              child: TextButton(
-                onPressed: () {
-                  Get.to(
-                    routeName: routes[11],
-                    () => const EditUserProfile(),
-                    curve: customCurve,
-                    transition: customTrans,
-                    duration: duration,
-                  );
-                },
-                child: Text(
-                  "Edit Profile",
-                  style: TextStyle(fontSize: 15.r),
-                ),
+            Expanded(
+              child: Column(
+                children: [
+                  SettingRow(
+                    hintMsg: "Edit Profile",
+                    icon: Icons.person_outline_rounded,
+                    name: "Account",
+                    pageFunction: () => Get.to(
+                      routeName: routes[11],
+                      () => const EditUserProfile(),
+                      curve: customCurve,
+                      transition: customTrans,
+                      duration: duration,
+                    ),
+                  ),
+                ],
               ),
             ),
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: 10.h),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  const Column(
+                    children: [
+                      Text("App Version"),
+                      // Text(packageInfo!.version),
+                    ],
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      launchUrl(Uri.parse("https://justaman045.vercel.app"));
+                    },
+                    child: const Text("Website"),
+                  ),
+                ],
+              ),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class SettingRow extends StatelessWidget {
+  const SettingRow({
+    super.key,
+    required this.icon,
+    required this.name,
+    required this.hintMsg,
+    required this.pageFunction,
+  });
+
+  final IconData icon;
+  final String name;
+  final String hintMsg;
+  final Function pageFunction;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 5.h),
+      child: GestureDetector(
+        behavior: HitTestBehavior.translucent,
+        onTap: () => pageFunction(),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Icon(
+                  icon,
+                  size: 30.r,
+                ),
+                SizedBox(
+                  width: 20.w,
+                ),
+                Text(
+                  name,
+                  style: TextStyle(fontSize: 15.r),
+                ),
+              ],
+            ),
+            Row(
+              children: [
+                Text(
+                  hintMsg,
+                  style: TextStyle(fontSize: 12.r),
+                ),
+                SizedBox(
+                  width: 10.w,
+                ),
+                Icon(
+                  Icons.arrow_forward_ios_outlined,
+                  size: 20.r,
+                ),
+              ],
+            )
           ],
         ),
       ),

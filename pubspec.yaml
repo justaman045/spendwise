@@ -52,6 +52,8 @@ dependencies:
   flutter_automation: ^2.0.0
   showcaseview: ^3.0.0
   package_info_plus: ^8.0.0
+  app_settings: ^5.1.1
+  url_launcher: ^6.3.0
 
 dev_dependencies:
   flutter_test:
