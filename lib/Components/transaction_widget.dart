@@ -6,23 +6,19 @@ import 'package:intl/intl.dart';
 import 'package:spendwise/Requirements/data.dart';
 import 'package:spendwise/Screens/transaction_details.dart';
 
-// TODO: Reduce Lines of Code
-class TransactionWidget extends StatefulWidget {
+// Represents a single transaction with details and navigation
+class TransactionWidget extends StatelessWidget {
   const TransactionWidget({
     super.key,
-    required this.width,
     required this.name,
     required this.typeOfTransaction,
     required this.amount,
     required this.dateAndTime,
-    required this.height,
     required this.expenseType,
     required this.transactionReferanceNumber,
     required this.toIncl,
   });
 
-  final double width;
-  final double height;
   final String name;
   final String typeOfTransaction;
   final int amount;
@@ -32,60 +28,40 @@ class TransactionWidget extends StatefulWidget {
   final int toIncl;
 
   @override
-  State<TransactionWidget> createState() => _TransactionWidgetState();
-}
-
-class _TransactionWidgetState extends State<TransactionWidget> {
-  @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        final refresh = Get.to(
+        Get.to(
           routeName: "Transaction Details",
           () => TransactionDetails(
-            amount: widget.amount,
-            dateTime: widget.dateAndTime,
-            toName: widget.name,
-            transactionReferanceNumber: widget.transactionReferanceNumber,
-            expenseType: widget.expenseType,
-            transactionType: widget.typeOfTransaction,
-            toIncl: widget.toIncl,
+            amount: amount,
+            dateTime: dateAndTime,
+            toName: name,
+            transactionReferanceNumber: transactionReferanceNumber,
+            expenseType: expenseType,
+            transactionType: typeOfTransaction,
+            toIncl: toIncl,
           ),
           transition: customTrans,
           curve: customCurve,
           duration: duration,
         );
-
-        if (refresh != null) {
-          setState(() {});
-        }
       },
       child: Row(
         children: [
           Padding(
-            padding: EdgeInsets.symmetric(
-              horizontal: 15.w,
-              vertical: 15.h,
-            ),
-            // padding: EdgeInsets.symmetric(
-            //     horizontal: width * 0.04, vertical: height * 0.01),
+            padding: EdgeInsets.symmetric(horizontal: 15.w, vertical: 15.h),
             child: Container(
               decoration: BoxDecoration(
                 color: Colors.blueAccent,
-                borderRadius: BorderRadius.all(
-                  Radius.circular(15.w),
-                ),
+                borderRadius: BorderRadius.circular(15.w),
               ),
-              child: Row(
-                children: [
-                  Padding(
-                    padding: EdgeInsets.all(13.w),
-                    child: Icon(
-                      Icons.shopping_cart,
-                      size: 20.r,
-                    ),
-                  ),
-                ],
+              child: Padding(
+                padding: EdgeInsets.all(13.w),
+                child: Icon(
+                  Icons.shopping_cart,
+                  size: 20.r,
+                ),
               ),
             ),
           ),
@@ -100,55 +76,49 @@ class _TransactionWidgetState extends State<TransactionWidget> {
                     SizedBox(
                       width: 150.w,
                       child: Text(
-                        widget.name.toString(),
+                        name,
                         style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 15.r,
-                        ),
+                            fontWeight: FontWeight.bold, fontSize: 15.r),
                       ),
                     ),
                     Row(
                       children: [
-                        if (widget.typeOfTransaction == "expense") ...[
+                        if (typeOfTransaction == "expense") ...[
                           Text(
                             "Rs. -",
                             style: TextStyle(
-                              color: Colors.redAccent,
-                              fontSize: 18.r,
-                              fontWeight: FontWeight.bold,
-                            ),
+                                color: Colors.redAccent,
+                                fontSize: 18.r,
+                                fontWeight: FontWeight.bold),
                           ),
                         ] else ...[
                           Text(
                             "Rs. +",
                             style: TextStyle(
-                              color: Colors.green,
-                              fontSize: 18.r,
-                              fontWeight: FontWeight.bold,
-                            ),
+                                color: Colors.green,
+                                fontSize: 18.r,
+                                fontWeight: FontWeight.bold),
                           ),
                         ],
-                        if (widget.typeOfTransaction == "expense") ...[
+                        if (typeOfTransaction == "expense") ...[
                           Countup(
                             begin: 0,
-                            end: widget.amount.toDouble(),
+                            end: amount.toDouble(),
                             style: TextStyle(
-                              color: Colors.redAccent,
-                              fontSize: 20.r,
-                              fontWeight: FontWeight.bold,
-                            ),
+                                color: Colors.redAccent,
+                                fontSize: 20.r,
+                                fontWeight: FontWeight.bold),
                           ),
                         ] else ...[
                           Countup(
                             begin: 0,
-                            end: widget.amount.toDouble(),
+                            end: amount.toDouble(),
                             style: TextStyle(
-                              color: Colors.green,
-                              fontSize: 20.r,
-                              fontWeight: FontWeight.bold,
-                            ),
+                                color: Colors.green,
+                                fontSize: 20.r,
+                                fontWeight: FontWeight.bold),
                           ),
-                        ]
+                        ],
                       ],
                     ),
                   ],
@@ -157,33 +127,15 @@ class _TransactionWidgetState extends State<TransactionWidget> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      widget.expenseType,
-                      style: TextStyle(
-                        fontSize: 13.r,
-                      ),
+                      expenseType,
+                      style: TextStyle(fontSize: 13.r),
                     ),
-                    Row(
-                      children: [
-                        Text(
-                          DateFormat.yMMMMd('en_US')
-                              .format(widget.dateAndTime)
-                              .toString(),
-                          style: TextStyle(fontSize: 11.r),
-                        ),
-                        Text(", ",
-                            style: TextStyle(
-                              fontSize: 11.r,
-                            )),
-                        Text(
-                          DateFormat.jm().format(widget.dateAndTime).toString(),
-                          style: TextStyle(
-                            fontSize: 11.r,
-                          ),
-                        )
-                      ],
-                    )
+                    Text(
+                      "${DateFormat.yMMMMd('en_US').format(dateAndTime)}, ${DateFormat.jm().format(dateAndTime)}",
+                      style: TextStyle(fontSize: 11.r),
+                    ),
                   ],
-                )
+                ),
               ],
             ),
           ),

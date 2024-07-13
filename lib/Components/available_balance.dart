@@ -8,7 +8,6 @@ import "package:spendwise/Requirements/transaction.dart";
 import "package:spendwise/Screens/all_transactions.dart";
 import "package:spendwise/Utils/theme.dart";
 
-// TODO: Reduce Lines of Code
 class AvailableBalance extends StatelessWidget {
   const AvailableBalance({
     super.key,
@@ -19,9 +18,20 @@ class AvailableBalance extends StatelessWidget {
   final double width;
   final List<CusTransaction> bankTransaction;
 
+  double calculateBalance() {
+    // Calculate available balance
+    return totalIncomeThisMonth(bankTransaction) -
+        totalExpenseThisMonth(bankTransaction);
+  }
+
+  Color getTextColor(double balance) {
+    return balance >= 0 ? Colors.green : Colors.redAccent;
+  }
+
   @override
   Widget build(BuildContext context) {
-    // GestureDetector to run a function when a certain gesture is detected over this widget
+    final double balance = calculateBalance();
+
     return GestureDetector(
       onTap: () => Get.to(
         routeName: routes[5],
@@ -36,16 +46,11 @@ class AvailableBalance extends StatelessWidget {
         duration: duration,
       ),
       child: Padding(
-        padding: EdgeInsets.symmetric(
-          vertical: 10.h,
-          horizontal: 10.w,
-        ),
+        padding: EdgeInsets.symmetric(vertical: 10.h, horizontal: 10.w),
         child: Container(
           decoration: BoxDecoration(
             gradient: MyAppColors.avaiableBalanceColor,
-            borderRadius: BorderRadius.all(
-              Radius.circular(20.w),
-            ),
+            borderRadius: BorderRadius.all(Radius.circular(20.w)),
           ),
           child: Center(
             child: Padding(
@@ -66,34 +71,20 @@ class AvailableBalance extends StatelessWidget {
                         "Rs. ",
                         style: TextStyle(
                           fontSize: 25.r,
-                          color: (totalIncomeThisMonth(bankTransaction) -
-                                          totalExpenseThisMonth(
-                                              bankTransaction))
-                                      .toDouble() >=
-                                  0
-                              ? Colors.green
-                              : Colors.redAccent,
+                          color: getTextColor(balance),
                           fontWeight: FontWeight.bold,
                         ),
                       ),
                       Countup(
                         duration: duration,
                         begin: 0,
-                        end: (totalIncomeThisMonth(bankTransaction) -
-                                totalExpenseThisMonth(bankTransaction))
-                            .toDouble(),
+                        end: balance,
                         style: TextStyle(
                           fontSize: width * 0.12,
-                          color: (totalIncomeThisMonth(bankTransaction) -
-                                          totalExpenseThisMonth(
-                                              bankTransaction))
-                                      .toDouble() >
-                                  -1
-                              ? Colors.green
-                              : Colors.redAccent,
+                          color: getTextColor(balance),
                           fontWeight: FontWeight.bold,
                         ),
-                      )
+                      ),
                     ],
                   ),
                 ],

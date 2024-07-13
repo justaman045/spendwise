@@ -6,9 +6,7 @@ import 'package:spendwise/Components/available_balance.dart';
 import 'package:spendwise/Components/current_flow.dart';
 import 'package:spendwise/Components/custom_appbar.dart';
 import 'package:spendwise/Components/custom_drawer.dart';
-import 'package:spendwise/Components/gradient_color.dart';
 import 'package:spendwise/Components/recent_transaction_header.dart';
-import 'package:spendwise/Components/responsive_methods.dart';
 import 'package:spendwise/Components/transaction_widget.dart';
 import 'package:spendwise/Models/cus_transaction.dart';
 import 'package:spendwise/Requirements/data.dart';
@@ -87,10 +85,11 @@ class _HomePageState extends State<HomePage> {
             return Scaffold(
               // Custom AppBar for this Page
               appBar: CustomAppBar(
-                username: userName.toString(),
+                username: username["username"].toString(),
               ),
               // Drawer of the App
               drawer: CustomDrawer(
+                username: username["username"].toString(),
                 scaffoldKey: scaffoldKey,
               ),
               body: SafeArea(
@@ -107,14 +106,12 @@ class _HomePageState extends State<HomePage> {
 
                       // Current FLow of the Money based on the type of flow
                       CurrentFlow(
-                        width: getScreenWidth(context),
                         bankTransactions: bankTransaction,
                       ),
 
                       // Header of the Transaction List
                       RecentTransactionHeader(
                         bankTransactions: bankTransaction,
-                        width: getScreenWidth(context),
                       ),
 
                       // if there are no transactions made today then show there are no transactions today
@@ -188,13 +185,11 @@ class _HomePageState extends State<HomePage> {
                               // Return the Transaction Widget with the transaction details
                               return TransactionWidget(
                                 expenseType: transaction[index].expenseType,
-                                width: 100.w,
                                 amount: transaction[index].amount.toInt(),
                                 dateAndTime: transaction[index].dateAndTime,
                                 name: transaction[index].name,
                                 typeOfTransaction:
                                     transaction[index].typeOfTransaction,
-                                height: 100.h,
                                 transactionReferanceNumber: transaction[index]
                                     .transactionReferanceNumber,
                                 toIncl: transaction[index].toInclude,

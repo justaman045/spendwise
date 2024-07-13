@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:spendwise/Components/responsive_methods.dart';
 import 'package:spendwise/Requirements/data.dart';
 import 'package:spendwise/Screens/login.dart';
 
@@ -87,7 +86,7 @@ class Intro extends StatelessWidget {
                         "Get Started",
                         style: TextStyle(
                           color: Colors.blueAccent,
-                          fontSize: getScreenHeight(context) * 0.03,
+                          fontSize: 25.r,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -96,21 +95,20 @@ class Intro extends StatelessWidget {
                   Icon(
                     Icons.keyboard_double_arrow_right_sharp,
                     color: Colors.blueAccent,
-                    size: getScreenHeight(context) * 0.03,
+                    size: 25.r,
                   ),
                 ],
               ),
             ),
 
-            // Yet in Testing
+            //TODO: Also keep for no Account usage
             if (skipSignIn) ...[
               TextButton(
                 onPressed: () {},
                 child: const Text("Don't want to SignUp??"),
               ),
               Padding(
-                padding: EdgeInsets.symmetric(
-                    horizontal: getResponsiveWidth(context) * 0.1),
+                padding: EdgeInsets.symmetric(horizontal: 10.w),
                 child: const Text(introSkipLogin),
               ),
             ]

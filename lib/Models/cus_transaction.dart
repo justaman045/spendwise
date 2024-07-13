@@ -1,6 +1,6 @@
 import 'package:sqflite/sqflite.dart';
 
-// TODO: Reduce Lines of Code
+/// Represents a customer transaction with associated data.
 class CusTransaction {
   final double amount;
   final DateTime dateAndTime;
@@ -8,7 +8,8 @@ class CusTransaction {
   final String typeOfTransaction;
   final String expenseType;
   final int transactionReferanceNumber;
-  final int toInclude;
+  final int
+      toInclude; // Flag to indicate if transaction should be included in calculations
 
   CusTransaction({
     required this.amount,
@@ -17,10 +18,10 @@ class CusTransaction {
     required this.typeOfTransaction,
     required this.expenseType,
     required this.transactionReferanceNumber,
-    this.toInclude = 1, // Set default value to true
+    this.toInclude = 1, // Default to include
   });
 
-  // Factory constructor to create a CusTransaction from a Map (used for database results)
+  // Factory constructor to create a CusTransaction from a database map
   factory CusTransaction.fromMap(Map<String, dynamic> map) => CusTransaction(
         amount: map['amount'] as double,
         dateAndTime: DateTime.parse(map['dateAndTime'] as String),
@@ -28,11 +29,10 @@ class CusTransaction {
         typeOfTransaction: map['typeOfTransaction'] as String,
         expenseType: map['expenseType'] as String,
         transactionReferanceNumber: map['transactionReferanceNumber'] as int,
-        toInclude:
-            map['toInclude'] == 0 ? 0 : 1, // Handle null value with default
+        toInclude: map['toInclude'] == 0 ? 0 : 1, // Handle null or zero values
       );
 
-  // Method to convert the CusTransaction object to a Map (used for database insertion)
+  // Converts the CusTransaction object to a map for database insertion
   Map<String, dynamic> toMap() => {
         'amount': amount,
         'dateAndTime': dateAndTime.toString(),
@@ -40,12 +40,12 @@ class CusTransaction {
         'typeOfTransaction': typeOfTransaction,
         'expenseType': expenseType,
         'transactionReferanceNumber': transactionReferanceNumber,
-        'toInclude': toInclude == 0 ? 0 : 1,
+        'toInclude': toInclude,
       };
 
   // Assuming you have a DatabaseHelper class (not shown here) that manages database operations
 
-  // **Create (Insert)**
+  // Inserts a transaction into the database
   static Future<void> insertTransaction(
       Database db, CusTransaction transaction) async {
     await db.insert(
@@ -55,13 +55,13 @@ class CusTransaction {
     );
   }
 
-  // **Read (Fetch All)**
+  // Retrieves all transactions from the database
   static Future<List<CusTransaction>> getAllTransactions(Database db) async {
     final List<Map<String, dynamic>> maps = await db.query('transactions');
-    return List.generate(maps.length, (i) => CusTransaction.fromMap(maps[i]));
+    return maps.map((map) => CusTransaction.fromMap(map)).toList();
   }
 
-  // **Read (Fetch One by Reference Number)**
+  // Retrieves a transaction by its reference number
   static Future<CusTransaction?> getTransactionByRef(
       Database db, int refNumber) async {
     final List<Map<String, dynamic>> maps = await db.query(
@@ -69,13 +69,10 @@ class CusTransaction {
       where: 'transactionReferanceNumber = ?',
       whereArgs: [refNumber],
     );
-    if (maps.isNotEmpty) {
-      return CusTransaction.fromMap(maps.first);
-    }
-    return null;
+    return maps.isNotEmpty ? CusTransaction.fromMap(maps.first) : null;
   }
 
-  // **Update**
+  // Updates an existing transaction in the database
   static Future<void> updateTransaction(
       Database db, CusTransaction transaction) async {
     await db.update(
@@ -86,7 +83,7 @@ class CusTransaction {
     );
   }
 
-  // **Delete**
+  // Deletes a transaction from the database
   static Future<void> deleteTransaction(Database db, int refNumber) async {
     await db.delete(
       'transactions',

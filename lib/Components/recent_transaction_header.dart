@@ -4,17 +4,15 @@ import "package:get/get.dart";
 import "package:spendwise/Models/cus_transaction.dart";
 import "package:spendwise/Requirements/data.dart";
 import "package:spendwise/Screens/all_transactions.dart";
-import "package:spendwise/Utils/theme.dart";
+import "package:spendwise/Utils/theme.dart"; // Assuming colors and routes are defined here
 
-// TODO: Reduce Lines of Code
+// Compact header for recent transactions with "See All" button
 class RecentTransactionHeader extends StatelessWidget {
   const RecentTransactionHeader({
     super.key,
-    required this.width,
     required this.bankTransactions,
   });
 
-  final double width;
   final List<CusTransaction> bankTransactions;
 
   @override
@@ -25,34 +23,29 @@ class RecentTransactionHeader extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
-            "Today's Transaction",
-            style: TextStyle(
-              fontSize: 20.r,
-              fontWeight: FontWeight.bold,
-            ),
+            "Today's Transactions",
+            style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.bold),
           ),
           TextButton(
             style: TextButton.styleFrom(
-              backgroundColor: const Color.fromRGBO(225, 225, 254, 1),
+              backgroundColor: MyAppColors.gradientColor,
             ),
-            onPressed: () {
-              Get.to(
-                routeName: routes[4],
-                () => const AllTransactions(
-                  type: "allTransactions",
-                  pageTitle: "All Transactions this Month",
-                  chartTitle: "All Transactions from SMS this Month",
-                  chartType: "Transaction",
-                ),
-                transition: customTrans,
-                curve: customCurve,
-                duration: duration,
-              );
-            },
+            onPressed: () => Get.to(
+              routeName: routes[4],
+              () => const AllTransactions(
+                type: "allTransactions",
+                pageTitle: "All Transactions this Month",
+                chartTitle: "All Transactions from SMS this Month",
+                chartType: "Transaction",
+              ),
+              transition: customTrans,
+              curve: customCurve,
+              duration: duration,
+            ),
             child: Text(
               "See All..",
               style: TextStyle(
-                fontSize: 15.r,
+                fontSize: 15.sp,
                 color: MyAppColors.normalColoredWidgetTextColorDarkMode,
               ),
             ),

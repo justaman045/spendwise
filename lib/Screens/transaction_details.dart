@@ -3,7 +3,6 @@ import "package:flutter_screenutil/flutter_screenutil.dart";
 import "package:get/get.dart";
 import "package:intl/intl.dart";
 import "package:spendwise/Components/details_button.dart";
-import "package:spendwise/Components/responsive_methods.dart";
 import "package:spendwise/Requirements/data.dart";
 import "package:spendwise/Screens/edit_transaction.dart";
 import "package:spendwise/Utils/theme.dart";
@@ -102,16 +101,16 @@ class TransactionDetails extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   DetailsButton(
-                    width: getScreenWidth(context),
                     btnText: "Share",
                     icon: const Icon(Icons.share),
-                    ontapFunc: () {},
+                    // TODO: -------------------------------------------Add Function defination
+                    onTap: () {},
                   ),
                   DetailsButton(
-                    width: getScreenWidth(context),
                     btnText: "Print",
                     icon: const Icon(Icons.print),
-                    ontapFunc: () {},
+                    // TODO: -------------------------------------------Add Function defination
+                    onTap: () {},
                   ),
                 ],
               ),

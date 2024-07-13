@@ -2,7 +2,6 @@ import "package:firebase_auth/firebase_auth.dart";
 import "package:flutter/material.dart";
 import "package:flutter_screenutil/flutter_screenutil.dart";
 import "package:get/get.dart";
-import "package:spendwise/Components/responsive_methods.dart";
 import "package:spendwise/Models/cus_transaction.dart";
 import "package:spendwise/Requirements/data.dart";
 import "package:spendwise/Requirements/transaction.dart";
@@ -178,8 +177,6 @@ class _UserProfileState extends State<UserProfile> {
                         duration: duration,
                       );
                     },
-                    width: getScreenWidth(context),
-                    height: getScreenHeight(context),
                     icons: Icons.wallet_rounded,
                     text: "All Payments",
                   ),
@@ -198,8 +195,6 @@ class _UserProfileState extends State<UserProfile> {
                         duration: duration,
                       );
                     },
-                    width: getScreenWidth(context),
-                    height: getScreenHeight(context),
                     icons: Icons.wallet_rounded,
                     text: "All Income",
                   ),
@@ -213,8 +208,6 @@ class _UserProfileState extends State<UserProfile> {
                         duration: duration,
                       );
                     },
-                    width: getScreenWidth(context),
-                    height: getScreenHeight(context),
                     icons: Icons.wallet_rounded,
                     text: "Change Password",
                   ),
@@ -294,15 +287,11 @@ class _UserProfileState extends State<UserProfile> {
 class MyProfileButtons extends StatelessWidget {
   const MyProfileButtons({
     super.key,
-    required this.width,
-    required this.height,
     required this.icons,
     required this.text,
     required this.fn,
   });
 
-  final double width;
-  final double height;
   final IconData icons;
   final String text;
   final Function fn;
@@ -329,7 +318,6 @@ class MyProfileButtons extends StatelessWidget {
             ),
             borderRadius: BorderRadius.circular(50.w),
           ),
-          width: getScreenWidth(context),
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: 20.w),
             child: Row(

@@ -1,30 +1,26 @@
-import "package:flutter/cupertino.dart";
-import "package:flutter/material.dart";
-import "package:flutter/widgets.dart";
-import "package:get/get.dart";
-import "package:spendwise/Components/cash_flow.dart";
-import "package:spendwise/Models/cus_transaction.dart";
-import "package:spendwise/Requirements/data.dart";
-import "package:spendwise/Requirements/transaction.dart";
-import "package:spendwise/Screens/all_transactions.dart";
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:spendwise/Components/cash_flow.dart'; // Assuming CashFlow is in this directory
+import 'package:spendwise/Models/cus_transaction.dart';
+import 'package:spendwise/Requirements/data.dart';
+import 'package:spendwise/Requirements/transaction.dart';
+import 'package:spendwise/Screens/all_transactions.dart';
 
-// TODO: Reduce Lines of Code
+// Displays income and expense summaries for the current month
 class CurrentFlow extends StatelessWidget {
   const CurrentFlow({
     super.key,
-    required this.width,
     required this.bankTransactions,
   });
 
-  final double width;
   final List<CusTransaction> bankTransactions;
 
   @override
   Widget build(BuildContext context) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.start, // Align items to the left
       children: [
-        GestureDetector(
+        _buildCashFlowItem(
           onTap: () => Get.to(
             routeName: "Monthly Income",
             () => const AllTransactions(
@@ -37,13 +33,10 @@ class CurrentFlow extends StatelessWidget {
             curve: customCurve,
             duration: duration,
           ),
-          child: CashFlow(
-            width: width,
-            flowText: "Income this Month",
-            flowAmount: totalIncomeThisMonth(bankTransactions).toInt(),
-          ),
+          flowText: "Income this Month",
+          flowAmount: totalIncomeThisMonth(bankTransactions).toInt(),
         ),
-        GestureDetector(
+        _buildCashFlowItem(
           onTap: () => Get.to(
             routeName: "Monthly Expense",
             () => const AllTransactions(
@@ -56,13 +49,25 @@ class CurrentFlow extends StatelessWidget {
             curve: customCurve,
             duration: duration,
           ),
-          child: CashFlow(
-            width: width,
-            flowText: "Expenses this Month",
-            flowAmount: totalExpenseThisMonth(bankTransactions).toInt(),
-          ),
+          flowText: "Expenses this Month",
+          flowAmount: totalExpenseThisMonth(bankTransactions).toInt(),
         ),
       ],
+    );
+  }
+
+  // Creates a CashFlow widget with tap handler, text, and calculated amount
+  Widget _buildCashFlowItem({
+    required VoidCallback onTap, // Callback for handling tap event
+    required String flowText, // Text describing the cash flow type
+    required int flowAmount, // Calculated amount
+  }) {
+    return GestureDetector(
+      onTap: onTap,
+      child: CashFlow(
+        flowText: flowText,
+        flowAmount: flowAmount,
+      ),
     );
   }
 }

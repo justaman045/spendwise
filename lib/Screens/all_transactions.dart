@@ -1,7 +1,6 @@
 import "package:flutter/material.dart";
 import "package:flutter_screenutil/flutter_screenutil.dart";
 import "package:get/get.dart";
-import "package:spendwise/Components/responsive_methods.dart";
 import "package:spendwise/Components/transaction_charts.dart";
 import "package:spendwise/Components/transaction_widget.dart";
 import "package:spendwise/Models/cus_transaction.dart";
@@ -114,9 +113,9 @@ class _AllTransactionsState extends State<AllTransactions> {
                     : Column(
                         children: [
                           TransactionCharts(
-                            chartTitleCustom: widget.chartTitle,
-                            chartNameOne: widget.chartType,
-                            chartOne: bankTransactions,
+                            chartTitle: widget.chartTitle,
+                            chartName: widget.chartType,
+                            chartData: bankTransactions,
                           ),
                           Expanded(
                             child: ListView.builder(
@@ -126,13 +125,11 @@ class _AllTransactionsState extends State<AllTransactions> {
                                 final transaction = bankTransactions[index];
                                 return TransactionWidget(
                                   expenseType: transaction.expenseType,
-                                  width: getScreenWidth(context),
                                   amount: transaction.amount.toInt(),
                                   dateAndTime: transaction.dateAndTime,
                                   name: transaction.name,
                                   typeOfTransaction:
                                       transaction.typeOfTransaction,
-                                  height: getScreenHeight(context),
                                   transactionReferanceNumber:
                                       transaction.transactionReferanceNumber,
                                   toIncl: transaction.toInclude,

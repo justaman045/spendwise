@@ -14,6 +14,7 @@ class MyAppColors {
   static const normalColoredWidgetTextColorDarkMode = Colors.black;
   static const normalColoredWidgetTextColorLightMode = Colors.white;
   static const normalWidgetTextColor = Colors.white;
+  static const gradientColor = Color.fromRGBO(225, 225, 254, 1);
   static const avaiableBalanceColor = LinearGradient(
     begin: Alignment.topRight,
     end: Alignment.bottomLeft,
@@ -28,6 +29,17 @@ class MyAppColors {
     colors: [
       Color.fromRGBO(230, 247, 241, 1),
       Color.fromRGBO(228, 243, 243, 1),
+    ],
+  );
+}
+
+LinearGradient colorsOfGradient() {
+  return const LinearGradient(
+    begin: Alignment.topLeft,
+    end: Alignment.bottomLeft,
+    colors: [
+      Colors.blue,
+      Colors.blueAccent,
     ],
   );
 }

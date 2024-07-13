@@ -4,48 +4,46 @@ import "package:flutter_screenutil/flutter_screenutil.dart";
 import "package:spendwise/Requirements/data.dart";
 import "package:spendwise/Utils/theme.dart";
 
-// TODO: Reduce Lines of Code
+// Represents a cash flow item displayed on the screen
 class CashFlow extends StatelessWidget {
   const CashFlow({
     super.key,
-    required this.width,
-    required this.flowText,
-    required this.flowAmount,
+    required this.flowText, // Text describing the cash flow type (e.g., Income, Expense)
+    required this.flowAmount, // The amount associated with the cash flow
   });
 
-  final double width;
   final String flowText;
   final int flowAmount;
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.all(15.r),
+      padding: EdgeInsets.all(15.r), // Spacing around the cash flow widget
       child: Row(
         children: [
           Container(
-            width: (150.w),
-            // color: Colors.black,
+            width: 150.w, // Fixed width for consistency
             decoration: BoxDecoration(
-              gradient: MyAppColors.currentFlowcolor,
+              gradient: MyAppColors.currentFlowcolor, // Apply gradient color
               borderRadius: BorderRadius.all(
-                Radius.circular(20.r),
+                Radius.circular(20.r), // Rounded corners for aesthetics
               ),
             ),
             child: Padding(
-              padding: EdgeInsets.all(15.r),
+              padding: EdgeInsets.all(15.r), // Padding within the container
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment:
+                    CrossAxisAlignment.start, // Align text to the left
                 children: [
                   Padding(
-                    padding: EdgeInsets.all(5.r),
+                    padding: EdgeInsets.all(5.r), // Spacing for the icon
                     child: const Icon(
-                      Icons.attach_money,
+                      Icons.attach_money, // Money icon to represent cash flow
                       color: MyAppColors.normalColoredWidgetTextColorDarkMode,
                     ),
                   ),
                   Text(
-                    flowText,
+                    flowText, // Display the cash flow type text
                     style: TextStyle(
                       fontSize: 16.r,
                       fontWeight: FontWeight.w500,
@@ -55,7 +53,7 @@ class CashFlow extends StatelessWidget {
                   Row(
                     children: [
                       Text(
-                        "Rs. ",
+                        "Rs. ", // Rupee symbol for currency
                         style: TextStyle(
                           fontSize: 15.r,
                           fontWeight: FontWeight.bold,
@@ -64,16 +62,18 @@ class CashFlow extends StatelessWidget {
                         ),
                       ),
                       Countup(
-                        duration: duration,
-                        begin: 0,
-                        end: flowAmount.toDouble(),
+                        duration:
+                            duration, // Animation duration (defined elsewhere)
+                        begin: 0.0, // Start animation from 0
+                        end: flowAmount
+                            .toDouble(), // Convert int to double for animation
                         style: TextStyle(
                           fontSize: 25.r,
                           fontWeight: FontWeight.bold,
                           color:
                               MyAppColors.normalColoredWidgetTextColorDarkMode,
                         ),
-                      )
+                      ),
                     ],
                   ),
                 ],

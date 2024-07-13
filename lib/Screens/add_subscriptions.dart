@@ -227,11 +227,19 @@ class _AddSubscriptionsState extends State<AddSubscriptions> {
                     child: TextButton(
                       onPressed: () {
                         if (fromdate != null && todate != null) {
+                          if (endingRecurring.text.isEmpty) {
+                            endingRecurring.text = toDate.text;
+                          }
+                          if (endingRecurring.text.isNotEmpty) {
+                            toDate.text = endingRecurring.text;
+                          }
                           Subscription subscription = Subscription(
-                              fromDate: fromDate.text,
-                              toDate: toDate.text,
-                              amount: double.parse(amount.text),
-                              name: selectedApp);
+                            fromDate: fromDate.text,
+                            toDate: toDate.text,
+                            amount: double.parse(amount.text),
+                            recurringDate: endingRecurring.text,
+                            name: selectedApp,
+                          );
                           DatabaseHelper()
                               .insertSubscription(subscription)
                               .then((value) => Get.back(result: "refresh"));

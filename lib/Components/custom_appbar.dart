@@ -4,39 +4,37 @@ import "package:get/get.dart";
 import "package:spendwise/Requirements/data.dart";
 import "package:spendwise/Screens/recognized_accounts.dart";
 
-// TODO: Reduce Lines of Code
+// Represents a custom app bar for the Spendwise app
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   const CustomAppBar({
     super.key,
     required this.username,
   });
 
-  // final GlobalKey scaffolKey;
   final String username;
 
   @override
   Widget build(BuildContext context) {
     return AppBar(
+      // Title with username
       title: Text(
         "Welcome, $username",
         style: TextStyle(fontSize: 20.r),
       ),
       centerTitle: false,
-      // leading: IconButton(
-      //   icon: const Icon(Icons.supervised_user_circle_outlined),
-      //   onPressed: () => scaffolKey.currentState?.openDrawer(),
-      //   tooltip: "Menu Icon",
-      // ),
+
+      // Removed commented-out leading icon (can be re-added if needed)
+
+      // Action icon for navigating to recognized accounts
       actions: [
         IconButton(
-          onPressed: () {
-            Get.to(
-                routeName: "Accounts",
-                () => const RecognizedAccounts(),
-                curve: customCurve,
-                transition: customTrans,
-                duration: duration);
-          },
+          onPressed: () => Get.to(
+            routeName: "Accounts",
+            () => const RecognizedAccounts(),
+            curve: customCurve,
+            transition: customTrans,
+            duration: duration,
+          ),
           icon: Icon(
             Icons.wallet,
             size: 20.h,

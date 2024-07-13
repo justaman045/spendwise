@@ -20,7 +20,6 @@ class AddCashEntry extends StatefulWidget {
 }
 
 class _AddCashEntryState extends State<AddCashEntry> {
-  final String _dateTime = "";
   TextEditingController nameEditingController = TextEditingController();
   TextEditingController amountEditingController = TextEditingController();
   TextEditingController typeOftransactionEditingController =
@@ -169,9 +168,9 @@ class _AddCashEntryState extends State<AddCashEntry> {
                           items: typeOfExpense
                               .map(
                                 (e) => DropdownMenuItem(
-                                  value: e,
+                                  value: toBeginningOfSentenceCase(e),
                                   child: Text(
-                                    e,
+                                    toBeginningOfSentenceCase(e),
                                     style: TextStyle(
                                       fontSize: 13.r,
                                     ),
@@ -210,9 +209,9 @@ class _AddCashEntryState extends State<AddCashEntry> {
                           items: typeOfTransaction
                               .map(
                                 (e) => DropdownMenuItem(
-                                  value: e,
+                                  value: toBeginningOfSentenceCase(e),
                                   child: Text(
-                                    e,
+                                    toBeginningOfSentenceCase(e),
                                     style: TextStyle(
                                       fontSize: 13.r,
                                     ),
@@ -228,61 +227,6 @@ class _AddCashEntryState extends State<AddCashEntry> {
                         ),
                       ),
                     ),
-                    Padding(
-                      padding: EdgeInsets.only(
-                        left: 20.r,
-                        right: 20.w,
-                      ),
-                      child: Row(
-                        children: [
-                          Checkbox(
-                            value: isRecurring,
-                            onChanged: (bool? value) {
-                              endingRecurring.text = "";
-                              setState(
-                                () {
-                                  isRecurring = value!;
-                                },
-                              );
-                            },
-                          ),
-                          const Text("Is this Subscription Recurring??")
-                        ],
-                      ),
-                    ),
-                    if (isRecurring) ...[
-                      Padding(
-                        padding: EdgeInsets.only(
-                          left: 20.r,
-                          top: 15.h,
-                          right: 20.w,
-                        ),
-                        child: TextFormField(
-                          keyboardType: TextInputType.none,
-                          controller: endingRecurring,
-                          decoration: InputDecoration(
-                            suffixIcon: IconButton(
-                              icon: const Icon(Icons.calendar_month_rounded),
-                              onPressed: () async {
-                                dynamic date = await showDatePicker(
-                                    context: context,
-                                    firstDate:
-                                        DateTime(DateTime.now().year - 1),
-                                    lastDate: DateTime(2099));
-                                recurringDate = date;
-                                endingRecurring.text =
-                                    DateFormat.yMMMMd().format(date);
-                              },
-                            ),
-                            label: const Text("Recurring Upto"),
-                            hintText: _dateTime.toString(),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(15.r),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
                   ],
                 ),
               ),

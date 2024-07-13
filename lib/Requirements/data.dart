@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-// TODO: Reduce Lines of Code
-const String userName = "justaman045";
+// // TODO: Reduce Lines of Code
 const List<String> routes = [
   "intro",
   "login",
@@ -20,15 +19,6 @@ const List<String> routes = [
   "subscription",
   "add_subscription"
 ];
-bool loggedin = false;
-const int balance = 6123;
-const double income = 22600;
-const List<String> navBars = [
-  "Home",
-  "Transactions",
-  "User Profile",
-  "Settings",
-];
 const String introText =
     "Experience the future of Payments with our user-friendly app. Say goodbye to Notes making and other unusefull process of recording your transactions.";
 const String introSkipLogin =
@@ -38,10 +28,6 @@ const int animationDuration = 2;
 const Transition customTrans = Transition.circularReveal;
 const Curve customCurve = Curves.bounceInOut;
 const Duration duration = Duration(seconds: 1);
-// const String name = "Aman Ojha";
-// const String designation = "Software Enginner";
-// const String emailId = "coderaman07@gmail.com";
-// const String password = "password";
 const List<String> typeOfTransaction = ["income", "expense"];
 const List<String> typeOfExpense = [
   "Bike",

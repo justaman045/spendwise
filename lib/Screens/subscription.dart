@@ -28,10 +28,14 @@ class _SubscriptionManagerState extends State<SubscriptionManager> {
         await DatabaseHelper().getAllSubscriptions();
     return subscriptions
         .where((element) =>
-            stringToDateTime(element.toDate)
-                .difference(DateTime.now())
-                .inDays >=
-            0)
+            (stringToDateTime(element.toDate)
+                    .difference(DateTime.now())
+                    .inDays >=
+                0) ||
+            (stringToDateTime(element.recurringDate)
+                    .difference(DateTime.now())
+                    .inDays) >=
+                0)
         .toList();
   }
 
@@ -240,11 +244,20 @@ class _SubscriptionManagerState extends State<SubscriptionManager> {
                                                 style:
                                                     TextStyle(fontSize: 18.r),
                                               ),
-                                              Text(
-                                                "${stringToDateTime(subscriptionList[index].toDate).difference(DateTime.now()).inDays} Days Remianing",
-                                                style:
-                                                    TextStyle(fontSize: 13.r),
-                                              )
+                                              if (stringToDateTime(
+                                                          subscriptionList[
+                                                                  index]
+                                                              .toDate)
+                                                      .difference(
+                                                          DateTime.now())
+                                                      .inDays <=
+                                                  31) ...[
+                                                Text(
+                                                    "${stringToDateTime(subscriptionList[index].toDate).difference(DateTime.now()).inDays} Days Remaining"),
+                                              ] else ...[
+                                                Text(
+                                                    "${daysToMonths(stringToDateTime(subscriptionList[index].toDate).difference(DateTime.now()).inDays)["months"]} Months Remianing"),
+                                              ]
                                             ],
                                           ),
                                         )
