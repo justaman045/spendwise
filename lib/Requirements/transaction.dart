@@ -2,8 +2,8 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_sms_inbox/flutter_sms_inbox.dart';
 import 'package:spendwise/Models/cus_transaction.dart';
-import 'package:spendwise/Models/db_helper.dart';
 import 'package:spendwise/Models/expense.dart';
+import 'package:spendwise/Utils/transaction_methods.dart';
 
 // TODO: Reduce Lines of Code
 final SmsQuery query = SmsQuery();
@@ -251,7 +251,7 @@ Future<List<List<Object>>> querySmsMessages() async {
   // ------------------------------------------------Area to test my Code----------------------------------
 
   final responses = await Future.wait([
-    DatabaseHelper().getAllTransactions(),
+    TransactionMethods().getAllTransactions(),
     query.querySms(
       kinds: [
         SmsQueryKind.inbox,

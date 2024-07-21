@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:spendwise/Models/db_helper.dart';
+import 'package:spendwise/Models/subscription.dart';
 
 class EditSubscription extends StatefulWidget {
   const EditSubscription({super.key, required this.subscription});

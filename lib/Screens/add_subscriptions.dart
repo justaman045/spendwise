@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:spendwise/Models/db_helper.dart';
+import 'package:spendwise/Models/subscription.dart';
 import 'package:spendwise/Utils/methods.dart';
+import 'package:spendwise/Utils/subscription_methods.dart';
 
 class AddSubscriptions extends StatefulWidget {
   const AddSubscriptions({super.key});
@@ -28,7 +29,7 @@ class _AddSubscriptionsState extends State<AddSubscriptions> {
 
   void getSubs() async {
     List<String> subs = await getSubscriptionApps();
-    subsbriptions = await DatabaseHelper().getAllSubscriptions();
+    subsbriptions = await SubscriptionMethods().getAllSubscriptions();
     availableSubscriptions = subs
         .where((subName) => !subsbriptions.any((subscribed) =>
             (subscribed.name == subName) &&
@@ -240,7 +241,7 @@ class _AddSubscriptionsState extends State<AddSubscriptions> {
                             recurringDate: endingRecurring.text,
                             name: selectedApp,
                           );
-                          DatabaseHelper()
+                          SubscriptionMethods()
                               .insertSubscription(subscription)
                               .then((value) => Get.back(result: "refresh"));
                         } else {

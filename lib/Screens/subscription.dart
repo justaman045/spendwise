@@ -3,12 +3,13 @@ import "package:flutter_screenutil/flutter_screenutil.dart";
 import "package:get/get.dart";
 import "package:showcaseview/showcaseview.dart";
 import "package:spendwise/Components/subscription_manager_expense.dart";
-import "package:spendwise/Models/db_helper.dart";
+import "package:spendwise/Models/subscription.dart";
 import "package:spendwise/Requirements/data.dart";
 import "package:spendwise/Screens/active_subscription.dart";
 import "package:spendwise/Screens/add_subscriptions.dart";
 import "package:spendwise/Screens/subscriptions_details.dart";
 import "package:spendwise/Utils/methods.dart";
+import "package:spendwise/Utils/subscription_methods.dart";
 import "package:spendwise/Utils/theme.dart";
 
 class SubscriptionManager extends StatefulWidget {
@@ -25,7 +26,7 @@ class _SubscriptionManagerState extends State<SubscriptionManager> {
   Future? _future;
   Future<List<Subscription>> _getSubscriptions() async {
     List<Subscription> subscriptions =
-        await DatabaseHelper().getAllSubscriptions();
+        await SubscriptionMethods().getAllSubscriptions();
     return subscriptions
         .where((element) =>
             (stringToDateTime(element.toDate)
@@ -286,7 +287,7 @@ class _SubscriptionManagerState extends State<SubscriptionManager> {
             label: const Icon(Icons.add),
             onPressed: () async {
               List<Subscription> subscribed =
-                  await DatabaseHelper().getAllSubscriptions();
+                  await SubscriptionMethods().getAllSubscriptions();
               List<String> subs = await getSubscriptionApps();
               if (subscribed.length != subs.length) {
                 final toreload = await Get.to(

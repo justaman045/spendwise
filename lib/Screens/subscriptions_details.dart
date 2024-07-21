@@ -1,10 +1,11 @@
 import "package:flutter/material.dart";
 import "package:flutter_screenutil/flutter_screenutil.dart";
 import "package:get/get.dart";
-import "package:spendwise/Models/db_helper.dart";
+import "package:spendwise/Models/subscription.dart";
 import "package:spendwise/Requirements/data.dart";
 import "package:spendwise/Screens/edit_subscription.dart";
 import "package:spendwise/Utils/methods.dart";
+import "package:spendwise/Utils/subscription_methods.dart";
 import "package:spendwise/Utils/theme.dart";
 
 class SubscriptionsDetails extends StatefulWidget {
@@ -221,7 +222,7 @@ class _SubscriptionsDetailsState extends State<SubscriptionsDetails> {
                           ),
                           child: TextButton(
                             onPressed: () {
-                              DatabaseHelper()
+                              SubscriptionMethods()
                                   .deleteSubscription(widget.subscription.id)
                                   .then(
                                     (val) => Get.back(result: "refresh"),

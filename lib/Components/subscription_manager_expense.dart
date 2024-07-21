@@ -1,9 +1,9 @@
 import 'package:countup/countup.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:spendwise/Models/subscription.dart';
 import 'package:spendwise/Requirements/data.dart';
 import 'package:spendwise/Utils/theme.dart';
-import 'package:spendwise/Models/db_helper.dart';
 
 class SuscriptionManagerExpense extends StatefulWidget {
   const SuscriptionManagerExpense({

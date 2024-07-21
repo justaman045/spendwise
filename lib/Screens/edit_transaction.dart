@@ -3,9 +3,9 @@ import "package:flutter_screenutil/flutter_screenutil.dart";
 import "package:get/get.dart";
 import "package:intl/intl.dart";
 import "package:spendwise/Models/cus_transaction.dart";
-import "package:spendwise/Models/db_helper.dart";
 import "package:spendwise/Requirements/data.dart";
 import "package:spendwise/Utils/theme.dart";
+import "package:spendwise/Utils/transaction_methods.dart";
 
 final _formKey = GlobalKey<FormState>();
 
@@ -332,7 +332,7 @@ class _EditTransactionState extends State<EditTransaction> {
                                 widget.transactionReferanceNumber,
                             toInclude: _toExclude == "No" ? 1 : 0,
                           );
-                          await DatabaseHelper()
+                          await TransactionMethods()
                               .updateTransaction(transaction)
                               .then((value) => Get.back())
                               .then((value) => Get.back(result: "refresh"));
@@ -379,7 +379,7 @@ class _EditTransactionState extends State<EditTransaction> {
                   padding: EdgeInsets.only(top: 20.h),
                   child: GestureDetector(
                     onTap: () async {
-                      await DatabaseHelper()
+                      await TransactionMethods()
                           .deleteTransaction(widget.transactionReferanceNumber)
                           .then((value) => Get.back())
                           .then((value) => Get.back(result: "refresh"));

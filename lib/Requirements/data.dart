@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 // // TODO: Reduce Lines of Code
+const String tableName = 'transactions';
+const String subscriptionsTable = 'subscriptions';
+const String peopleBalanceTable = 'peopleBalance';
+const String expenseTypesTable = 'expenseTypes';
 const List<String> routes = [
   "intro",
   "login",

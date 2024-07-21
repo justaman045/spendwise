@@ -4,10 +4,10 @@ import "package:flutter_screenutil/flutter_screenutil.dart";
 import "package:get/get.dart";
 import "package:intl/intl.dart";
 import "package:spendwise/Models/cus_transaction.dart";
-import "package:spendwise/Models/db_helper.dart";
 import "package:spendwise/Requirements/data.dart";
 import "package:spendwise/Requirements/transaction.dart";
 import "package:spendwise/Utils/theme.dart";
+import "package:spendwise/Utils/transaction_methods.dart";
 
 // TODO: Reduce Lines of Code
 final _formKey = GlobalKey<FormState>();
@@ -268,7 +268,7 @@ class _AddCashEntryState extends State<AddCashEntry> {
                             transactionReferanceNumber:
                                 generateUniqueRefNumber(),
                           );
-                          await DatabaseHelper()
+                          await TransactionMethods()
                               .insertTransaction(transaction)
                               .then(
                                 (value) => Get.off(
@@ -339,7 +339,7 @@ class _AddCashEntryState extends State<AddCashEntry> {
                             transactionReferanceNumber:
                                 generateUniqueRefNumber(),
                           );
-                          await DatabaseHelper()
+                          await TransactionMethods()
                               .insertTransaction(transaction)
                               .then(
                                 (value) => Get.back(result: "refresh"),
