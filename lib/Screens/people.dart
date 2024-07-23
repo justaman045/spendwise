@@ -14,6 +14,7 @@ class People extends StatefulWidget {
 
 class _PeopleState extends State<People> {
   final _peopleBalanceList = <PeopleBalance>[];
+  // ignore: unused_field
   Future? _future;
 
   @override

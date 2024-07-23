@@ -28,21 +28,20 @@ class _AddPeopleState extends State<AddPeople> {
     final dateTimeController = TextEditingController();
     final transactionForController = TextEditingController();
     final relationController = TextEditingController();
-    final String _dateTime = "";
-    DateTime? fromdate;
+    const String dateTime = "";
 
-    final _ExpenseType = <ExpenseType>[];
+    final expensetype = <ExpenseType>[];
 
-    Future<void> _fetchData() async {
-      _ExpenseType.clear();
-      _ExpenseType.addAll(await ExpenseTypeMethods().getAllExpenseTypes());
+    Future<void> fetchData() async {
+      expensetype.clear();
+      expensetype.addAll(await ExpenseTypeMethods().getAllExpenseTypes());
       setState(() {});
     }
 
     @override
     void initState() {
       super.initState();
-      _fetchData();
+      fetchData();
     }
 
     return Scaffold(
@@ -134,12 +133,11 @@ class _AddPeopleState extends State<AddPeople> {
                                 context: context,
                                 firstDate: DateTime(DateTime.now().year - 1),
                                 lastDate: DateTime(2099));
-                            fromdate = date;
                             dateTimeController.text =
                                 DateFormat.yMMMMd().format(date);
                           },
                         ),
-                        hintText: _dateTime.toString(),
+                        hintText: dateTime.toString(),
                       ),
                       validator: (value) {
                         if (value?.isEmpty ?? true) {
@@ -156,10 +154,12 @@ class _AddPeopleState extends State<AddPeople> {
                       onChanged: (value) {
                         transactionForController.text = "dummy";
                       },
-                      items: _ExpenseType.map((elem) => DropdownMenuItem(
-                            value: elem.name,
-                            child: Text(elem.name),
-                          )).toList(),
+                      items: expensetype
+                          .map((elem) => DropdownMenuItem(
+                                value: elem.name,
+                                child: Text(elem.name),
+                              ))
+                          .toList(),
                       decoration: InputDecoration(
                         labelText: "Transaction For",
                         border: OutlineInputBorder(
