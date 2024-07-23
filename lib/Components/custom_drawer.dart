@@ -4,6 +4,7 @@ import "package:get/get.dart";
 import "package:spendwise/Requirements/data.dart";
 import "package:spendwise/Screens/all_transactions.dart";
 import "package:spendwise/Screens/home_page.dart";
+import "package:spendwise/Screens/people.dart";
 import "package:spendwise/Screens/settings.dart";
 import "package:spendwise/Screens/subscription.dart";
 import "package:spendwise/Screens/user_profile.dart";
@@ -28,6 +29,7 @@ class CustomDrawer extends StatelessWidget {
       "Transactions",
       "Profile",
       "Subscriptions",
+      "People",
       "Settings"
     ];
 
@@ -133,6 +135,17 @@ class CustomDrawer extends StatelessWidget {
         }
         break;
       case 4: // Settings
+        if (currentRoute != "people") {
+          Get.to(
+            routeName: "people",
+            () => const People(),
+            curve: customCurve,
+            transition: customTrans,
+            duration: duration,
+          );
+        }
+        break;
+      case 5: // Settings
         if (currentRoute != routes[7]) {
           Get.to(
             routeName: routes[7],

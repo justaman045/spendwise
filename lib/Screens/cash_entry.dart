@@ -3,9 +3,12 @@ import "package:flutter/services.dart";
 import "package:flutter_screenutil/flutter_screenutil.dart";
 import "package:get/get.dart";
 import "package:intl/intl.dart";
+import "package:multi_dropdown/multiselect_dropdown.dart";
 import "package:spendwise/Models/cus_transaction.dart";
+import "package:spendwise/Models/people_expense.dart";
 import "package:spendwise/Requirements/data.dart";
 import "package:spendwise/Requirements/transaction.dart";
+import "package:spendwise/Utils/people_balance_shared_methods.dart";
 import "package:spendwise/Utils/theme.dart";
 import "package:spendwise/Utils/transaction_methods.dart";
 
@@ -31,11 +34,20 @@ class _AddCashEntryState extends State<AddCashEntry> {
   String transactionReferanceNumber = "";
   DateTime? recurringDate;
   bool isRecurring = false;
+  MultiSelectController multiSelectDropDownController = MultiSelectController();
+  List<PeopleBalance> _peopleBalanceList = [];
+
+  Future<void> _fetchData() async {
+    _peopleBalanceList =
+        await PeopleBalanceSharedMethods().getAllPeopleBalance();
+    setState(() {});
+  }
 
   @override
   void initState() {
     expenseTypeEditingController.text = typeOfExpense[0];
     typeOftransactionEditingController.text = typeOfTransaction[0];
+    _fetchData();
     super.initState();
   }
 
@@ -227,6 +239,55 @@ class _AddCashEntryState extends State<AddCashEntry> {
                         ),
                       ),
                     ),
+                    Padding(
+                      padding: EdgeInsets.only(
+                        left: 20.r,
+                        right: 20.w,
+                      ),
+                      child: Row(
+                        children: [
+                          Checkbox(
+                            value: isRecurring,
+                            onChanged: (bool? value) {
+                              endingRecurring.text = "";
+                              setState(
+                                () {
+                                  isRecurring = value!;
+                                },
+                              );
+                            },
+                          ),
+                          const Text("Is this Subscription Recurring??")
+                        ],
+                      ),
+                    ),
+                    if (isRecurring) ...[
+                      Padding(
+                        padding:
+                            EdgeInsets.only(left: 20.r, top: 15.h, right: 20.w),
+                        child: MultiSelectDropDown(
+                          backgroundColor:
+                              MyAppColors.normalColoredWidgetTextColorDarkMode,
+                          showClearIcon: true,
+                          controller: multiSelectDropDownController,
+                          onOptionSelected: (options) =>
+                              debugPrint(options.toString()),
+                          options: _peopleBalanceList.isEmpty
+                              ? []
+                              : _peopleBalanceList
+                                  .map((peopleBalance) => ValueItem(
+                                        label: peopleBalance.name,
+                                        value: peopleBalance.id.toString(),
+                                      ))
+                                  .toList(),
+                          selectionType: SelectionType.multi,
+                          chipConfig: const ChipConfig(wrapType: WrapType.wrap),
+                          dropdownHeight: 100.h,
+                          optionTextStyle: const TextStyle(fontSize: 16),
+                          selectedOptionIcon: const Icon(Icons.check_circle),
+                        ),
+                      )
+                    ],
                   ],
                 ),
               ),
@@ -259,6 +320,8 @@ class _AddCashEntryState extends State<AddCashEntry> {
                           //           transition: customTrans,
                           //           duration: duration,
                           //         ));
+
+                          if (isRecurring) {}
                           CusTransaction transaction = CusTransaction(
                             amount: double.parse(amountEditingController.text),
                             dateAndTime: DateTime.now(),
