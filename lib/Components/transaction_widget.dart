@@ -7,7 +7,7 @@ import 'package:spendwise/Requirements/data.dart';
 import 'package:spendwise/Screens/transaction_details.dart';
 
 // Represents a single transaction with details and navigation
-class TransactionWidget extends StatelessWidget {
+class TransactionWidget extends StatefulWidget {
   const TransactionWidget({
     super.key,
     required this.name,
@@ -28,24 +28,33 @@ class TransactionWidget extends StatelessWidget {
   final int toIncl;
 
   @override
+  State<TransactionWidget> createState() => _TransactionWidgetState();
+}
+
+class _TransactionWidgetState extends State<TransactionWidget> {
+  @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
-        Get.to(
+      onTap: () async {
+        dynamic refresh = await Get.to(
           routeName: "Transaction Details",
           () => TransactionDetails(
-            amount: amount,
-            dateTime: dateAndTime,
-            toName: name,
-            transactionReferanceNumber: transactionReferanceNumber,
-            expenseType: expenseType,
-            transactionType: typeOfTransaction,
-            toIncl: toIncl,
+            amount: widget.amount,
+            dateTime: widget.dateAndTime,
+            toName: widget.name,
+            transactionReferanceNumber: widget.transactionReferanceNumber,
+            expenseType: widget.expenseType,
+            transactionType: widget.typeOfTransaction,
+            toIncl: widget.toIncl,
           ),
           transition: customTrans,
           curve: customCurve,
           duration: duration,
         );
+
+        if (refresh != null) {
+          setState(() {});
+        }
       },
       child: Row(
         children: [
@@ -76,14 +85,15 @@ class TransactionWidget extends StatelessWidget {
                     SizedBox(
                       width: 150.w,
                       child: Text(
-                        name,
+                        widget.name,
                         style: TextStyle(
                             fontWeight: FontWeight.bold, fontSize: 15.r),
                       ),
                     ),
                     Row(
                       children: [
-                        if (typeOfTransaction == "expense") ...[
+                        if (widget.typeOfTransaction.toLowerCase() ==
+                            "expense") ...[
                           Text(
                             "Rs. -",
                             style: TextStyle(
@@ -100,10 +110,12 @@ class TransactionWidget extends StatelessWidget {
                                 fontWeight: FontWeight.bold),
                           ),
                         ],
-                        if (typeOfTransaction == "expense") ...[
+                        if (widget.typeOfTransaction.toLowerCase() ==
+                            "expense") ...[
                           Countup(
                             begin: 0,
-                            end: amount.toDouble(),
+                            duration: duration,
+                            end: widget.amount.toDouble(),
                             style: TextStyle(
                                 color: Colors.redAccent,
                                 fontSize: 20.r,
@@ -112,7 +124,8 @@ class TransactionWidget extends StatelessWidget {
                         ] else ...[
                           Countup(
                             begin: 0,
-                            end: amount.toDouble(),
+                            duration: duration,
+                            end: widget.amount.toDouble(),
                             style: TextStyle(
                                 color: Colors.green,
                                 fontSize: 20.r,
@@ -127,11 +140,11 @@ class TransactionWidget extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      expenseType,
+                      widget.expenseType,
                       style: TextStyle(fontSize: 13.r),
                     ),
                     Text(
-                      "${DateFormat.yMMMMd('en_US').format(dateAndTime)}, ${DateFormat.jm().format(dateAndTime)}",
+                      "${DateFormat.yMMMMd('en_US').format(widget.dateAndTime)}, ${DateFormat.jm().format(widget.dateAndTime)}",
                       style: TextStyle(fontSize: 11.r),
                     ),
                   ],

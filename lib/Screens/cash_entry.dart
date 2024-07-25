@@ -33,7 +33,7 @@ class _AddCashEntryState extends State<AddCashEntry> {
   String typeOftransaction = "";
   String transactionReferanceNumber = "";
   DateTime? recurringDate;
-  bool isRecurring = false;
+  bool isSharable = false;
   MultiSelectController multiSelectDropDownController = MultiSelectController();
   List<PeopleBalance> _peopleBalanceList = [];
 
@@ -247,21 +247,21 @@ class _AddCashEntryState extends State<AddCashEntry> {
                       child: Row(
                         children: [
                           Checkbox(
-                            value: isRecurring,
+                            value: isSharable,
                             onChanged: (bool? value) {
                               endingRecurring.text = "";
                               setState(
                                 () {
-                                  isRecurring = value!;
+                                  isSharable = value!;
                                 },
                               );
                             },
                           ),
-                          const Text("Is this Subscription Recurring??")
+                          const Text("Share this Expense with Someone?")
                         ],
                       ),
                     ),
-                    if (isRecurring) ...[
+                    if (isSharable) ...[
                       Padding(
                         padding:
                             EdgeInsets.only(left: 20.r, top: 15.h, right: 20.w),
@@ -321,7 +321,6 @@ class _AddCashEntryState extends State<AddCashEntry> {
                           //           duration: duration,
                           //         ));
 
-                          if (isRecurring) {}
                           CusTransaction transaction = CusTransaction(
                             amount: double.parse(amountEditingController.text),
                             dateAndTime: DateTime.now(),
@@ -402,11 +401,64 @@ class _AddCashEntryState extends State<AddCashEntry> {
                             transactionReferanceNumber:
                                 generateUniqueRefNumber(),
                           );
-                          await TransactionMethods()
-                              .insertTransaction(transaction)
-                              .then(
-                                (value) => Get.back(result: "refresh"),
-                              );
+                          if (isSharable) {
+                            for (dynamic valOne in multiSelectDropDownController
+                                .selectedOptions) {
+                              for (PeopleBalance valTwo in _peopleBalanceList) {
+                                if (int.parse(valOne.value) == valTwo.id) {
+                                  double updatedAmount;
+                                  if (transaction.typeOfTransaction
+                                          .toLowerCase() ==
+                                      "income") {
+                                    updatedAmount =
+                                        valTwo.amount - transaction.amount;
+                                  } else {
+                                    if (multiSelectDropDownController
+                                            .selectedOptions.length >
+                                        1) {
+                                      updatedAmount = valTwo.amount +
+                                          (transaction.amount /
+                                              (multiSelectDropDownController
+                                                      .selectedOptions.length +
+                                                  1));
+                                    } else {
+                                      updatedAmount =
+                                          valTwo.amount + transaction.amount;
+                                    }
+                                  }
+                                  if (updatedAmount == 0) {
+                                    PeopleBalanceSharedMethods()
+                                        .deletePeopleBalance(
+                                            valTwo.transactionReferanceNumber);
+                                  } else {
+                                    PeopleBalanceSharedMethods()
+                                        .updatePeopleBalance(
+                                      PeopleBalance(
+                                        name: valTwo.name,
+                                        amount: updatedAmount,
+                                        dateAndTime: valTwo.dateAndTime,
+                                        transactionFor: valTwo.transactionFor,
+                                        relationFrom: valTwo.relationFrom,
+                                        transactionReferanceNumber:
+                                            valTwo.transactionReferanceNumber,
+                                      ),
+                                    );
+                                  }
+                                }
+                              }
+                            }
+                          }
+                          //TODO: Maybe reciving portion is done sending portion is remaining
+                          if (transaction.typeOfTransaction.toLowerCase() !=
+                              typeOfTransaction[2].toLowerCase()) {
+                            await TransactionMethods()
+                                .insertTransaction(transaction)
+                                .then(
+                                  (value) => Get.back(result: "refresh"),
+                                );
+                          } else {
+                            Get.back(result: "refresh");
+                          }
                         }
                       },
                       child: Container(

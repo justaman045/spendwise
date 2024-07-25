@@ -9,6 +9,8 @@ import 'package:spendwise/Requirements/transaction.dart';
 import 'package:spendwise/Utils/expense_type_methods.dart';
 import 'package:spendwise/Utils/people_balance_shared_methods.dart';
 
+//TODO: Finalize the page
+
 final _formKey = GlobalKey<FormState>();
 
 class AddPeople extends StatefulWidget {

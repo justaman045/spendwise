@@ -381,7 +381,6 @@ class _EditTransactionState extends State<EditTransaction> {
                     onTap: () async {
                       await TransactionMethods()
                           .deleteTransaction(widget.transactionReferanceNumber)
-                          .then((value) => Get.back())
                           .then((value) => Get.back(result: "refresh"));
                     },
                     child: Container(

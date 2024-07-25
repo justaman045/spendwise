@@ -42,7 +42,8 @@ List<CusTransaction> allTransactions(
         .where((transaction) =>
             transaction.dateAndTime.year == today.year &&
             transaction.dateAndTime.month == today.month &&
-            transaction.typeOfTransaction == "income".toLowerCase() &&
+            transaction.typeOfTransaction.toLowerCase() ==
+                "income".toLowerCase() &&
             transaction.toInclude == 1)
         .toList()
         .reversed
@@ -57,7 +58,8 @@ List<CusTransaction> allTransactions(
         .where((transaction) =>
             transaction.dateAndTime.year == today.year &&
             transaction.dateAndTime.month == today.month &&
-            transaction.typeOfTransaction == "expense".toLowerCase() &&
+            transaction.typeOfTransaction.toLowerCase() ==
+                "expense".toLowerCase() &&
             transaction.toInclude == 1)
         .toList()
         .reversed
@@ -70,7 +72,8 @@ List<CusTransaction> allTransactions(
     debugPrint("from incomeshowhidden");
     return transactions
         .where((transaction) =>
-            transaction.typeOfTransaction == "income".toLowerCase())
+            transaction.typeOfTransaction.toLowerCase() ==
+            "income".toLowerCase())
         .toList()
         .reversed
         .toList();
@@ -82,7 +85,8 @@ List<CusTransaction> allTransactions(
     debugPrint("from expenseshowhidden");
     return transactions
         .where((transaction) =>
-            transaction.typeOfTransaction == "expense".toLowerCase())
+            transaction.typeOfTransaction.toLowerCase() ==
+            "expense".toLowerCase())
         .toList()
         .reversed
         .toList();
@@ -136,7 +140,8 @@ double totalExpenseThisMonth(List<CusTransaction> transactions) {
   double expense = 0;
   for (var element in transactions) {
     if (element.dateAndTime.month == currentMonth) {
-      if (element.typeOfTransaction == "expense" && element.toInclude == 1) {
+      if (element.typeOfTransaction.toLowerCase() == "expense" &&
+          element.toInclude == 1) {
         expense += element.amount;
       }
     }
@@ -162,7 +167,8 @@ double totalIncomeThisMonth(List<CusTransaction> transactions) {
   double income = 0;
   for (var element in transactions) {
     if (element.dateAndTime.month == currentMonth) {
-      if (element.typeOfTransaction == "income" && element.toInclude == 1) {
+      if (element.typeOfTransaction.toLowerCase() == "income" &&
+          element.toInclude == 1) {
         income += element.amount;
       }
     }

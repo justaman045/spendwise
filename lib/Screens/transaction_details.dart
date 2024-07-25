@@ -8,7 +8,7 @@ import "package:spendwise/Screens/edit_transaction.dart";
 import "package:spendwise/Utils/theme.dart";
 
 // TODO: Reduce Lines of Code
-class TransactionDetails extends StatelessWidget {
+class TransactionDetails extends StatefulWidget {
   const TransactionDetails({
     super.key,
     required this.toName,
@@ -29,7 +29,13 @@ class TransactionDetails extends StatelessWidget {
   final int toIncl;
 
   @override
+  State<TransactionDetails> createState() => _TransactionDetailsState();
+}
+
+class _TransactionDetailsState extends State<TransactionDetails> {
+  @override
   Widget build(BuildContext context) {
+    debugPrint(widget.transactionType.toString().toLowerCase());
     return Scaffold(
       body: SafeArea(
         child: Column(
@@ -46,7 +52,8 @@ class TransactionDetails extends StatelessWidget {
                 ),
               ),
             ),
-            if (expenseType == "expense") ...[
+            if (widget.transactionType.toString().toLowerCase() ==
+                "expense") ...[
               Center(
                 child: Text(
                   "Payment Sucessfull",
@@ -64,7 +71,7 @@ class TransactionDetails extends StatelessWidget {
                     horizontal: 20.w,
                   ),
                   child: Text(
-                    "You've paid to $toName",
+                    "You've paid to ${widget.toName}",
                     style: TextStyle(fontSize: 13.r),
                   ),
                 ),
@@ -124,7 +131,7 @@ class TransactionDetails extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  if (expenseType == "income") ...[
+                  if (widget.expenseType == "income") ...[
                     Text(
                       "From",
                       style: TextStyle(
@@ -140,7 +147,7 @@ class TransactionDetails extends StatelessWidget {
                     ),
                   ],
                   Text(
-                    toName!,
+                    widget.toName!,
                     style: TextStyle(
                       fontSize: 13.r,
                     ),
@@ -162,7 +169,7 @@ class TransactionDetails extends StatelessWidget {
                     style: TextStyle(fontSize: 13.r),
                   ),
                   Text(
-                    transactionReferanceNumber.toString(),
+                    widget.transactionReferanceNumber.toString(),
                     style: TextStyle(
                       fontSize: 13.r,
                     ),
@@ -188,7 +195,9 @@ class TransactionDetails extends StatelessWidget {
                   Row(
                     children: [
                       Text(
-                        DateFormat.yMMMMd('en_US').format(dateTime!).toString(),
+                        DateFormat.yMMMMd('en_US')
+                            .format(widget.dateTime!)
+                            .toString(),
                         style: TextStyle(
                           fontSize: 13.r,
                         ),
@@ -200,7 +209,7 @@ class TransactionDetails extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        DateFormat.jm().format(dateTime!).toString(),
+                        DateFormat.jm().format(widget.dateTime!).toString(),
                         style: TextStyle(
                           fontSize: 13.r,
                         ),
@@ -226,7 +235,7 @@ class TransactionDetails extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    "Rs. $amount",
+                    "Rs. ${widget.amount}",
                     style: TextStyle(
                       fontSize: 13.r,
                     ),
@@ -258,7 +267,7 @@ class TransactionDetails extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    "Rs. $amount",
+                    "Rs. ${widget.amount}",
                     style: TextStyle(
                       fontSize: 13.r,
                     ),
@@ -289,22 +298,27 @@ class TransactionDetails extends StatelessWidget {
                   ),
                 ),
                 child: TextButton(
-                  onPressed: () {
-                    Get.to(
+                  onPressed: () async {
+                    dynamic refresh = await Get.to(
                       routeName: "editTransaction",
                       () => EditTransaction(
-                        amount: amount!,
-                        dateTime: dateTime!,
-                        expenseType: expenseType!,
-                        toName: toName!,
-                        transactionReferanceNumber: transactionReferanceNumber!,
-                        transactionType: transactionType,
-                        toIncl: toIncl,
+                        amount: widget.amount!,
+                        dateTime: widget.dateTime!,
+                        expenseType: widget.expenseType!,
+                        toName: widget.toName!,
+                        transactionReferanceNumber:
+                            widget.transactionReferanceNumber!,
+                        transactionType: widget.transactionType,
+                        toIncl: widget.toIncl,
                       ),
                       curve: customCurve,
                       transition: customTrans,
                       duration: duration,
                     );
+
+                    if (refresh != null) {
+                      Get.back(result: "refresh");
+                    }
                   },
                   child: Text(
                     "Edit Transaction",

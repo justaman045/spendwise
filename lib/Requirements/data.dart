@@ -32,7 +32,7 @@ const int animationDuration = 2;
 const Transition customTrans = Transition.circularReveal;
 const Curve customCurve = Curves.bounceInOut;
 const Duration duration = Duration(seconds: 1);
-const List<String> typeOfTransaction = ["income", "expense"];
+const List<String> typeOfTransaction = ["income", "expense", "didn't Pay"];
 const List<String> typeOfExpense = [
   "Bike",
   "Travel",
@@ -49,6 +49,6 @@ const List<String> typeOfExpense = [
   "Transfer",
   "Transfer to Self",
 ];
-const String openingQuery =
-    "CREATE TABLE IF NOT EXISTS cus_transaction (amount REAL NOT NULL,  date_and_time TEXT NOT NULL,  name TEXT NOT NULL,  type_of_transaction TEXT NOT NULL,  expense_type TEXT,  transaction_reference_number INTEGER PRIMARY KEY);";
+// const String openingQuery =
+//     "CREATE TABLE IF NOT EXISTS cus_transaction (amount REAL NOT NULL,  date_and_time TEXT NOT NULL,  name TEXT NOT NULL,  type_of_transaction TEXT NOT NULL,  expense_type TEXT,  transaction_reference_number INTEGER PRIMARY KEY);";
 const String appName = "SpendWise";
