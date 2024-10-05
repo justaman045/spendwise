@@ -5,7 +5,9 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:spendwise/Models/expense_type.dart';
 import 'package:spendwise/Models/people_expense.dart';
+import 'package:spendwise/Requirements/data.dart';
 import 'package:spendwise/Requirements/transaction.dart';
+import 'package:spendwise/Screens/home_page.dart';
 import 'package:spendwise/Utils/expense_type_methods.dart';
 import 'package:spendwise/Utils/people_balance_shared_methods.dart';
 
@@ -94,82 +96,82 @@ class _AddPeopleState extends State<AddPeople> {
                     ),
                   ),
                   // ----------------------------------------------------------------------------
-                  Padding(
-                    padding: EdgeInsets.symmetric(vertical: 10.h),
-                    child: TextFormField(
-                      controller: amountController,
-                      keyboardType: TextInputType.number,
-                      validator: (value) {
-                        if (value?.isEmpty ?? true) {
-                          return "Please enter a Amount";
-                        } else if (int.parse(value!).isLowerThan(1)) {
-                          return "Enter a Number greater than 0";
-                        }
-                        return null;
-                      },
-                      decoration: InputDecoration(
-                        labelText: "Amount",
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(15.h),
-                        ),
-                      ),
-                    ),
-                  ),
+                  // Padding(
+                  //   padding: EdgeInsets.symmetric(vertical: 10.h),
+                  //   child: TextFormField(
+                  //     controller: amountController,
+                  //     keyboardType: TextInputType.number,
+                  //     validator: (value) {
+                  //       if (value?.isEmpty ?? true) {
+                  //         return "Please enter a Amount";
+                  //       } else if (int.parse(value!).isLowerThan(1)) {
+                  //         return "Enter a Number greater than 0";
+                  //       }
+                  //       return null;
+                  //     },
+                  //     decoration: InputDecoration(
+                  //       labelText: "Amount",
+                  //       border: OutlineInputBorder(
+                  //         borderRadius: BorderRadius.circular(15.h),
+                  //       ),
+                  //     ),
+                  //   ),
+                  // ),
                   // -----------------------------------------------------------------------
-                  Padding(
-                    padding: EdgeInsets.symmetric(vertical: 10.h),
-                    child: TextFormField(
-                      controller: dateTimeController,
-                      canRequestFocus: false,
-                      keyboardType: TextInputType.none,
-                      readOnly: true,
-                      decoration: InputDecoration(
-                        labelText: "Date and Time",
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(15.h),
-                        ),
-                        suffixIcon: IconButton(
-                          icon: const Icon(Icons.calendar_month_rounded),
-                          onPressed: () async {
-                            dynamic date = await showDatePicker(
-                                context: context,
-                                firstDate: DateTime(DateTime.now().year - 1),
-                                lastDate: DateTime(2099));
-                            dateTimeController.text =
-                                DateFormat.yMMMMd().format(date);
-                          },
-                        ),
-                        hintText: dateTime.toString(),
-                      ),
-                      validator: (value) {
-                        if (value?.isEmpty ?? true) {
-                          return "Add a Date for the Transaction";
-                        }
-                        return null;
-                      },
-                    ),
-                  ),
+                  // Padding(
+                  //   padding: EdgeInsets.symmetric(vertical: 10.h),
+                  //   child: TextFormField(
+                  //     controller: dateTimeController,
+                  //     canRequestFocus: false,
+                  //     keyboardType: TextInputType.none,
+                  //     readOnly: true,
+                  //     decoration: InputDecoration(
+                  //       labelText: "Date and Time",
+                  //       border: OutlineInputBorder(
+                  //         borderRadius: BorderRadius.circular(15.h),
+                  //       ),
+                  //       suffixIcon: IconButton(
+                  //         icon: const Icon(Icons.calendar_month_rounded),
+                  //         onPressed: () async {
+                  //           dynamic date = await showDatePicker(
+                  //               context: context,
+                  //               firstDate: DateTime(DateTime.now().year - 1),
+                  //               lastDate: DateTime(2099));
+                  //           dateTimeController.text =
+                  //               DateFormat.yMMMMd().format(date);
+                  //         },
+                  //       ),
+                  //       hintText: dateTime.toString(),
+                  //     ),
+                  //     validator: (value) {
+                  //       if (value?.isEmpty ?? true) {
+                  //         return "Add a Date for the Transaction";
+                  //       }
+                  //       return null;
+                  //     },
+                  //   ),
+                  // ),
                   // -----------------------------------------------------------------------
-                  Padding(
-                    padding: EdgeInsets.symmetric(vertical: 10.h),
-                    child: DropdownButtonFormField(
-                      onChanged: (value) {
-                        transactionForController.text = "dummy";
-                      },
-                      items: expensetype
-                          .map((elem) => DropdownMenuItem(
-                                value: elem.name,
-                                child: Text(elem.name),
-                              ))
-                          .toList(),
-                      decoration: InputDecoration(
-                        labelText: "Transaction For",
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(15.h),
-                        ),
-                      ),
-                    ),
-                  ),
+                  // Padding(
+                  //   padding: EdgeInsets.symmetric(vertical: 10.h),
+                  //   child: DropdownButtonFormField(
+                  //     onChanged: (value) {
+                  //       transactionForController.text = "dummy";
+                  //     },
+                  //     items: expensetype
+                  //         .map((elem) => DropdownMenuItem(
+                  //               value: elem.name,
+                  //               child: Text(elem.name),
+                  //             ))
+                  //         .toList(),
+                  //     decoration: InputDecoration(
+                  //       labelText: "Transaction For",
+                  //       border: OutlineInputBorder(
+                  //         borderRadius: BorderRadius.circular(15.h),
+                  //       ),
+                  //     ),
+                  //   ),
+                  // ),
                   // -----------------------------------------------------------------------
                   Padding(
                     padding: EdgeInsets.symmetric(vertical: 10.h),
@@ -218,6 +220,10 @@ class _AddPeopleState extends State<AddPeople> {
                     ),
                     child: TextButton(
                       onPressed: () async {
+                        amountController.text = "0";
+                        dateTimeController.text =
+                            DateFormat.yMMMMd().format(DateTime.now());
+                        transactionForController.text = "";
                         if (_formKey.currentState!.validate()) {
                           PeopleBalance peopleBalance = PeopleBalance(
                             name: nameController.text,
@@ -231,7 +237,10 @@ class _AddPeopleState extends State<AddPeople> {
                           PeopleBalanceSharedMethods()
                               .insertPeopleBalance(peopleBalance)
                               .then(
-                                (value) => Get.back(result: "refresh"),
+                                (value) => Get.offAll(() => const HomePage(),
+                                    curve: customCurve,
+                                    duration: duration,
+                                    transition: customTrans),
                               );
                         }
                       },
