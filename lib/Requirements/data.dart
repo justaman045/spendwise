@@ -32,7 +32,12 @@ const int animationDuration = 2;
 const Transition customTrans = Transition.circularReveal;
 const Curve customCurve = Curves.bounceInOut;
 const Duration duration = Duration(seconds: 1);
-const List<String> typeOfTransaction = ["income", "expense", "didn't Pay"];
+const List<String> typeOfTransaction = [
+  "income",
+  "expense",
+  "he/She Didn't Pay",
+  "you Didn't Paid"
+];
 const List<String> typeOfExpense = [
   "Bike",
   "Travel",

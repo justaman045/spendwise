@@ -106,6 +106,28 @@ class _PeopleState extends State<People> {
                                                 ],
                                               ],
                                             ),
+                                            if (snapshot.data[index].amount >
+                                                0) ...[
+                                              Padding(
+                                                padding: EdgeInsets.symmetric(
+                                                    vertical: 7.h),
+                                                child: SizedBox(
+                                                  width: 150.w,
+                                                  child: Text(
+                                                      "You've to Recieve Rs. ${snapshot.data[index].amount} from ${snapshot.data[index].name}"),
+                                                ),
+                                              ),
+                                            ] else ...[
+                                              Padding(
+                                                padding: EdgeInsets.symmetric(
+                                                    vertical: 7.h),
+                                                child: SizedBox(
+                                                  width: 150.w,
+                                                  child: Text(
+                                                      "You've to Give Rs. ${snapshot.data[index].amount} from ${snapshot.data[index].name}"),
+                                                ),
+                                              ),
+                                            ],
                                           ],
                                         ),
                                         Text(

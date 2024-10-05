@@ -19,6 +19,8 @@ void main() async {
   // Firebase ensure initialized
   WidgetsFlutterBinding.ensureInitialized();
 
+  const ScreenUtilInit();
+
   await SystemChrome.setPreferredOrientations(
     [DeviceOrientation.portraitUp],
   ); // To turn off landscape mode

@@ -55,6 +55,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '436894081806',
     projectId: 'spendwise-eef57',
     storageBucket: 'spendwise-eef57.appspot.com',
+    iosClientId: '436894081806-cc1l5trme5p0ofu1i0m149vp3ms1u5bl.apps.googleusercontent.com',
     iosBundleId: 'app.vercel.justaman045.spendwise',
   );
 
@@ -64,6 +65,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '436894081806',
     projectId: 'spendwise-eef57',
     storageBucket: 'spendwise-eef57.appspot.com',
+    iosClientId: '436894081806-cc1l5trme5p0ofu1i0m149vp3ms1u5bl.apps.googleusercontent.com',
     iosBundleId: 'app.vercel.justaman045.spendwise',
   );
 
@@ -76,4 +78,5 @@ class DefaultFirebaseOptions {
     storageBucket: 'spendwise-eef57.appspot.com',
     measurementId: 'G-JTFC4BTWYF',
   );
+
 }

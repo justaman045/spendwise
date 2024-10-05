@@ -3,11 +3,12 @@ import "package:flutter/services.dart";
 import "package:flutter_screenutil/flutter_screenutil.dart";
 import "package:get/get.dart";
 import "package:intl/intl.dart";
-import "package:multi_dropdown/multiselect_dropdown.dart";
+import "package:multi_dropdown/multi_dropdown.dart";
 import "package:spendwise/Models/cus_transaction.dart";
 import "package:spendwise/Models/people_expense.dart";
 import "package:spendwise/Requirements/data.dart";
 import "package:spendwise/Requirements/transaction.dart";
+import "package:spendwise/Screens/add_people.dart";
 import "package:spendwise/Utils/people_balance_shared_methods.dart";
 import "package:spendwise/Utils/theme.dart";
 import "package:spendwise/Utils/transaction_methods.dart";
@@ -34,13 +35,24 @@ class _AddCashEntryState extends State<AddCashEntry> {
   String transactionReferanceNumber = "";
   DateTime? recurringDate;
   bool isSharable = false;
-  MultiSelectController multiSelectDropDownController = MultiSelectController();
+  bool toAddNewPerson = false;
+  MultiSelectController<String> multiSelectDropDownController =
+      MultiSelectController<String>();
   List<PeopleBalance> _peopleBalanceList = [];
+  Future? _future;
+  double updatedAmount = 0;
 
   Future<void> _fetchData() async {
     _peopleBalanceList =
         await PeopleBalanceSharedMethods().getAllPeopleBalance();
     setState(() {});
+  }
+
+  Future<void> _refreshData() async {
+    setState(() {
+      _peopleBalanceList.clear();
+      _future = PeopleBalanceSharedMethods().getAllPeopleBalance();
+    });
   }
 
   @override
@@ -233,7 +245,9 @@ class _AddCashEntryState extends State<AddCashEntry> {
                               .toList(),
                           onChanged: (String? value) => setState(
                             () {
-                              if (value != null) typeOftransaction = value;
+                              if (value != null) {
+                                typeOftransactionEditingController.text = value;
+                              }
                             },
                           ),
                         ),
@@ -263,30 +277,89 @@ class _AddCashEntryState extends State<AddCashEntry> {
                     ),
                     if (isSharable) ...[
                       Padding(
-                        padding:
-                            EdgeInsets.only(left: 20.r, top: 15.h, right: 20.w),
-                        child: MultiSelectDropDown(
-                          backgroundColor:
-                              MyAppColors.normalColoredWidgetTextColorDarkMode,
-                          showClearIcon: true,
-                          controller: multiSelectDropDownController,
-                          onOptionSelected: (options) =>
-                              debugPrint(options.toString()),
-                          options: _peopleBalanceList.isEmpty
-                              ? []
-                              : _peopleBalanceList
-                                  .map((peopleBalance) => ValueItem(
-                                        label: peopleBalance.name,
-                                        value: peopleBalance.id.toString(),
-                                      ))
-                                  .toList(),
-                          selectionType: SelectionType.multi,
-                          chipConfig: const ChipConfig(wrapType: WrapType.wrap),
-                          dropdownHeight: 100.h,
-                          optionTextStyle: const TextStyle(fontSize: 16),
-                          selectedOptionIcon: const Icon(Icons.check_circle),
+                        padding: EdgeInsets.only(
+                          left: 30.r,
+                          right: 20.w,
                         ),
-                      )
+                        child: Row(
+                          children: [
+                            Checkbox(
+                              value: toAddNewPerson,
+                              onChanged: (bool? value) {
+                                endingRecurring.text = "";
+                                setState(
+                                  () {
+                                    toAddNewPerson = value!;
+                                  },
+                                );
+                              },
+                            ),
+                            SizedBox(
+                              width: 250.w,
+                              child: const Text(
+                                  "If the person is not avaiable in the list, Click here"),
+                            )
+                          ],
+                        ),
+                      ),
+                      if (toAddNewPerson == false) ...[
+                        Padding(
+                          padding: EdgeInsets.only(
+                              left: 20.r, top: 15.h, right: 20.w),
+                          child: MultiDropdown<String>(
+                            controller: multiSelectDropDownController,
+                            onSelectionChange: (options) =>
+                                debugPrint(options.toString()),
+                            items: _peopleBalanceList.isEmpty
+                                ? []
+                                : _peopleBalanceList
+                                    .map((peopleBalance) => DropdownItem(
+                                          label: peopleBalance.name,
+                                          value: peopleBalance.id.toString(),
+                                        ))
+                                    .toList(),
+                            dropdownItemDecoration:
+                                const DropdownItemDecoration(
+                                    backgroundColor:
+                                        Color.fromRGBO(0, 0, 0, 1)),
+                            chipDecoration: const ChipDecoration(
+                                wrap: true,
+                                backgroundColor: Color.fromRGBO(0, 0, 0, 1)),
+                          ),
+                        ),
+                      ] else ...[
+                        GestureDetector(
+                          onTap: () async {
+                            final toreload = await Get.to(
+                              routeName: "add_people",
+                              () => const AddPeople(),
+                              curve: customCurve,
+                              transition: customTrans,
+                              duration: duration,
+                            );
+
+                            if (toreload != null) {
+                              // debugPrint(toreload.toString());
+                              _refreshData();
+                            }
+                          },
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(vertical: 10.r),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                  gradient: colorsOfGradient(),
+                                  borderRadius: BorderRadius.circular(10.r)),
+                              child: Padding(
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: 10.r,
+                                  vertical: 10.r,
+                                ),
+                                child: const Text("Add a New Person"),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ]
                     ],
                   ],
                 ),
@@ -299,7 +372,7 @@ class _AddCashEntryState extends State<AddCashEntry> {
                     GestureDetector(
                       onTap: () async {
                         if (_formKey.currentState!.validate()) {
-                          debugPrint(typeOftransaction.length.toString());
+                          // debugPrint(typeOftransaction.length.toString());
                           // final user = FirebaseAuth.instance.currentUser;
                           // await FirebaseFirestore.instance
                           //     .collection("Transaction")
@@ -376,7 +449,7 @@ class _AddCashEntryState extends State<AddCashEntry> {
                       onTap: () async {
                         // FirebaseF
                         if (_formKey.currentState!.validate()) {
-                          debugPrint(typeOftransaction.length.toString());
+                          // debugPrint(typeOftransaction.length.toString());
                           // final user = FirebaseAuth.instance.currentUser;
                           // await FirebaseFirestore.instance
                           //     .collection("Transaction")
@@ -401,64 +474,73 @@ class _AddCashEntryState extends State<AddCashEntry> {
                             transactionReferanceNumber:
                                 generateUniqueRefNumber(),
                           );
+
+                          //If sharing mode is on then update the data
                           if (isSharable) {
                             for (dynamic valOne in multiSelectDropDownController
-                                .selectedOptions) {
+                                .selectedItems) {
                               for (PeopleBalance valTwo in _peopleBalanceList) {
-                                if (int.parse(valOne.value) == valTwo.id) {
-                                  double updatedAmount;
-                                  if (transaction.typeOfTransaction
-                                          .toLowerCase() ==
-                                      "income") {
-                                    updatedAmount =
-                                        valTwo.amount - transaction.amount;
-                                  } else {
-                                    if (multiSelectDropDownController
-                                            .selectedOptions.length >
-                                        1) {
-                                      updatedAmount = valTwo.amount +
-                                          (transaction.amount /
-                                              (multiSelectDropDownController
-                                                      .selectedOptions.length +
-                                                  1));
-                                    } else {
-                                      updatedAmount =
-                                          valTwo.amount + transaction.amount;
-                                    }
+                                //for Income
+                                if (typeOftransactionEditingController.text
+                                        .toLowerCase() ==
+                                    typeOfTransaction[0].toLowerCase()) {
+                                  if (int.parse(valOne.value) == valTwo.id) {
+                                    updatedAmount = valTwo.amount +
+                                        double.parse(
+                                            amountEditingController.text);
+                                    debugPrint(updatedAmount.toString());
                                   }
-                                  if (updatedAmount == 0) {
-                                    PeopleBalanceSharedMethods()
-                                        .deletePeopleBalance(
-                                            valTwo.transactionReferanceNumber);
-                                  } else {
-                                    PeopleBalanceSharedMethods()
-                                        .updatePeopleBalance(
-                                      PeopleBalance(
-                                        name: valTwo.name,
-                                        amount: updatedAmount,
-                                        dateAndTime: valTwo.dateAndTime,
-                                        transactionFor: valTwo.transactionFor,
-                                        relationFrom: valTwo.relationFrom,
-                                        transactionReferanceNumber:
-                                            valTwo.transactionReferanceNumber,
-                                      ),
-                                    );
+
+                                  //for Expense
+                                } else if (typeOftransactionEditingController
+                                        .text
+                                        .toLowerCase() ==
+                                    typeOfTransaction[1].toLowerCase()) {
+                                  if (int.parse(valOne.value) == valTwo.id) {
+                                    updatedAmount = valTwo.amount -
+                                        double.parse(
+                                            amountEditingController.text);
+                                    debugPrint(updatedAmount.toString());
                                   }
+
+                                  //He/She didn't paid
+                                } else if (typeOftransactionEditingController
+                                        .text
+                                        .toLowerCase() ==
+                                    typeOfTransaction[2].toLowerCase()) {
+                                  updatedAmount =
+                                      int.parse(amountEditingController.text) /
+                                          (multiSelectDropDownController
+                                                  .selectedItems.length +
+                                              1);
+                                  debugPrint(updatedAmount.toString());
+                                } else if (typeOftransactionEditingController
+                                        .text
+                                        .toLowerCase() ==
+                                    typeOfTransaction[3].toLowerCase()) {
+                                  updatedAmount =
+                                      int.parse(amountEditingController.text) /
+                                          (multiSelectDropDownController
+                                                  .selectedItems.length +
+                                              1);
+                                  debugPrint(updatedAmount.toString());
+                                } else {
+                                  debugPrint("Error");
                                 }
                               }
                             }
                           }
                           //TODO: Maybe reciving portion is done sending portion is remaining
-                          if (transaction.typeOfTransaction.toLowerCase() !=
-                              typeOfTransaction[2].toLowerCase()) {
-                            await TransactionMethods()
-                                .insertTransaction(transaction)
-                                .then(
-                                  (value) => Get.back(result: "refresh"),
-                                );
-                          } else {
-                            Get.back(result: "refresh");
-                          }
+                          // if (transaction.typeOfTransaction.toLowerCase() !=
+                          //     typeOfTransaction[2].toLowerCase()) {
+                          //   await TransactionMethods()
+                          //       .insertTransaction(transaction)
+                          //       .then(
+                          //         (value) => Get.back(result: "refresh"),
+                          //       );
+                          // } else {
+                          //   Get.back(result: "refresh");
+                          // }
                         }
                       },
                       child: Container(
