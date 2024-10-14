@@ -34,11 +34,13 @@ class _AddCashEntryState extends State<AddCashEntry> {
   String typeOftransaction = "";
   String transactionReferanceNumber = "";
   DateTime? recurringDate;
-  bool isSharable = false;
+  bool isSharable = true;
   bool toAddNewPerson = false;
+  bool toIncludeYourself = false;
   MultiSelectController<String> multiSelectDropDownController =
       MultiSelectController<String>();
   List<PeopleBalance> _peopleBalanceList = [];
+  List<PeopleBalance> people = [];
   Future? _future;
   double updatedAmount = 0;
 
@@ -246,36 +248,22 @@ class _AddCashEntryState extends State<AddCashEntry> {
                           onChanged: (String? value) => setState(
                             () {
                               if (value != null) {
-                                typeOftransactionEditingController.text = value;
+                                typeOftransaction = value;
+                                typeOftransactionEditingController.text =
+                                    typeOftransaction;
                               }
+                              setState(() {});
                             },
                           ),
                         ),
                       ),
                     ),
-                    Padding(
-                      padding: EdgeInsets.only(
-                        left: 20.r,
-                        right: 20.w,
-                      ),
-                      child: Row(
-                        children: [
-                          Checkbox(
-                            value: isSharable,
-                            onChanged: (bool? value) {
-                              endingRecurring.text = "";
-                              setState(
-                                () {
-                                  isSharable = value!;
-                                },
-                              );
-                            },
-                          ),
-                          const Text("Share this Expense with Someone?")
-                        ],
-                      ),
-                    ),
-                    if (isSharable) ...[
+                    if (((typeOftransactionEditingController.text)
+                                .toLowerCase() !=
+                            (typeOfTransaction[0]).toLowerCase()) &&
+                        ((typeOftransactionEditingController.text)
+                                .toLowerCase() !=
+                            (typeOfTransaction[1]).toLowerCase())) ...[
                       Padding(
                         padding: EdgeInsets.only(
                           left: 30.r,
@@ -305,11 +293,14 @@ class _AddCashEntryState extends State<AddCashEntry> {
                       if (toAddNewPerson == false) ...[
                         Padding(
                           padding: EdgeInsets.only(
-                              left: 20.r, top: 15.h, right: 20.w),
+                            left: 20.r,
+                            top: 15.h,
+                            right: 20.w,
+                          ),
                           child: MultiDropdown<String>(
                             controller: multiSelectDropDownController,
                             onSelectionChange: (options) =>
-                                debugPrint(options.toString()),
+                                {debugPrint(options.toString())},
                             items: _peopleBalanceList.isEmpty
                                 ? []
                                 : _peopleBalanceList
@@ -320,11 +311,19 @@ class _AddCashEntryState extends State<AddCashEntry> {
                                     .toList(),
                             dropdownItemDecoration:
                                 const DropdownItemDecoration(
-                                    backgroundColor:
-                                        Color.fromRGBO(0, 0, 0, 1)),
+                              backgroundColor: Color.fromRGBO(0, 0, 0, 1),
+                            ),
                             chipDecoration: const ChipDecoration(
-                                wrap: true,
-                                backgroundColor: Color.fromRGBO(0, 0, 0, 1)),
+                              wrap: true,
+                              backgroundColor: Color.fromRGBO(0, 0, 0, 1),
+                            ),
+                            validator: (selectedOptions) {
+                              if (selectedOptions!.isEmpty) {
+                                return "Select any Person to share the Expense/Income";
+                              }
+
+                              return null;
+                            },
                           ),
                         ),
                       ] else ...[
@@ -339,7 +338,6 @@ class _AddCashEntryState extends State<AddCashEntry> {
                             );
 
                             if (toreload != null) {
-                              // debugPrint(toreload.toString());
                               _refreshData();
                             }
                           },
@@ -347,8 +345,9 @@ class _AddCashEntryState extends State<AddCashEntry> {
                             padding: EdgeInsets.symmetric(vertical: 10.r),
                             child: Container(
                               decoration: BoxDecoration(
-                                  gradient: colorsOfGradient(),
-                                  borderRadius: BorderRadius.circular(10.r)),
+                                gradient: colorsOfGradient(),
+                                borderRadius: BorderRadius.circular(10.r),
+                              ),
                               child: Padding(
                                 padding: EdgeInsets.symmetric(
                                   horizontal: 10.r,
@@ -361,9 +360,38 @@ class _AddCashEntryState extends State<AddCashEntry> {
                         ),
                       ]
                     ],
+                    Padding(
+                      padding: EdgeInsets.only(
+                        left: 30.r,
+                        right: 20.w,
+                        top: 10.h,
+                      ),
+                      child: Row(
+                        children: [
+                          Checkbox(
+                            value: toIncludeYourself,
+                            onChanged: (bool? value) {
+                              endingRecurring.text = "";
+                              setState(
+                                () {
+                                  toIncludeYourself = value!;
+                                },
+                              );
+                            },
+                          ),
+                          SizedBox(
+                            width: 250.w,
+                            child: const Text(
+                                "Click here to divide the amount between only the selected Persons"),
+                          )
+                        ],
+                      ),
+                    ),
                   ],
                 ),
               ),
+
+              // --------------------------------------------------------------
               Padding(
                 padding: EdgeInsets.only(top: 25.h),
                 child: Row(
@@ -372,28 +400,6 @@ class _AddCashEntryState extends State<AddCashEntry> {
                     GestureDetector(
                       onTap: () async {
                         if (_formKey.currentState!.validate()) {
-                          // debugPrint(typeOftransaction.length.toString());
-                          // final user = FirebaseAuth.instance.currentUser;
-                          // await FirebaseFirestore.instance
-                          //     .collection("Transaction")
-                          //     .doc(user!.uid)
-                          //     .collection("transactions")
-                          //     .doc()
-                          //     .set({
-                          //   "amount": amountEditingController.text,
-                          //   "dateAndTime": DateTime.now(),
-                          //   "expenseType": typeOfexp,
-                          //   "name": nameEditingController.text,
-                          //   "typeOfTransaction": typeOftransaction,
-                          //   "transactionReferanceNumber": 0,
-                          // }).then((value) => Get.off(
-                          //           routeName: "saveAndAdd",
-                          //           () => const AddCashEntry(),
-                          //           curve: customCurve,
-                          //           transition: customTrans,
-                          //           duration: duration,
-                          //         ));
-
                           CusTransaction transaction = CusTransaction(
                             amount: double.parse(amountEditingController.text),
                             dateAndTime: DateTime.now(),
@@ -447,100 +453,104 @@ class _AddCashEntryState extends State<AddCashEntry> {
                     ),
                     GestureDetector(
                       onTap: () async {
-                        // FirebaseF
                         if (_formKey.currentState!.validate()) {
-                          // debugPrint(typeOftransaction.length.toString());
-                          // final user = FirebaseAuth.instance.currentUser;
-                          // await FirebaseFirestore.instance
-                          //     .collection("Transaction")
-                          //     .doc(user!.uid)
-                          //     .collection("transactions")
-                          //     .doc()
-                          //     .set({
-                          //   "amount": amountEditingController.text,
-                          //   "dateAndTime": DateTime.now(),
-                          //   "expenseType": typeOfexp,
-                          //   "name": nameEditingController.text,
-                          //   "typeOfTransaction": typeOftransaction,
-                          //   "transactionReferanceNumber": 0,
-                          // }).then((value) => Get.back());
+                          if (typeOftransactionEditingController.text
+                                  .toLowerCase() ==
+                              typeOfTransaction[2].toLowerCase()) {
+                            if (multiSelectDropDownController
+                                .selectedItems.length
+                                .isGreaterThan(0)) {
+                              for (PeopleBalance peopleBalance
+                                  in _peopleBalanceList) {
+                                for (DropdownItem name
+                                    in multiSelectDropDownController
+                                        .selectedItems) {
+                                  if (name.label == peopleBalance.name) {
+                                    double newAmount = peopleBalance.amount;
+                                    newAmount -= (double.parse(
+                                            amountEditingController.text) /
+                                        (multiSelectDropDownController
+                                                .selectedItems.length +
+                                            (toIncludeYourself ? 0 : 1)));
+                                    PeopleBalanceSharedMethods()
+                                        .updatePeopleBalance(PeopleBalance(
+                                            name: peopleBalance.name,
+                                            amount: newAmount,
+                                            dateAndTime:
+                                                peopleBalance.dateAndTime,
+                                            transactionFor:
+                                                peopleBalance.transactionFor,
+                                            relationFrom:
+                                                peopleBalance.relationFrom,
+                                            transactionReferanceNumber:
+                                                peopleBalance
+                                                    .transactionReferanceNumber));
+                                    CusTransaction transaction = CusTransaction(
+                                      amount: newAmount,
+                                      dateAndTime: DateTime.now(),
+                                      name: nameEditingController.text,
+                                      typeOfTransaction:
+                                          typeOftransactionEditingController
+                                              .text,
+                                      expenseType: typeOfexp,
+                                      transactionReferanceNumber:
+                                          generateUniqueRefNumber(),
+                                    );
+                                  }
+                                }
+                              }
+                            }
+                          } else if (typeOftransactionEditingController.text
+                                  .toLowerCase() ==
+                              typeOfTransaction[3].toLowerCase()) {
+                            if (multiSelectDropDownController
+                                .selectedItems.length
+                                .isGreaterThan(0)) {
+                              for (PeopleBalance peopleBalance
+                                  in _peopleBalanceList) {
+                                for (DropdownItem name
+                                    in multiSelectDropDownController
+                                        .selectedItems) {
+                                  if (name.label == peopleBalance.name) {
+                                    double newAmount = peopleBalance.amount;
+                                    newAmount += (double.parse(
+                                            amountEditingController.text) /
+                                        (multiSelectDropDownController
+                                                .selectedItems.length +
+                                            (toIncludeYourself ? 0 : 1)));
+                                    CusTransaction transaction = CusTransaction(
+                                      amount: newAmount,
+                                      dateAndTime: DateTime.now(),
+                                      name: nameEditingController.text,
+                                      typeOfTransaction:
+                                          typeOftransactionEditingController
+                                              .text,
+                                      expenseType: typeOfexp,
+                                      transactionReferanceNumber:
+                                          generateUniqueRefNumber(),
+                                    );
+                                  }
+                                }
+                              }
+                            }
+                          }
 
                           CusTransaction transaction = CusTransaction(
                             amount: double.parse(amountEditingController.text),
                             dateAndTime: DateTime.now(),
                             name: nameEditingController.text,
-                            typeOfTransaction: typeOftransaction,
+                            typeOfTransaction:
+                                typeOftransactionEditingController.text,
                             expenseType: typeOfexp,
                             transactionReferanceNumber:
                                 generateUniqueRefNumber(),
                           );
 
-                          //If sharing mode is on then update the data
-                          if (isSharable) {
-                            for (dynamic valOne in multiSelectDropDownController
-                                .selectedItems) {
-                              for (PeopleBalance valTwo in _peopleBalanceList) {
-                                //for Income
-                                if (typeOftransactionEditingController.text
-                                        .toLowerCase() ==
-                                    typeOfTransaction[0].toLowerCase()) {
-                                  if (int.parse(valOne.value) == valTwo.id) {
-                                    updatedAmount = valTwo.amount +
-                                        double.parse(
-                                            amountEditingController.text);
-                                    debugPrint(updatedAmount.toString());
-                                  }
-
-                                  //for Expense
-                                } else if (typeOftransactionEditingController
-                                        .text
-                                        .toLowerCase() ==
-                                    typeOfTransaction[1].toLowerCase()) {
-                                  if (int.parse(valOne.value) == valTwo.id) {
-                                    updatedAmount = valTwo.amount -
-                                        double.parse(
-                                            amountEditingController.text);
-                                    debugPrint(updatedAmount.toString());
-                                  }
-
-                                  //He/She didn't paid
-                                } else if (typeOftransactionEditingController
-                                        .text
-                                        .toLowerCase() ==
-                                    typeOfTransaction[2].toLowerCase()) {
-                                  updatedAmount =
-                                      int.parse(amountEditingController.text) /
-                                          (multiSelectDropDownController
-                                                  .selectedItems.length +
-                                              1);
-                                  debugPrint(updatedAmount.toString());
-                                } else if (typeOftransactionEditingController
-                                        .text
-                                        .toLowerCase() ==
-                                    typeOfTransaction[3].toLowerCase()) {
-                                  updatedAmount =
-                                      int.parse(amountEditingController.text) /
-                                          (multiSelectDropDownController
-                                                  .selectedItems.length +
-                                              1);
-                                  debugPrint(updatedAmount.toString());
-                                } else {
-                                  debugPrint("Error");
-                                }
-                              }
-                            }
-                          }
-                          //TODO: Maybe reciving portion is done sending portion is remaining
-                          // if (transaction.typeOfTransaction.toLowerCase() !=
-                          //     typeOfTransaction[2].toLowerCase()) {
-                          //   await TransactionMethods()
-                          //       .insertTransaction(transaction)
-                          //       .then(
-                          //         (value) => Get.back(result: "refresh"),
-                          //       );
-                          // } else {
-                          //   Get.back(result: "refresh");
-                          // }
+                          await TransactionMethods()
+                              .insertTransaction(transaction)
+                              .then(
+                                (value) => Get.back(result: "refresh"),
+                              );
                         }
                       },
                       child: Container(
@@ -575,6 +585,7 @@ class _AddCashEntryState extends State<AddCashEntry> {
                   ],
                 ),
               ),
+              // --------------------------------------------------------------
               Padding(
                 padding: EdgeInsets.only(top: 25.h, bottom: 25.h),
                 child: Center(

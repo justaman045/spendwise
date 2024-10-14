@@ -43,7 +43,6 @@ class _PeopleState extends State<People> {
             _peopleBalanceList.clear();
             _peopleBalanceList.addAll(snapshot.data);
           }
-          debugPrint(snapshot.data.length.toString());
           return RefreshIndicator(
             onRefresh: _refreshData,
             child: Scaffold(
@@ -94,8 +93,8 @@ class _PeopleState extends State<People> {
                                             Text(snapshot.data[index].name),
                                             Row(
                                               children: [
-                                                Text(snapshot
-                                                    .data[index].dateAndTime),
+                                                // Text(snapshot
+                                                //     .data[index].dateAndTime),
                                                 if (snapshot
                                                     .data[index].transactionFor
                                                     .toString()
@@ -113,8 +112,13 @@ class _PeopleState extends State<People> {
                                                     vertical: 7.h),
                                                 child: SizedBox(
                                                   width: 150.w,
-                                                  child: Text(
-                                                      "You've to Recieve Rs. ${snapshot.data[index].amount} from ${snapshot.data[index].name}"),
+                                                  child: snapshot.data[index]
+                                                              .amount ==
+                                                          0
+                                                      ? const Text(
+                                                          "No Balance to Settle")
+                                                      : Text(
+                                                          "You've to Recieve Rs. ${snapshot.data[index].amount} from ${snapshot.data[index].name}"),
                                                 ),
                                               ),
                                             ] else ...[
@@ -123,8 +127,13 @@ class _PeopleState extends State<People> {
                                                     vertical: 7.h),
                                                 child: SizedBox(
                                                   width: 150.w,
-                                                  child: Text(
-                                                      "You've to Give Rs. ${snapshot.data[index].amount} from ${snapshot.data[index].name}"),
+                                                  child: snapshot.data[index]
+                                                              .amount ==
+                                                          0
+                                                      ? const Text(
+                                                          "No Balance to Settle")
+                                                      : Text(
+                                                          "You've to Give Rs. ${snapshot.data[index].amount} to ${snapshot.data[index].name}"),
                                                 ),
                                               ),
                                             ],
@@ -186,7 +195,6 @@ class _PeopleState extends State<People> {
                   );
 
                   if (toreload != null) {
-                    // debugPrint(toreload.toString());
                     _refreshData();
                   }
                 },

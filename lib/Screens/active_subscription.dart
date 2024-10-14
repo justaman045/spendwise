@@ -74,12 +74,7 @@ class _ActiveSubscriptionState extends State<ActiveSubscription> {
                       ),
                     );
                   }
-                  debugPrint(snapshot.data!.length.toString());
                   List<Subscription> subscriptionList = snapshot.data!;
-                  // debugPrint(subscriptionList[1]
-                  //     .name
-                  //     .replaceAll(" ", "")
-                  //     .toLowerCase());
                   return Expanded(
                     child: ListView.builder(
                       itemCount: subscriptionList.length,
@@ -167,7 +162,6 @@ class _ActiveSubscriptionState extends State<ActiveSubscription> {
             );
 
             if (toreload != null) {
-              // debugPrint(toreload.toString());
               setState(() {});
             }
           } else {

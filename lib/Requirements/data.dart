@@ -25,8 +25,7 @@ const List<String> routes = [
 ];
 const String introText =
     "Experience the future of Payments with our user-friendly app. Say goodbye to Notes making and other unusefull process of recording your transactions.";
-const String introSkipLogin =
-    "Use app without Login/Signup for Free forever. But we insist you to do so as it help us to know oour potential Customers";
+const String introSkipLogin = "Use app without Login/Signup for Free forever.";
 const bool skipSignIn = false;
 const int animationDuration = 2;
 const Transition customTrans = Transition.circularReveal;

@@ -272,6 +272,54 @@ class _AddPeopleState extends State<AddPeople> {
                 ],
               ),
             ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(10.r)),
+                    gradient: const LinearGradient(
+                      begin: Alignment.topRight,
+                      end: Alignment.bottomLeft,
+                      colors: [
+                        Colors.black54,
+                        Colors.black87,
+                      ],
+                    ),
+                  ),
+                  child: TextButton(
+                    onPressed: () async {
+                      amountController.text = "0";
+                      dateTimeController.text =
+                          DateFormat.yMMMMd().format(DateTime.now());
+                      transactionForController.text = "";
+                      if (_formKey.currentState!.validate()) {
+                        PeopleBalance peopleBalance = PeopleBalance(
+                          name: nameController.text,
+                          amount: double.parse(amountController.text),
+                          dateAndTime: dateTimeController.text,
+                          transactionFor: transactionForController.text,
+                          relationFrom: relationController.text,
+                          transactionReferanceNumber: generateUniqueRefNumber(),
+                        );
+                        PeopleBalanceSharedMethods()
+                            .insertPeopleBalance(peopleBalance)
+                            .then(
+                              (value) => Get.to(() => const AddPeople(),
+                                  curve: customCurve,
+                                  duration: duration,
+                                  transition: customTrans),
+                            );
+                      }
+                    },
+                    child: Text(
+                      "Add Another Person",
+                      style: TextStyle(fontSize: 15.r),
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ],
         ),
       ),

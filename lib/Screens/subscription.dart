@@ -190,7 +190,6 @@ class _SubscriptionManagerState extends State<SubscriptionManager> {
                           ),
                         );
                       }
-                      debugPrint(snapshot.data!.length.toString());
                       List<Subscription> subscriptionList =
                           snapshot.data!.reversed.toList();
 
@@ -299,7 +298,6 @@ class _SubscriptionManagerState extends State<SubscriptionManager> {
                 );
 
                 if (toreload != null) {
-                  // debugPrint(toreload.toString());
                   setState(() {});
                 }
               } else {
