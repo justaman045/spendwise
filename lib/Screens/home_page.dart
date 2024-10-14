@@ -216,7 +216,6 @@ class _HomePageState extends State<HomePage> {
                   );
 
                   if (toreload != null) {
-                    // debugPrint(toreload.toString());
                     _refreshData();
                   }
                 },

@@ -39,7 +39,6 @@ class _AddSubscriptionsState extends State<AddSubscriptions> {
                 .isLowerThan(0))))
         .toList();
 
-    availableSubscriptions.map((e) => debugPrint(e));
     setState(() {});
   }
 

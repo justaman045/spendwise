@@ -103,13 +103,18 @@ class Intro extends StatelessWidget {
 
             //TODO: Also keep for no Account usage
             if (skipSignIn) ...[
-              TextButton(
-                onPressed: () {},
-                child: const Text("Don't want to SignUp??"),
-              ),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 10.w),
-                child: const Text(introSkipLogin),
+              SizedBox(
+                width: 400.w,
+                height: 70.h,
+                child: Column(
+                  children: [
+                    TextButton(
+                      onPressed: () {},
+                      child: const Text("Don't want to SignUp??"),
+                    ),
+                    const Text(introSkipLogin),
+                  ],
+                ),
               ),
             ]
           ],

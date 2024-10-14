@@ -35,7 +35,6 @@ class TransactionDetails extends StatefulWidget {
 class _TransactionDetailsState extends State<TransactionDetails> {
   @override
   Widget build(BuildContext context) {
-    debugPrint(widget.transactionType.toString().toLowerCase());
     return Scaffold(
       body: SafeArea(
         child: Column(

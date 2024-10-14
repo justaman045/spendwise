@@ -8,7 +8,6 @@ import 'package:sqflite/sqflite.dart';
 class TransactionMethods {
   Future<void> insertTransaction(CusTransaction transaction) async {
     final db = await DatabaseHelper().database;
-    debugPrint(transaction.toInclude.toString());
     await db.insert(
       tableName,
       transaction.toMap(),

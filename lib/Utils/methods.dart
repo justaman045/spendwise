@@ -21,7 +21,6 @@ Future<List<CusTransaction>> getTransactions() async {
   // final bankTransaction = combineTransactions(
   //     bankTransactions[0] as List<CusTransaction>, parsedmsg);
   // for (dynamic trans in parsedmsg) {
-  //   debugPrint(trans);
   // }
   return bankTransactions[0] as List<CusTransaction>;
 }
@@ -51,7 +50,6 @@ DateTime stringToDateTime(String dateString) {
     return format.parse(dateString);
   } on FormatException catch (e) {
     // Handle parsing error (e.g., invalid format)
-    debugPrint("Invalid date format: $e");
     return DateTime.now(); // Or throw an exception if desired
   }
 }

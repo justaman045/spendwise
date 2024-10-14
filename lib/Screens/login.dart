@@ -211,7 +211,6 @@ class _LoginState extends State<Login> {
                                     duration: duration,
                                   );
                                 } on FirebaseAuthException catch (e) {
-                                  debugPrint(e.code);
                                   if (e.code == "invalid-credential") {
                                     Get.snackbar(
                                       "Error",

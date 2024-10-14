@@ -335,9 +335,7 @@ class SignUp extends StatelessWidget {
                                       "Email already being used by some user, Try resetting the password.",
                                       snackPosition: SnackPosition.TOP,
                                     );
-                                  } else {
-                                    debugPrint(e.code);
-                                  }
+                                  } else {}
                                 }
                               }
                             },

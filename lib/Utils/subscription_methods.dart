@@ -7,7 +7,6 @@ class SubscriptionMethods {
   // Create (Insert)
   Future<void> insertSubscription(Subscription subscription) async {
     final db = await DatabaseHelper().database;
-    debugPrint(subscription.name);
     await db.insert(subscriptionsTable, subscription.toMap());
   }
 

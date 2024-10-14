@@ -45,6 +45,7 @@ class _SuscriptionManagerExpenseState extends State<SuscriptionManagerExpense> {
                     totalExpense += subscription.amount; // Attempt parsing
                   } on FormatException {
                     // Handle parsing error (e.g., log the error)
+                    //TODO: Remove this
                     debugPrint(
                         "Error parsing subscription amount: ${subscription.amount}");
                   }
