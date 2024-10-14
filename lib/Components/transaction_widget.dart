@@ -92,8 +92,8 @@ class _TransactionWidgetState extends State<TransactionWidget> {
                     ),
                     Row(
                       children: [
-                        if (widget.typeOfTransaction.toLowerCase() ==
-                            "expense") ...[
+                        if (widget.typeOfTransaction.toLowerCase() !=
+                            typeOfTransaction[0]) ...[
                           Text(
                             "Rs. -",
                             style: TextStyle(
@@ -110,8 +110,8 @@ class _TransactionWidgetState extends State<TransactionWidget> {
                                 fontWeight: FontWeight.bold),
                           ),
                         ],
-                        if (widget.typeOfTransaction.toLowerCase() ==
-                            "expense") ...[
+                        if (widget.typeOfTransaction.toLowerCase() !=
+                            typeOfTransaction[0]) ...[
                           Countup(
                             begin: 0,
                             duration: duration,

@@ -58,14 +58,10 @@ List<CusTransaction> allTransactions(
     return transactions
         .where((transaction) =>
             transaction.dateAndTime.year == today.year &&
-                transaction.dateAndTime.month == today.month &&
-                transaction.typeOfTransaction.toLowerCase() ==
-                    typeOfTransaction[1] ||
-            transaction.typeOfTransaction.toLowerCase() ==
-                typeOfTransaction[2] ||
-            transaction.typeOfTransaction.toLowerCase() ==
-                    typeOfTransaction[3] &&
-                transaction.toInclude == 1)
+            transaction.dateAndTime.month == today.month &&
+            transaction.typeOfTransaction.toLowerCase() !=
+                typeOfTransaction[0] &&
+            transaction.toInclude == 1)
         .toList()
         .reversed
         .toList();
@@ -89,11 +85,7 @@ List<CusTransaction> allTransactions(
     debugPrint("from expenseshowhidden");
     return transactions
         .where((transaction) =>
-            transaction.typeOfTransaction.toLowerCase() ==
-                typeOfTransaction[1] ||
-            transaction.typeOfTransaction.toLowerCase() ==
-                typeOfTransaction[2] ||
-            transaction.typeOfTransaction.toLowerCase() == typeOfTransaction[3])
+            transaction.typeOfTransaction.toLowerCase() != typeOfTransaction[0])
         .toList()
         .reversed
         .toList();
@@ -106,11 +98,9 @@ List<CusTransaction> allTransactions(
     return transactions
         .where((transaction) =>
             transaction.dateAndTime.month == today.month &&
-                transaction.dateAndTime.year == today.year &&
-                transaction.expenseType == typeOfTransaction[1] ||
-            transaction.expenseType == typeOfTransaction[2] ||
-            transaction.expenseType == typeOfTransaction[3] &&
-                transaction.toInclude == 1)
+            transaction.dateAndTime.year == today.year &&
+            transaction.expenseType != typeOfTransaction[0] &&
+            transaction.toInclude == 1)
         .toList()
         .reversed
         .toList();
@@ -149,10 +139,8 @@ double totalExpenseThisMonth(List<CusTransaction> transactions) {
   double expense = 0;
   for (var element in transactions) {
     if (element.dateAndTime.month == currentMonth) {
-      if (element.typeOfTransaction.toLowerCase() == typeOfTransaction[1] ||
-          element.typeOfTransaction.toLowerCase() == typeOfTransaction[2] ||
-          element.typeOfTransaction.toLowerCase() == typeOfTransaction[3] &&
-              element.toInclude == 1) {
+      if (element.typeOfTransaction.toLowerCase() != typeOfTransaction[0] &&
+          element.toInclude == 1) {
         expense += element.amount;
       }
     }
@@ -193,9 +181,7 @@ double totalAvailableBalance(List<CusTransaction> transactions) {
   for (var element in transactions) {
     if (element.typeOfTransaction == typeOfTransaction[0]) {
       income += element.amount;
-    } else if (element.typeOfTransaction == typeOfTransaction[1] ||
-        element.typeOfTransaction == typeOfTransaction[2] ||
-        element.typeOfTransaction == typeOfTransaction[3]) {
+    } else if (element.typeOfTransaction != typeOfTransaction[0]) {
       income -= element.amount;
     }
   }
@@ -209,10 +195,8 @@ double getBalance(List<CusTransaction> transactions, {String type = ""}) {
     if (type.toLowerCase() == "totalExpenseThisMonth".toLowerCase()) {
       for (var element in transactions) {
         if (element.dateAndTime.month == currentMonth) {
-          if (element.typeOfTransaction == typeOfTransaction[1] ||
-              element.typeOfTransaction == typeOfTransaction[2] ||
-              element.typeOfTransaction == typeOfTransaction[3] &&
-                  element.toInclude == 1) {
+          if (element.typeOfTransaction != typeOfTransaction[0] &&
+              element.toInclude == 1) {
             expense += element.amount;
           }
         }
@@ -233,9 +217,7 @@ double getBalance(List<CusTransaction> transactions, {String type = ""}) {
   for (var element in transactions) {
     if (element.typeOfTransaction == typeOfTransaction[0]) {
       expense += element.amount;
-    } else if (element.typeOfTransaction == typeOfTransaction[1] ||
-        element.typeOfTransaction == typeOfTransaction[2] ||
-        element.typeOfTransaction == typeOfTransaction[3]) {
+    } else if (element.typeOfTransaction != typeOfTransaction[0]) {
       expense -= element.amount;
     }
   }
@@ -245,9 +227,7 @@ double getBalance(List<CusTransaction> transactions, {String type = ""}) {
 List<ExpenseData> expenseChart(List<CusTransaction> transactions) {
   final filteredTransactions = transactions
       .where((transaction) =>
-          transaction.typeOfTransaction == typeOfTransaction[1] ||
-          transaction.typeOfTransaction == typeOfTransaction[2] ||
-          transaction.typeOfTransaction == typeOfTransaction[3])
+          transaction.typeOfTransaction != typeOfTransaction[0])
       .toList();
   return filteredTransactions.map((transaction) {
     final date = transaction.dateAndTime.day;

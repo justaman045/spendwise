@@ -243,6 +243,30 @@ class _TransactionDetailsState extends State<TransactionDetails> {
               ),
             ),
             Padding(
+              padding: EdgeInsets.only(
+                left: 30.w,
+                right: 30.w,
+                top: 15.h,
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    "Type",
+                    style: TextStyle(
+                      fontSize: 13.r,
+                    ),
+                  ),
+                  Text(
+                    widget.transactionType,
+                    style: TextStyle(
+                      fontSize: 13.r,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Padding(
               padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
               child: Divider(
                 color: Get.isDarkMode

@@ -467,7 +467,7 @@ class _AddCashEntryState extends State<AddCashEntry> {
                                         .selectedItems) {
                                   if (name.label == peopleBalance.name) {
                                     double newAmount = peopleBalance.amount;
-                                    newAmount -= (double.parse(
+                                    newAmount += (double.parse(
                                             amountEditingController.text) /
                                         (multiSelectDropDownController
                                                 .selectedItems.length +
@@ -513,11 +513,24 @@ class _AddCashEntryState extends State<AddCashEntry> {
                                         .selectedItems) {
                                   if (name.label == peopleBalance.name) {
                                     double newAmount = peopleBalance.amount;
-                                    newAmount += (double.parse(
+                                    newAmount -= (double.parse(
                                             amountEditingController.text) /
                                         (multiSelectDropDownController
                                                 .selectedItems.length +
                                             (toIncludeYourself ? 0 : 1)));
+                                    PeopleBalanceSharedMethods()
+                                        .updatePeopleBalance(PeopleBalance(
+                                            name: peopleBalance.name,
+                                            amount: newAmount,
+                                            dateAndTime:
+                                                peopleBalance.dateAndTime,
+                                            transactionFor:
+                                                peopleBalance.transactionFor,
+                                            relationFrom:
+                                                peopleBalance.relationFrom,
+                                            transactionReferanceNumber:
+                                                peopleBalance
+                                                    .transactionReferanceNumber));
                                     CusTransaction transaction = CusTransaction(
                                       amount: newAmount,
                                       dateAndTime: DateTime.now(),
