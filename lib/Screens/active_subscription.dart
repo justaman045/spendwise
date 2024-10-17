@@ -23,7 +23,7 @@ class _ActiveSubscriptionState extends State<ActiveSubscription> {
     return subscriptions
         .where((element) =>
             stringToDateTime(element.toDate).difference(DateTime.now()).inDays <
-            0)
+            0 && element.isRecurring.toString().toLowerCase() == "false")
         .toList();
   }
 

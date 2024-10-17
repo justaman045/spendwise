@@ -90,13 +90,12 @@ class _SubscriptionsDetailsState extends State<SubscriptionsDetails> {
                                         CrossAxisAlignment.start,
                                     children: [
                                       const Text("Cycle"),
-                                      if (widget.subscription.recurringDate
-                                          .isEmpty) ...[
+                                      if ((widget.subscription.isRecurring).toString().toLowerCase() != "false") ...[
                                         Text(
                                             "${daysToMonths(stringToDateTime(widget.subscription.toDate).difference(stringToDateTime(widget.subscription.fromDate)).inDays)["months"]} months"),
                                       ] else ...[
                                         Text(
-                                            "${daysToMonths(stringToDateTime(widget.subscription.recurringDate).difference(stringToDateTime(widget.subscription.fromDate)).inDays)["months"]} months"),
+                                            "${daysToMonths(stringToDateTime(widget.subscription.isRecurring).difference(stringToDateTime(widget.subscription.fromDate)).inDays)["months"]} months"),
                                       ]
                                     ],
                                   )

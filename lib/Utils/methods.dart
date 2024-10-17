@@ -50,6 +50,7 @@ DateTime stringToDateTime(String dateString) {
     return format.parse(dateString);
   } on FormatException catch (e) {
     // Handle parsing error (e.g., invalid format)
+    debugPrint(e.message);
     return DateTime.now(); // Or throw an exception if desired
   }
 }

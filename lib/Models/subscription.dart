@@ -2,16 +2,18 @@ class Subscription {
   final int id;
   final String fromDate;
   final String toDate;
-  final String recurringDate;
+  final String isRecurring;
   final double amount;
   final String name;
+  final String tenure;
 
   Subscription({
     required this.fromDate,
     required this.toDate,
     required this.amount,
     required this.name,
-    required this.recurringDate,
+    required this.isRecurring,
+    required this.tenure,
     this.id = 0,
   });
 
@@ -20,7 +22,8 @@ class Subscription {
         'toDate': toDate,
         'amount': amount,
         'name': name,
-        'recurringDate': recurringDate,
+        'isRecurring': isRecurring,
+        'tenure': tenure,
       };
 
   static Subscription fromMap(Map<String, dynamic> map) => Subscription(
@@ -29,6 +32,7 @@ class Subscription {
         toDate: map['toDate'] as String,
         amount: map['amount'] as double,
         name: map['name'] as String,
-        recurringDate: map['recurringDate'] as String,
+    isRecurring: map['isRecurring'] as String,
+    tenure: map['tenure'] as String,
       );
 }

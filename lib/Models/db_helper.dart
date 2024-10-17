@@ -48,7 +48,8 @@ class DatabaseHelper {
         amount REAL NOT NULL,
         name TEXT NOT NULL,
         isActive BOOLEAN DEFAULT TRUE,
-        recurringDate TEXT
+        isRecurring TEXT NOT NULL,
+        tenure TEXT NOT NULL
       )
     ''');
 

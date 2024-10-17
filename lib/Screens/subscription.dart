@@ -29,15 +29,62 @@ class _SubscriptionManagerState extends State<SubscriptionManager> {
         await SubscriptionMethods().getAllSubscriptions();
     return subscriptions
         .where((element) =>
-            (stringToDateTime(element.toDate)
-                    .difference(DateTime.now())
-                    .inDays >=
-                0) ||
-            (stringToDateTime(element.recurringDate)
-                    .difference(DateTime.now())
-                    .inDays) >=
-                0)
+    (stringToDateTime(element.toDate).difference(DateTime.now()).inDays >= 0) || element.isRecurring.toString().toLowerCase() != "false")
         .toList();
+  }
+
+  DateTime getNextPaymentDate(DateTime subscriptionStartDate, String paymentFrequency) {
+    // Calculate the difference based on the payment frequency
+    Duration difference;
+    switch (paymentFrequency) {
+      case "1 Day":
+        difference = const Duration(days: 1);
+        break;
+      case "3 Days":
+        difference = const Duration(days: 3);
+        break;
+      case "1 Week":
+        difference = const Duration(days: 7);
+        break;
+      case "1 Month":
+        difference = const Duration(days: 30);
+        break;
+      case "2 Months":
+        difference = const Duration(days: 60);
+        break;
+      case "3 Months":
+        difference = const Duration(days: 90);
+        break;
+      case "4 Months":
+        difference = const Duration(days: 120);
+        break;
+      case "6 Months":
+        difference = const Duration(days: 180);
+        break;
+      case "8 Months":
+        difference = const Duration(days: 240);
+        break;
+      case "1 Year":
+        difference = const Duration(days: 365);
+        break;
+      default:
+        throw ArgumentError("Invalid payment frequency");
+    }
+
+    // Calculate the next payment date
+    DateTime nextPaymentDate = subscriptionStartDate.add(difference);
+
+    // Return the next payment date
+    return nextPaymentDate;
+  }
+
+  int calculateNewDate(Subscription subscription){
+    DateTime nextPaymentDate = getNextPaymentDate(stringToDateTime(subscription.fromDate), subscription.tenure).add(const Duration(days: 1));
+    if(nextPaymentDate.difference(DateTime.now()).inDays > 0){
+      return nextPaymentDate.difference(DateTime.now()).inDays;
+    } else {
+      return getNextPaymentDate(nextPaymentDate, subscription.tenure).difference(DateTime.now()).inDays ;
+    }
   }
 
   @override
@@ -244,19 +291,30 @@ class _SubscriptionManagerState extends State<SubscriptionManager> {
                                                 style:
                                                     TextStyle(fontSize: 18.r),
                                               ),
-                                              if (stringToDateTime(
-                                                          subscriptionList[
-                                                                  index]
-                                                              .toDate)
-                                                      .difference(
-                                                          DateTime.now())
-                                                      .inDays <=
-                                                  31) ...[
-                                                Text(
-                                                    "${stringToDateTime(subscriptionList[index].toDate).difference(DateTime.now()).inDays} Days Remaining"),
+                                              if(subscriptionList[index].isRecurring.toString().toLowerCase() == "true") ...[
+                                                if (calculateNewDate(subscriptionList[index]) <=
+                                                    30) ...[
+                                                  Text(
+                                                      "${calculateNewDate(subscriptionList[index])} Days Remaining"),
+                                                ] else ...[
+                                                  Text(
+                                                      "${daysToMonths(calculateNewDate(subscriptionList[index]))["months"]} Months Remaining"),
+                                                ]
                                               ] else ...[
-                                                Text(
-                                                    "${daysToMonths(stringToDateTime(subscriptionList[index].toDate).difference(DateTime.now()).inDays)["months"]} Months Remianing"),
+                                                if (stringToDateTime(
+                                                    subscriptionList[
+                                                    index]
+                                                        .toDate)
+                                                    .difference(
+                                                    DateTime.now())
+                                                    .inDays <=
+                                                    31) ...[
+                                                  Text(
+                                                      "${stringToDateTime(subscriptionList[index].toDate).difference(DateTime.now()).inDays} Days Remaining"),
+                                                ] else ...[
+                                                  Text(
+                                                      "${daysToMonths(stringToDateTime(subscriptionList[index].toDate).difference(DateTime.now()).inDays)["months"]} Months Remianing"),
+                                                ]
                                               ]
                                             ],
                                           ),

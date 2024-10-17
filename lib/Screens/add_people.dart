@@ -3,12 +3,10 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:spendwise/Models/expense_type.dart';
 import 'package:spendwise/Models/people_expense.dart';
 import 'package:spendwise/Requirements/data.dart';
 import 'package:spendwise/Requirements/transaction.dart';
 import 'package:spendwise/Screens/home_page.dart';
-import 'package:spendwise/Utils/expense_type_methods.dart';
 import 'package:spendwise/Utils/people_balance_shared_methods.dart';
 
 //TODO: Finalize the page
@@ -32,21 +30,20 @@ class _AddPeopleState extends State<AddPeople> {
     final dateTimeController = TextEditingController();
     final transactionForController = TextEditingController();
     final relationController = TextEditingController();
-    const String dateTime = "";
 
-    final expensetype = <ExpenseType>[];
+    // final expensetype = <ExpenseType>[];
 
-    Future<void> fetchData() async {
-      expensetype.clear();
-      expensetype.addAll(await ExpenseTypeMethods().getAllExpenseTypes());
-      setState(() {});
-    }
-
-    @override
-    void initState() {
-      super.initState();
-      fetchData();
-    }
+    // Future<void> fetchData() async {
+    //   expensetype.clear();
+    //   expensetype.addAll(await ExpenseTypeMethods().getAllExpenseTypes());
+    //   setState(() {});
+    // }
+    //
+    // @override
+    // void initState() {
+    //   super.initState();
+    //   fetchData();
+    // }
 
     return Scaffold(
       appBar: AppBar(
