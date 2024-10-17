@@ -287,7 +287,7 @@ class _AddCashEntryState extends State<AddCashEntry> {
                             SizedBox(
                               width: 250.w,
                               child: const Text(
-                                  "If the person is not avaiable in the list, Click here"),
+                                  "If the person is not available in the list, Click here"),
                             )
                           ],
                         ),
@@ -488,7 +488,7 @@ class _AddCashEntryState extends State<AddCashEntry> {
                                                 peopleBalance
                                                     .transactionReferanceNumber));
                                     transaction = CusTransaction(
-                                      amount: newAmount,
+                                      amount: double.parse(amountEditingController.text),
                                       dateAndTime: DateTime.now(),
                                       name: nameEditingController.text,
                                       typeOfTransaction:
@@ -534,7 +534,7 @@ class _AddCashEntryState extends State<AddCashEntry> {
                                                 peopleBalance
                                                     .transactionReferanceNumber));
                                     transaction = CusTransaction(
-                                      amount: newAmount,
+                                      amount: double.parse(amountEditingController.text),
                                       dateAndTime: DateTime.now(),
                                       name: nameEditingController.text,
                                       typeOfTransaction:

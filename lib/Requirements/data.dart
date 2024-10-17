@@ -21,7 +21,8 @@ const List<String> routes = [
   "editProfile",
   "cashentry",
   "subscription",
-  "add_subscription"
+  "add_subscription",
+  "verifyEmail"
 ];
 const String introText =
     "Experience the future of Payments with our user-friendly app. Say goodbye to Notes making and other unusefull process of recording your transactions.";

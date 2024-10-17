@@ -6,6 +6,7 @@ import "package:get/get.dart";
 import "package:spendwise/Requirements/data.dart";
 import "package:spendwise/Screens/home_page.dart";
 import "package:spendwise/Screens/login.dart";
+import "package:spendwise/Screens/verify_email.dart";
 import "package:spendwise/Utils/theme.dart";
 
 final _formKey = GlobalKey<FormState>();
@@ -319,8 +320,8 @@ class SignUp extends StatelessWidget {
                                         "dateOfJoining": DateTime.now()
                                       }).then(
                                         (value) => Get.offAll(
-                                          routeName: routes[3],
-                                          () => const HomePage(),
+                                          routeName: routes[15],
+                                          () => const VerifyEmail(),
                                           transition: customTrans,
                                           curve: customCurve,
                                           duration: duration,

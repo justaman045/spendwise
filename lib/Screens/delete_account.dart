@@ -68,7 +68,7 @@ class DeleteAccount extends StatelessWidget {
                     controller: passwordEditingController,
                     validator: (value) {
                       if (value!.length < 8) {
-                        return "Password should be atleast 8 Charcters";
+                        return "Password should be at-least 8 Characters";
                       }
                       return null;
                     },
