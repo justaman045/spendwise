@@ -8,8 +8,8 @@
 6. Edit Profile
    * Upload a Image
 7. Signup
-   * Verify Email Page ( Proceed further only once verified )
+   * Verify Email Page ( Proceed further only once verified ) => completed
 8. no un-necessary Routes
 9. Send Notifications on every transactional SMS received
 10. Create a Widget for Today's Expense
-11. Edit Transaction
+11. Edit Subscription

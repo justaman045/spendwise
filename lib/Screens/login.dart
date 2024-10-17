@@ -6,6 +6,7 @@ import 'package:spendwise/Requirements/data.dart';
 import 'package:spendwise/Screens/home_page.dart';
 import 'package:spendwise/Screens/reset_password.dart';
 import 'package:spendwise/Screens/signup.dart';
+import 'package:spendwise/Screens/verify_email.dart';
 import 'package:spendwise/Utils/theme.dart';
 
 final _formKey = GlobalKey<FormState>();
@@ -31,11 +32,11 @@ class _LoginState extends State<Login> {
     return Scaffold(
       body: Stack(
         children: [
-          // TO reduce the Widget Transparancy to make the overlapping widget readable
+          // TO reduce the Widget Transparency to make the overlapping widget readable
           Opacity(
             opacity: 0.6,
 
-            // Widget for the BackGround Screen Colorfull
+            // Widget for the BackGround Screen Colorfully
             child: Container(
               height: 150.h,
               width: 150.w,
@@ -144,7 +145,7 @@ class _LoginState extends State<Login> {
                           child: TextFormField(
                             validator: (value) {
                               if (value!.length < 8) {
-                                return "Password length should be at least 8 Charecters";
+                                return "Password length should be at least 8 Characters";
                               }
                               return null;
                             },
@@ -203,25 +204,33 @@ class _LoginState extends State<Login> {
                                           email: emailEditingController.text,
                                           password:
                                               passwordEditingController.text);
-                                  Get.offAll(
-                                    routeName: routes[3],
-                                    () => const HomePage(),
-                                    transition: customTrans,
-                                    curve: customCurve,
-                                    duration: duration,
-                                  );
+                                  if(FirebaseAuth.instance.currentUser!.emailVerified){
+                                    Get.offAll(
+                                      routeName: routes[3],
+                                          () => const VerifyEmail(),
+                                      transition: customTrans,
+                                      curve: customCurve,
+                                      duration: duration,
+                                    );
+                                  } else {
+                                    Get.offAll(
+                                      routeName: routes[15],
+                                          () => const VerifyEmail(),
+                                      transition: customTrans,
+                                      curve: customCurve,
+                                      duration: duration,
+                                    );
+                                  }
                                 } on FirebaseAuthException catch (e) {
                                   if (e.code == "invalid-credential") {
                                     Get.snackbar(
                                       "Error",
                                       "Invalid Credentials",
-                                      snackPosition: SnackPosition.BOTTOM,
                                     );
                                   } else if (e.code == "too-many-requests") {
                                     Get.snackbar(
                                       "Error",
                                       "Server Error, Try again Later",
-                                      snackPosition: SnackPosition.TOP,
                                     );
                                   }
                                 }

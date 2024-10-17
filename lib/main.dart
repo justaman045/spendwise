@@ -9,6 +9,7 @@ import 'package:spendwise/Screens/home_page.dart';
 import 'package:spendwise/Screens/intro.dart';
 import 'package:flutter_sms_inbox/flutter_sms_inbox.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:spendwise/Screens/verify_email.dart';
 import 'package:spendwise/Utils/methods.dart';
 import 'package:spendwise/Utils/theme.dart';
 import 'firebase_options.dart';
@@ -31,7 +32,7 @@ void main() async {
   // create a connection to that database
   await databaseHelper.database;
 
-  // Firebase initalize the app within device
+  // Firebase initialize the app within device
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
@@ -94,7 +95,7 @@ class _SpendWiseState extends State<SpendWise> {
           darkTheme: MyAppThemes.darkTheme,
 
           // if the user is logged in then show the homepage else show Intro Page
-          home: currentUser != null ? const HomePage() : const Intro(),
+          home: currentUser != null ? const VerifyEmail() : const Intro(),
         );
       },
     );
