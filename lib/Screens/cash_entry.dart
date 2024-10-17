@@ -43,6 +43,8 @@ class _AddCashEntryState extends State<AddCashEntry> {
   List<PeopleBalance> people = [];
   Future? _future;
   double updatedAmount = 0;
+  late CusTransaction transaction;
+
 
   Future<void> _fetchData() async {
     _peopleBalanceList =
@@ -485,7 +487,7 @@ class _AddCashEntryState extends State<AddCashEntry> {
                                             transactionReferanceNumber:
                                                 peopleBalance
                                                     .transactionReferanceNumber));
-                                    CusTransaction transaction = CusTransaction(
+                                    transaction = CusTransaction(
                                       amount: newAmount,
                                       dateAndTime: DateTime.now(),
                                       name: nameEditingController.text,
@@ -531,7 +533,7 @@ class _AddCashEntryState extends State<AddCashEntry> {
                                             transactionReferanceNumber:
                                                 peopleBalance
                                                     .transactionReferanceNumber));
-                                    CusTransaction transaction = CusTransaction(
+                                    transaction = CusTransaction(
                                       amount: newAmount,
                                       dateAndTime: DateTime.now(),
                                       name: nameEditingController.text,
@@ -546,18 +548,19 @@ class _AddCashEntryState extends State<AddCashEntry> {
                                 }
                               }
                             }
+                          } else {
+                            transaction = CusTransaction(
+                              amount: double.parse(
+                                  amountEditingController.text),
+                              dateAndTime: DateTime.now(),
+                              name: nameEditingController.text,
+                              typeOfTransaction:
+                              typeOftransactionEditingController.text,
+                              expenseType: typeOfexp,
+                              transactionReferanceNumber:
+                              generateUniqueRefNumber(),
+                            );
                           }
-
-                          CusTransaction transaction = CusTransaction(
-                            amount: double.parse(amountEditingController.text),
-                            dateAndTime: DateTime.now(),
-                            name: nameEditingController.text,
-                            typeOfTransaction:
-                                typeOftransactionEditingController.text,
-                            expenseType: typeOfexp,
-                            transactionReferanceNumber:
-                                generateUniqueRefNumber(),
-                          );
 
                           await TransactionMethods()
                               .insertTransaction(transaction)

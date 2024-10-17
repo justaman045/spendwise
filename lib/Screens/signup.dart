@@ -137,7 +137,7 @@ class SignUp extends StatelessWidget {
                               if (value!.length < 4) {
                                 return "Enter Correct Name";
                               } else if (value.length > 20) {
-                                return "Name can only be atleast 20 charecters";
+                                return "Name can only be at-least 20 characters";
                               }
                               return null;
                             },
@@ -181,7 +181,7 @@ class SignUp extends StatelessWidget {
                             controller: passwordEditingController,
                             validator: (value) {
                               if (value!.length < 8) {
-                                return "Password length should be at least 8 Charecters";
+                                return "Password length should be at least 8 Characters";
                               }
                               return null;
                             },

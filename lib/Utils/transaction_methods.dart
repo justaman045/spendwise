@@ -1,5 +1,4 @@
 // **Create (Insert)**
-import 'package:flutter/material.dart';
 import 'package:spendwise/Models/cus_transaction.dart';
 import 'package:spendwise/Models/db_helper.dart';
 import 'package:spendwise/Requirements/data.dart';

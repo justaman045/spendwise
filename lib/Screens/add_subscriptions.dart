@@ -23,9 +23,11 @@ class _AddSubscriptionsState extends State<AddSubscriptions> {
   DateTime? todate;
   DateTime? recurringDate;
   String selectedApp = "";
+  String selectedTenure = "";
   List<Subscription> subsbriptions = [];
   List<String> availableSubscriptions = [];
   bool isRecurring = false;
+
 
   void getSubs() async {
     List<String> subs = await getSubscriptionApps();
@@ -54,7 +56,7 @@ class _AddSubscriptionsState extends State<AddSubscriptions> {
     subsbriptions.map((elem) => sub.add(elem.name));
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Add Subcription"),
+        title: const Text("Add Subscription"),
         centerTitle: true,
       ),
       body: Padding(
@@ -122,28 +124,24 @@ class _AddSubscriptionsState extends State<AddSubscriptions> {
             ),
             Padding(
               padding: EdgeInsets.symmetric(vertical: 10.r),
-              child: TextFormField(
-                canRequestFocus: false,
-                keyboardType: TextInputType.none,
-                controller: toDate,
+              child: DropdownButtonFormField(
                 decoration: InputDecoration(
-                  suffixIcon: IconButton(
-                    icon: const Icon(Icons.calendar_month_rounded),
-                    onPressed: () async {
-                      dynamic date = await showDatePicker(
-                          context: context,
-                          firstDate: DateTime(DateTime.now().year - 1),
-                          lastDate: DateTime(2099));
-                      todate = date;
-                      toDate.text = DateFormat.yMMMMd().format(date);
-                    },
-                  ),
-                  label: const Text("Ending Date of the Subscription"),
-                  hintText: _dateTime.toString(),
+                  label: const Text("Tenure"),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(15.r),
                   ),
                 ),
+                items: ["1 Day", "3 Days", "1 Week", "1 Month", "2 Months", "3 Months", "4 Months", "6 Months", "8 Months", "1 Year"].map((subscriptionName) {
+                  return DropdownMenuItem(
+                    value: subscriptionName,
+                    child: Text(subscriptionName),
+                  );
+                }).toList(),
+                onChanged: (element) {
+                  if (element != null) {
+                    selectedTenure = element;
+                  }
+                },
               ),
             ),
             Padding(
@@ -175,33 +173,6 @@ class _AddSubscriptionsState extends State<AddSubscriptions> {
                 const Text("Is this Subscription Recurring??")
               ],
             ),
-            if (isRecurring) ...[
-              Padding(
-                padding: EdgeInsets.symmetric(vertical: 10.r),
-                child: TextFormField(
-                  keyboardType: TextInputType.none,
-                  controller: endingRecurring,
-                  decoration: InputDecoration(
-                    suffixIcon: IconButton(
-                      icon: const Icon(Icons.calendar_month_rounded),
-                      onPressed: () async {
-                        dynamic date = await showDatePicker(
-                            context: context,
-                            firstDate: DateTime(DateTime.now().year - 1),
-                            lastDate: DateTime(2099));
-                        recurringDate = date;
-                        endingRecurring.text = DateFormat.yMMMMd().format(date);
-                      },
-                    ),
-                    label: const Text("Recurring Upto"),
-                    hintText: _dateTime.toString(),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(15.r),
-                    ),
-                  ),
-                ),
-              ),
-            ],
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
@@ -226,23 +197,63 @@ class _AddSubscriptionsState extends State<AddSubscriptions> {
                     ),
                     child: TextButton(
                       onPressed: () {
+                        switch (selectedTenure){
+                          case "1 Day": {
+                            todate = fromdate!.add(const Duration(days: 1));
+                            break;
+                          }
+                          case "3 Days": {
+                            todate = fromdate!.add(const Duration(days: 3));
+                            break;
+                          }
+                          case "1 Week": {
+                            todate = fromdate!.add(const Duration(days: 7));
+                            break;
+                          }
+                          case "1 Month": {
+                            todate = fromdate!.add(const Duration(days: (30*1)));
+                            break;
+                          }
+                          case "2 Months": {
+                            todate = fromdate!.add(const Duration(days: (30*2)));
+                            break;
+                          }
+                          case "3 Months": {
+                            todate = fromdate!.add(const Duration(days: (30*3)));
+                            break;
+                          }
+                          case "4 Months": {
+                            todate = fromdate!.add(const Duration(days: (30*4)));
+                            break;
+                          }
+                          case "6 Months": {
+                            todate = fromdate!.add(const Duration(days: (30*6)));
+                            break;
+                          }
+                          case "8 Months": {
+                            todate = fromdate!.add(const Duration(days: (30*8)));
+                            break;
+                          }
+                          case "1 Year": {
+                            todate = fromdate!.add(const Duration(days: (30*12)));
+                            break;
+                          }
+                        }
+
                         if (fromdate != null && todate != null) {
-                          if (endingRecurring.text.isEmpty) {
-                            endingRecurring.text = toDate.text;
-                          }
-                          if (endingRecurring.text.isNotEmpty) {
-                            toDate.text = endingRecurring.text;
-                          }
+                            toDate.text = DateFormat.yMMMMd().format(todate!);
                           Subscription subscription = Subscription(
                             fromDate: fromDate.text,
                             toDate: toDate.text,
                             amount: double.parse(amount.text),
-                            recurringDate: endingRecurring.text,
+                            isRecurring: isRecurring.toString(),
                             name: selectedApp,
+                            tenure: selectedTenure
                           );
                           SubscriptionMethods()
                               .insertSubscription(subscription)
                               .then((value) => Get.back(result: "refresh"));
+                          // debugPrint(subscription.toDate);
                         } else {
                           Get.snackbar("Error in Date", "Choose correct Date");
                         }
