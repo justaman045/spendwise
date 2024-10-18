@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:sms_receiver/sms_receiver.dart';
 import 'package:spendwise/Models/db_helper.dart';
 import 'package:spendwise/Requirements/data.dart';
 import 'package:spendwise/Screens/cash_entry.dart';

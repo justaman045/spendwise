@@ -70,6 +70,10 @@ class _EditUserProfileState extends State<EditUserProfile> {
                             width: 150.w,
                             height: 150.h,
                           ),
+                          Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 15.w, vertical: 15.h),
+                            child: Image(image: const AssetImage("assets/pfp/4.png"),height: 105.h,),
+                          ),
                         ],
                       ),
                     ),
@@ -262,30 +266,35 @@ class _EditUserProfileState extends State<EditUserProfile> {
                             )),
                           ),
                         ),
-                        Container(
-                          width: 150.w,
-                          height: 50.h,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(20.w),
-                            gradient: const LinearGradient(
-                              begin: Alignment.topRight,
-                              end: Alignment.bottomLeft,
-                              colors: [
-                                Color.fromRGBO(210, 209, 254, 1),
-                                Color.fromRGBO(243, 203, 237, 1),
-                              ],
+                        GestureDetector(
+                          onTap: (){
+                            Get.back();
+                          },
+                          child: Container(
+                            width: 150.w,
+                            height: 50.h,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(20.w),
+                              gradient: const LinearGradient(
+                                begin: Alignment.topRight,
+                                end: Alignment.bottomLeft,
+                                colors: [
+                                  Color.fromRGBO(210, 209, 254, 1),
+                                  Color.fromRGBO(243, 203, 237, 1),
+                                ],
+                              ),
                             ),
-                          ),
-                          child: Center(
-                            child: Text(
-                              "Discard Changes",
-                              style: TextStyle(
-                                fontSize: 15.r,
-                                color: Get.isDarkMode
-                                    ? MyAppColors
-                                        .normalColoredWidgetTextColorDarkMode
-                                    : MyAppColors
-                                        .normalColoredWidgetTextColorLightMode,
+                            child: Center(
+                              child: Text(
+                                "Discard Changes",
+                                style: TextStyle(
+                                  fontSize: 15.r,
+                                  color: Get.isDarkMode
+                                      ? MyAppColors
+                                          .normalColoredWidgetTextColorDarkMode
+                                      : MyAppColors
+                                          .normalColoredWidgetTextColorLightMode,
+                                ),
                               ),
                             ),
                           ),

@@ -87,11 +87,11 @@ class _HomePageState extends State<HomePage> {
             return Scaffold(
               // Custom AppBar for this Page
               appBar: CustomAppBar(
-                username: username["username"].toString(),
+                username: username["name"].toString(),
               ),
               // Drawer of the App
               drawer: CustomDrawer(
-                username: username["username"].toString(),
+                username: username["name"].toString(),
                 scaffoldKey: scaffoldKey,
               ),
               body: SafeArea(

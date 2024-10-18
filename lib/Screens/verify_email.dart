@@ -4,6 +4,7 @@ import 'package:spendwise/Components/available_balance.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:spendwise/Requirements/data.dart';
 import 'package:spendwise/Screens/home_page.dart';
+import 'package:spendwise/Screens/intro.dart';
 import 'package:spendwise/Utils/theme.dart';
 import 'package:get/get.dart';
 
@@ -83,7 +84,32 @@ class _VerifyEmailState extends State<VerifyEmail> {
           Padding(
             padding: EdgeInsets.all(20.r),
             child: Container(decoration: BoxDecoration(gradient: colorsOfGradient(), borderRadius: BorderRadius.all(Radius.circular(10.r))), child: TextButton(onPressed: _isCheckingStatus ? null : checkAndRedirect, child: _isCheckingStatus ? const CircularProgressIndicator() : const Text("Check Status for Account Confirmation"))),
-          )
+          ),
+          Padding(
+            padding: EdgeInsets.all(20.r),
+            child: Container(
+              decoration: BoxDecoration(
+                gradient: colorsOfGradient(),
+                borderRadius: BorderRadius.all(Radius.circular(10.r)),
+              ),
+              child: TextButton(
+                onPressed: _isCheckingStatus
+                    ? null
+                    : () async {
+                  await FirebaseAuth.instance.signOut();
+                  debugPrint("Signed out");
+                  Get.offAll(routeName: routes[0],
+                        () => const Intro(),
+                    transition: customTrans,
+                    curve: customCurve,
+                    duration: duration,);
+                },
+                child: _isCheckingStatus
+                    ? const CircularProgressIndicator()
+                    : const Text("Log-Out Account"),
+              ),
+            ),
+          ),
         ],
       ),
     );
