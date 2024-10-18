@@ -19,6 +19,8 @@ final _formKey = GlobalKey<FormState>();
 class AddCashEntry extends StatefulWidget {
   const AddCashEntry({super.key});
 
+  static const route = '/cashentry';
+
   @override
   State<AddCashEntry> createState() => _AddCashEntryState();
 }
