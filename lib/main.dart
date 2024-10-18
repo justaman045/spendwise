@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:sms_receiver/sms_receiver.dart';
 import 'package:spendwise/Models/db_helper.dart';
 import 'package:spendwise/Requirements/data.dart';
+import 'package:spendwise/Screens/cash_entry.dart';
 import 'package:spendwise/Screens/home_page.dart';
 import 'package:spendwise/Screens/intro.dart';
 import 'package:flutter_sms_inbox/flutter_sms_inbox.dart';
@@ -12,8 +14,11 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:spendwise/Screens/verify_email.dart';
 import 'package:spendwise/Utils/methods.dart';
 import 'package:spendwise/Utils/theme.dart';
+import 'package:spendwise/api/firebase_api.dart';
 import 'firebase_options.dart';
 import 'package:flutter/services.dart';
+
+final navigatorKey = GlobalKey<NavigatorState>();
 
 // Main function to run all the app
 void main() async {
@@ -37,6 +42,8 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
+  FirebaseApi().initNotification();
+
   // Initializing Theme Controller
   Get.put(ThemeModeController());
 
@@ -54,7 +61,7 @@ class SpendWise extends StatefulWidget {
 class _SpendWiseState extends State<SpendWise> {
   // create the local variables for usage of the app
   List<SmsMessage> messages = [];
-  dynamic currentUser;
+  late User currentUser;
 
   @override
   void initState() {
@@ -77,10 +84,19 @@ class _SpendWiseState extends State<SpendWise> {
         });
       }
     }
+
   }
 
   @override
   Widget build(BuildContext context) {
+    bool loggedIn = true;
+
+    if(FirebaseAuth.instance.currentUser != null){
+      currentUser = FirebaseAuth.instance.currentUser!;
+    } else {
+      loggedIn = false;
+    }
+
     // ScreenUtilInit to initialize the Get package
     return ScreenUtilInit(
       builder: (_, child) {
@@ -88,6 +104,9 @@ class _SpendWiseState extends State<SpendWise> {
         return GetMaterialApp(
           title: appName,
           debugShowCheckedModeBanner: false,
+          routes: {
+            AddCashEntry.route: (context) => const AddCashEntry(),
+          },
           // theme: Get.find<ThemeModeController>().themeMode == ThemeMode.light
           //     ? MyAppThemes.lightTheme
           //     : MyAppThemes.darkTheme,
@@ -95,7 +114,7 @@ class _SpendWiseState extends State<SpendWise> {
           darkTheme: MyAppThemes.darkTheme,
 
           // if the user is logged in then show the homepage else show Intro Page
-          home: currentUser != null ? const VerifyEmail() : const Intro(),
+          home: loggedIn ? (currentUser.emailVerified ? const HomePage() : const VerifyEmail()) : const Intro(),
         );
       },
     );

@@ -207,7 +207,7 @@ class _LoginState extends State<Login> {
                                   if(FirebaseAuth.instance.currentUser!.emailVerified){
                                     Get.offAll(
                                       routeName: routes[3],
-                                          () => const VerifyEmail(),
+                                          () => const HomePage(),
                                       transition: customTrans,
                                       curve: customCurve,
                                       duration: duration,

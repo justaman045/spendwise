@@ -18,6 +18,8 @@ import 'package:spendwise/Utils/theme.dart';
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
+  static const homePageroute = "/";
+
   @override
   State<HomePage> createState() => _HomePageState();
 }
