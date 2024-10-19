@@ -333,13 +333,12 @@ class _EditTransactionState extends State<EditTransaction> {
                           );
                           await TransactionMethods()
                               .updateTransaction(transaction)
-                              .then((value) => Get.back())
+                              .then((value) => Get.back(result: "refresh"))
                               .then((value) => Get.back(result: "refresh"));
                         } else {
                           Get.snackbar(
-                            "Error",
-                            "This Feature is still under Development",
-                            snackPosition: SnackPosition.TOP,
+                            "You haven't changed anything",
+                            "To Save anything new you must change anything",
                           );
                         }
                       },
@@ -380,7 +379,7 @@ class _EditTransactionState extends State<EditTransaction> {
                     onTap: () async {
                       await TransactionMethods()
                           .deleteTransaction(widget.transactionReferanceNumber)
-                          .then((value) => Get.back(result: "refresh"));
+                          .then((value) => Get.back(result: "refresh")).then((value) => Get.back(result: "refresh"));
                     },
                     child: Container(
                       decoration: BoxDecoration(

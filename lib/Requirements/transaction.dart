@@ -179,6 +179,19 @@ double totalIncomeThisMonth(List<CusTransaction> transactions) {
 double totalAvailableBalance(List<CusTransaction> transactions) {
   double income = 0;
   for (var element in transactions) {
+    if (element.typeOfTransaction.toString().toLowerCase() == typeOfTransaction[0].toString().toLowerCase()) {
+      income += element.amount;
+    } else if (element.typeOfTransaction.toString().toLowerCase() != typeOfTransaction[0].toString().toLowerCase()) {
+      income -= element.amount;
+    }
+  }
+  return income;
+}
+
+//TODO: get overall income - overall expense ( not only this month )
+double totalBalanceRemaining(List<CusTransaction> transactions) {
+  double income = 0;
+  for (var element in transactions) {
     if (element.typeOfTransaction == typeOfTransaction[0]) {
       income += element.amount;
     } else if (element.typeOfTransaction != typeOfTransaction[0]) {

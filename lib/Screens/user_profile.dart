@@ -71,6 +71,7 @@ class _UserProfileState extends State<UserProfile> {
               user = use;
             }
           }
+          bankTransaction = allTransactions(snapshot.data);
           return Scaffold(
             appBar: AppBar(
               title: Text(
@@ -100,7 +101,10 @@ class _UserProfileState extends State<UserProfile> {
                               width: 120.w,
                               height: 120.h,
                             ),
-                            Center(child: Image(image: const AssetImage("assets/pfp/4.png"),height: 105.h,)),
+                            Padding(
+                              padding: EdgeInsets.only(right: 15.w, top: 2.5.h),
+                              child: Image(image: const AssetImage("assets/pfp/4.png"),height: 110.h,),
+                            ),
                           ],
                         ),
                         Padding(
@@ -123,7 +127,7 @@ class _UserProfileState extends State<UserProfile> {
                                     SizedBox(
                                       width: 150.w,
                                       child: Text(
-                                        "Rs. ${int.parse(user["dreamToSave"]) - totalAvailableBalance(bankTransaction)} more to Save",
+                                        "Rs. ${totalAvailableBalance(bankTransaction)} more to Save",
                                         style: TextStyle(fontSize: 13.r),
                                       ),
                                     ),

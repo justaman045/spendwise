@@ -3,6 +3,7 @@ import "package:flutter_screenutil/flutter_screenutil.dart";
 import "package:get/get.dart";
 import "package:spendwise/Requirements/data.dart";
 import "package:spendwise/Screens/all_transactions.dart";
+import "package:spendwise/Screens/features_to_impliment.dart";
 import "package:spendwise/Screens/home_page.dart";
 import "package:spendwise/Screens/people.dart";
 import "package:spendwise/Screens/settings.dart";
@@ -30,7 +31,8 @@ class CustomDrawer extends StatelessWidget {
       "Profile",
       "Subscriptions",
       "People",
-      "Settings"
+      "Settings",
+      "Features yet to Impliment"
     ];
 
     return Drawer(
@@ -47,7 +49,11 @@ class CustomDrawer extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Center(child: SizedBox(width: 80.w,child: const Image(image: AssetImage("assets/pfp/4.png")),)),
+                Center(
+                    child: SizedBox(
+                  width: 88.w,
+                  child: const Image(image: AssetImage("assets/pfp/4.png")),
+                )),
                 Column(
                   children: [
                     Center(
@@ -55,7 +61,8 @@ class CustomDrawer extends StatelessWidget {
                         username, // Username of the user
                         style: TextStyle(
                           fontSize: 20.w,
-                          color: MyAppColors.normalColoredWidgetTextColorDarkMode,
+                          color:
+                              MyAppColors.normalColoredWidgetTextColorDarkMode,
                         ),
                       ),
                     ),
@@ -149,6 +156,18 @@ class CustomDrawer extends StatelessWidget {
           Get.to(
             routeName: routes[7],
             () => const Settings(),
+            curve: customCurve,
+            transition: customTrans,
+            duration: duration,
+          );
+        }
+        break;
+      case 6: // Settings
+        if (currentRoute != "features") {
+          Get.to(
+            routeName: "features",
+            () => const FeaturesToImpliment(
+            ),
             curve: customCurve,
             transition: customTrans,
             duration: duration,

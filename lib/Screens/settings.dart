@@ -138,7 +138,7 @@ class _SettingsState extends State<Settings> {
                   Column(
                     children: [
                       const Text("App Version"),
-                      Text(packageInfo!.version),
+                      Text("${packageInfo!.version} ( Beta )"),
                     ],
                   ),
                   TextButton(
