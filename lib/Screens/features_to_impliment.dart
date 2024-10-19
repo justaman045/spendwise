@@ -61,10 +61,26 @@ class FeaturesToImpliment extends StatelessWidget {
               if (points != null) {
                 final processedPoints =
                     points.map((point) => Point.fromJson(point)).toList();
-                return ListView.builder(
-                  itemCount: processedPoints.length,
-                  itemBuilder: (context, index) =>
-                      _buildPointItem(processedPoints[index]),
+                return Column(
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 15.r, vertical: 10.h),
+                      child: Text("Features/Bugs Currently known to me, If you encounter any other bug please reach me out to me.", style: TextStyle(fontSize: 18.r),),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 30.w,
+                      ),
+                      child: const Divider(),
+                    ),
+                    Expanded(
+                      child: ListView.builder(
+                        itemCount: processedPoints.length,
+                        itemBuilder: (context, index) =>
+                            _buildPointItem(processedPoints[index]),
+                      ),
+                    ),
+                  ],
                 );
               } else {
                 // Handle case where "points" key might not exist
@@ -95,7 +111,9 @@ class FeaturesToImpliment extends StatelessWidget {
   Widget _buildPointItem(Point point) {
     return Column(
       children: [
-        SizedBox(height: 10.h,),
+        SizedBox(
+          height: 10.h,
+        ),
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 20.w),
           child: Column(
@@ -103,7 +121,7 @@ class FeaturesToImpliment extends StatelessWidget {
             children: [
               Text(
                 point.name,
-                style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                style: TextStyle(fontSize: 18.r, fontWeight: FontWeight.bold),
               ),
               Padding(
                 padding: EdgeInsets.only(left: 30.w),
@@ -116,13 +134,16 @@ class FeaturesToImpliment extends StatelessWidget {
                   itemCount: point.subPoints!.length,
                   itemBuilder: (context, index) => Text(
                     "- ${point.subPoints![index].name}: ${point.subPoints![index].description}",
-                    style:
-                        const TextStyle(fontSize: 16, fontStyle: FontStyle.italic),
+                    style: const TextStyle(
+                        fontSize: 16, fontStyle: FontStyle.italic),
                   ),
                 ),
             ],
           ),
         ),
+        SizedBox(
+          height: 10.h,
+        )
       ],
     );
   }
