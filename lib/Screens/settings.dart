@@ -1,9 +1,12 @@
+import "package:firebase_auth/firebase_auth.dart";
 import "package:flutter/material.dart";
 import "package:flutter_screenutil/flutter_screenutil.dart";
 import "package:get/get.dart";
 import "package:package_info_plus/package_info_plus.dart";
 import "package:spendwise/Requirements/data.dart";
+import "package:spendwise/Screens/delete_account.dart";
 import "package:spendwise/Screens/edit_user_profile.dart";
+import "package:spendwise/Screens/intro.dart";
 import "package:url_launcher/url_launcher.dart";
 
 // TODO: Reduce Lines of Code
@@ -66,6 +69,67 @@ class _SettingsState extends State<Settings> {
                 ],
               ),
             ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+              Padding(
+                padding: EdgeInsets.only(
+                  left: 30.w,
+                  top: 30.h,
+                ),
+                child: Text(
+                  "Account",
+                  style: TextStyle(fontSize: 13.r),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: 30.w,
+                ),
+                child: const Divider(),
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: 20.w,
+                ),
+                child: TextButton(
+                  onPressed: () async {
+                    await FirebaseAuth.instance
+                        .signOut()
+                        .then((value) => Get.offAll(
+                      routeName: routes[3],
+                          () => const Intro(),
+                      transition: customTrans,
+                      curve: customCurve,
+                      duration: duration,
+                    ));
+                  },
+                  child: Text(
+                    "Sign Out...",
+                    style: TextStyle(fontSize: 15.r),
+                  ),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: 20.w,
+                ),
+                child: TextButton(
+                    onPressed: () {
+                      Get.to(
+                        routeName: "deleteAccount",
+                            () => const DeleteAccount(),
+                        transition: customTrans,
+                        curve: customCurve,
+                        duration: duration,
+                      );
+                    },
+                    child: Text(
+                      "Delete Account",
+                      style: TextStyle(fontSize: 15.r),
+                    )),
+              ),
+            ],),
             Padding(
               padding: EdgeInsets.symmetric(vertical: 10.h),
               child: Row(

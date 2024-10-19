@@ -47,17 +47,16 @@ class CustomDrawer extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Icon(
-                  Icons.person_2_sharp,
-                  color: MyAppColors.normalColoredWidgetTextColorDarkMode,
-                ),
+                Center(child: SizedBox(width: 80.w,child: const Image(image: AssetImage("assets/pfp/4.png")),)),
                 Column(
                   children: [
-                    Text(
-                      username, // Username of the user
-                      style: TextStyle(
-                        fontSize: 20.w,
-                        color: MyAppColors.normalColoredWidgetTextColorDarkMode,
+                    Center(
+                      child: Text(
+                        username, // Username of the user
+                        style: TextStyle(
+                          fontSize: 20.w,
+                          color: MyAppColors.normalColoredWidgetTextColorDarkMode,
+                        ),
                       ),
                     ),
                   ],

@@ -95,7 +95,7 @@ class _SubscriptionsDetailsState extends State<SubscriptionsDetails> {
                                             "${daysToMonths(stringToDateTime(widget.subscription.toDate).difference(stringToDateTime(widget.subscription.fromDate)).inDays)["months"]} months"),
                                       ] else ...[
                                         Text(
-                                            "${daysToMonths(stringToDateTime(widget.subscription.isRecurring).difference(stringToDateTime(widget.subscription.fromDate)).inDays)["months"]} months"),
+                                            widget.subscription.tenure),
                                       ]
                                     ],
                                   )

@@ -307,6 +307,8 @@ class _AddPeopleState extends State<AddPeople> {
                                   duration: duration,
                                   transition: customTrans),
                             );
+                        nameController.text = "";
+                        relationController.text = "";
                       }
                     },
                     child: Text(

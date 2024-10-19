@@ -1,3 +1,5 @@
+import "dart:math";
+
 import "package:firebase_auth/firebase_auth.dart";
 import "package:flutter/material.dart";
 import "package:flutter_screenutil/flutter_screenutil.dart";
@@ -98,6 +100,7 @@ class _UserProfileState extends State<UserProfile> {
                               width: 120.w,
                               height: 120.h,
                             ),
+                            Center(child: Image(image: const AssetImage("assets/pfp/4.png"),height: 105.h,)),
                           ],
                         ),
                         Padding(

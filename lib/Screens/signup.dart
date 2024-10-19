@@ -317,7 +317,7 @@ class SignUp extends StatelessWidget {
                                             : userNameController.text,
                                         "dreamToSave":
                                             dreamSavingsController.text,
-                                        "dateOfJoining": DateTime.now()
+                                        "dateOfJoining": DateTime.now(),
                                       }).then(
                                         (value) => Get.offAll(
                                           routeName: routes[15],
