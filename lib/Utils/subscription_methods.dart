@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:spendwise/Models/db_helper.dart';
 import 'package:spendwise/Models/subscription.dart';
 import 'package:spendwise/Requirements/data.dart';
@@ -36,8 +37,8 @@ class SubscriptionMethods {
     await db.update(
       subscriptionsTable,
       subscription.toMap(),
-      where: 'id = ?',
-      whereArgs: [subscription.id],
+      where: 'name = ?',
+      whereArgs: [subscription.name],
     );
   }
 
