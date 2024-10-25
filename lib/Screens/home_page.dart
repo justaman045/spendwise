@@ -69,10 +69,10 @@ class _HomePageState extends State<HomePage> {
       child: FutureBuilder(
         future: getTransactions(),
         builder: (BuildContext context, AsyncSnapshot snapshot) {
-          // if the connection is done and the data is succesfully retirved then return the screen else return loading screen
+          // if the connection is done and the data is successfully retrieved then return the screen else return loading screen
           if ((snapshot.connectionState == ConnectionState.done) &&
               (_user != null)) {
-            // put the loaded BankTransaction into a variable for furhter use of the rendering app
+            // put the loaded BankTransaction into a variable for further use of the rendering app
             bankTransaction = snapshot.data;
 
             // get the user and extract it's detail

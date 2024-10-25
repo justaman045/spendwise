@@ -47,7 +47,6 @@ class _AddCashEntryState extends State<AddCashEntry> {
   double updatedAmount = 0;
   late CusTransaction transaction;
 
-
   Future<void> _fetchData() async {
     _peopleBalanceList =
         await PeopleBalanceSharedMethods().getAllPeopleBalance();
@@ -155,9 +154,9 @@ class _AddCashEntryState extends State<AddCashEntry> {
                           ],
                           validator: (value) {
                             if (value!.isEmpty) {
-                              return "Enter a amount that have been paid or recived";
-                            } else if (int.parse(value) <= 1) {
-                              return "Amount cannot be in negetive";
+                              return "Enter a amount that have been paid or received";
+                            } else if (int.parse(value) < 1) {
+                              return "Amount cannot be in negative";
                             }
                             return null;
                           },
@@ -490,7 +489,8 @@ class _AddCashEntryState extends State<AddCashEntry> {
                                                 peopleBalance
                                                     .transactionReferanceNumber));
                                     transaction = CusTransaction(
-                                      amount: double.parse(amountEditingController.text),
+                                      amount: double.parse(
+                                          amountEditingController.text),
                                       dateAndTime: DateTime.now(),
                                       name: nameEditingController.text,
                                       typeOfTransaction:
@@ -536,7 +536,63 @@ class _AddCashEntryState extends State<AddCashEntry> {
                                                 peopleBalance
                                                     .transactionReferanceNumber));
                                     transaction = CusTransaction(
-                                      amount: double.parse(amountEditingController.text),
+                                      amount: double.parse(
+                                          amountEditingController.text),
+                                      dateAndTime: DateTime.now(),
+                                      name: nameEditingController.text,
+                                      typeOfTransaction:
+                                          typeOftransactionEditingController
+                                              .text,
+                                      expenseType: typeOfexp,
+                                      transactionReferanceNumber:
+                                          generateUniqueRefNumber(),
+                                    );
+                                  }
+                                }
+                              }
+                            }
+                          } else if (typeOftransactionEditingController.text
+                                  .toLowerCase() ==
+                              typeOfTransaction[4].toLowerCase()) {
+                            if (multiSelectDropDownController
+                                .selectedItems.length
+                                .isGreaterThan(0)) {
+                              for (PeopleBalance peopleBalance
+                                  in _peopleBalanceList) {
+                                for (DropdownItem name
+                                    in multiSelectDropDownController
+                                        .selectedItems) {
+                                  if (name.label == peopleBalance.name) {
+                                    double newAmount = peopleBalance.amount;
+                                    if(peopleBalance.amount.toInt() > 0){
+                                      newAmount -= (double.parse(
+                                          amountEditingController.text) /
+                                          (multiSelectDropDownController
+                                              .selectedItems.length +
+                                              (toIncludeYourself ? 0 : 1)));
+                                    } else {
+                                      newAmount += (double.parse(
+                                          amountEditingController.text) /
+                                          (multiSelectDropDownController
+                                              .selectedItems.length +
+                                              (toIncludeYourself ? 0 : 1)));
+                                    }
+                                    PeopleBalanceSharedMethods()
+                                        .updatePeopleBalance(PeopleBalance(
+                                            name: peopleBalance.name,
+                                            amount: newAmount,
+                                            dateAndTime:
+                                                peopleBalance.dateAndTime,
+                                            transactionFor:
+                                                peopleBalance.transactionFor,
+                                            relationFrom:
+                                                peopleBalance.relationFrom,
+                                            transactionReferanceNumber:
+                                                peopleBalance
+                                                    .transactionReferanceNumber));
+                                    transaction = CusTransaction(
+                                      amount: double.parse(
+                                          amountEditingController.text),
                                       dateAndTime: DateTime.now(),
                                       name: nameEditingController.text,
                                       typeOfTransaction:
@@ -552,23 +608,30 @@ class _AddCashEntryState extends State<AddCashEntry> {
                             }
                           } else {
                             transaction = CusTransaction(
-                              amount: double.parse(
-                                  amountEditingController.text),
+                              amount:
+                                  double.parse(amountEditingController.text),
                               dateAndTime: DateTime.now(),
                               name: nameEditingController.text,
                               typeOfTransaction:
-                              typeOftransactionEditingController.text,
+                                  typeOftransactionEditingController.text,
                               expenseType: typeOfexp,
                               transactionReferanceNumber:
-                              generateUniqueRefNumber(),
+                                  generateUniqueRefNumber(),
                             );
                           }
 
-                          await TransactionMethods()
-                              .insertTransaction(transaction)
-                              .then(
-                                (value) => Get.back(result: "refresh"),
-                              );
+                          if (transaction.typeOfTransaction
+                                  .toString()
+                                  .toLowerCase() !=
+                              typeOfTransaction[3].toString().toLowerCase()) {
+                            await TransactionMethods()
+                                .insertTransaction(transaction)
+                                .then(
+                                  (value) => Get.back(result: "refresh"),
+                                );
+                          } else {
+                            Get.back(result: "result");
+                          }
                         }
                       },
                       child: Container(

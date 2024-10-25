@@ -83,14 +83,13 @@ class _SpendWiseState extends State<SpendWise> {
         });
       }
     }
-
   }
 
   @override
   Widget build(BuildContext context) {
     bool loggedIn = true;
 
-    if(FirebaseAuth.instance.currentUser != null){
+    if (FirebaseAuth.instance.currentUser != null) {
       currentUser = FirebaseAuth.instance.currentUser!;
     } else {
       loggedIn = false;
@@ -113,7 +112,11 @@ class _SpendWiseState extends State<SpendWise> {
           darkTheme: MyAppThemes.darkTheme,
 
           // if the user is logged in then show the homepage else show Intro Page
-          home: loggedIn ? (currentUser.emailVerified ? const HomePage() : const VerifyEmail()) : const Intro(),
+          home: loggedIn
+              ? (currentUser.emailVerified
+                  ? const HomePage()
+                  : const VerifyEmail())
+              : const Intro(),
         );
       },
     );
