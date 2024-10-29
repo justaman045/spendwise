@@ -76,7 +76,8 @@ class _SpendWiseState extends State<SpendWise> {
       // if the user is logged in then get user session
       final tcurrentUser = FirebaseAuth.instance.currentUser;
 
-      // get the current user that is already logged in and then if it is not null then update the currentUser
+      // get the current user that is already logged in and then if it is not
+      // null then update the currentUser
       if (tcurrentUser != null) {
         setState(() {
           currentUser = tcurrentUser;
@@ -111,7 +112,8 @@ class _SpendWiseState extends State<SpendWise> {
           themeMode: ThemeMode.system,
           darkTheme: MyAppThemes.darkTheme,
 
-          // if the user is logged in then show the homepage else show Intro Page
+          // if the user is logged in then show the homepage
+          // else show Intro Page
           home: loggedIn
               ? (currentUser.emailVerified
                   ? const HomePage()
