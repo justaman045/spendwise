@@ -1,6 +1,8 @@
+import "package:flutter/cupertino.dart";
 import "package:flutter/material.dart";
 import "package:flutter_screenutil/flutter_screenutil.dart";
 import "package:get/get.dart";
+import "package:showcaseview/showcaseview.dart";
 import "package:spendwise/Requirements/data.dart";
 import "package:spendwise/Screens/all_transactions.dart";
 import "package:spendwise/Screens/features_to_impliment.dart";
@@ -9,7 +11,8 @@ import "package:spendwise/Screens/people.dart";
 import "package:spendwise/Screens/settings.dart";
 import "package:spendwise/Screens/subscription.dart";
 import "package:spendwise/Screens/user_profile.dart";
-import "package:spendwise/Utils/theme.dart"; // Assuming MyAppColors is defined here
+import "package:spendwise/Utils/theme.dart";
+import "package:url_launcher/url_launcher.dart"; // Assuming MyAppColors is defined here
 
 // Represents a custom drawer for the Spendwise app
 class CustomDrawer extends StatelessWidget {
@@ -25,15 +28,16 @@ class CustomDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Static list of drawer item names
-    final List<String> navBars = [
-      "Home",
-      "Transactions",
-      "Profile",
-      "Subscriptions",
-      "People",
-      "Settings",
-      "Features yet to Impliment"
-    ];
+    final Map<String, IconData> navBars = {
+      "Home": CupertinoIcons.home,
+      "Transactions": const IconData(0xe040, fontFamily: 'MaterialIcons'),
+      "Profile": Icons.person_2,
+      "Subscriptions": Icons.subscriptions,
+      "People": CupertinoIcons.group_solid,
+      "Settings": CupertinoIcons.settings_solid,
+      "Features yet to Implement": CupertinoIcons.tray_full,
+      "Contact me for Feature Suggestion": Icons.contact_emergency
+    };
 
     return Drawer(
       width: 250.w,
@@ -75,8 +79,9 @@ class CustomDrawer extends StatelessWidget {
           // Dynamic list of drawer items based on navBars
           for (int i = 0; i < navBars.length; i++)
             ListTile(
+              leading: Icon(navBars.values.elementAt(i)),
               title: Text(
-                navBars[i],
+                navBars.keys.elementAt(i),
                 style: TextStyle(fontSize: 15.w),
               ),
               onTap: () => _handleNavigation(context, i),
@@ -87,7 +92,7 @@ class CustomDrawer extends StatelessWidget {
   }
 
   // Handles navigation based on the tapped drawer item index
-  void _handleNavigation(BuildContext context, int index) {
+  void _handleNavigation(BuildContext context, int index) async {
     final currentRoute = ModalRoute.of(context)?.settings.name;
 
     switch (index) {
@@ -106,11 +111,13 @@ class CustomDrawer extends StatelessWidget {
         if (currentRoute != routes[4]) {
           Get.to(
             routeName: routes[4],
-            () => const AllTransactions(
-              type: "allTransactions",
-              pageTitle: "All Transactions",
-              chartTitle: "All Transactions from SMS",
-              chartType: "Transaction",
+            () => ShowCaseWidget(
+              builder: (context) => const AllTransactions(
+                type: "allTransactions",
+                pageTitle: "All Transactions",
+                chartTitle: "All Transactions from SMS",
+                chartType: "Transaction",
+              ),
             ),
             curve: customCurve,
             transition: customTrans,
@@ -122,7 +129,7 @@ class CustomDrawer extends StatelessWidget {
         if (currentRoute != routes[6]) {
           Get.to(
             routeName: routes[6],
-            () => const UserProfile(),
+            () => ShowCaseWidget(builder: (context) => const UserProfile()),
             curve: customCurve,
             transition: customTrans,
             duration: duration,
@@ -133,7 +140,8 @@ class CustomDrawer extends StatelessWidget {
         if (currentRoute != routes[13]) {
           Get.to(
             routeName: routes[13],
-            () => const SubscriptionManager(),
+            () => ShowCaseWidget(
+                builder: (context) => const SubscriptionManager()),
             curve: customCurve,
             transition: customTrans,
             duration: duration,
@@ -144,7 +152,7 @@ class CustomDrawer extends StatelessWidget {
         if (currentRoute != "people") {
           Get.to(
             routeName: "people",
-            () => const People(),
+            () => ShowCaseWidget(builder: (context) => const People()),
             curve: customCurve,
             transition: customTrans,
             duration: duration,
@@ -155,7 +163,7 @@ class CustomDrawer extends StatelessWidget {
         if (currentRoute != routes[7]) {
           Get.to(
             routeName: routes[7],
-            () => const Settings(),
+            () => ShowCaseWidget(builder: (context) => const Settings()),
             curve: customCurve,
             transition: customTrans,
             duration: duration,
@@ -166,13 +174,15 @@ class CustomDrawer extends StatelessWidget {
         if (currentRoute != "features") {
           Get.to(
             routeName: "features",
-            () => const FeaturesToImpliment(
-            ),
+            () => const FeaturesToImpliment(),
             curve: customCurve,
             transition: customTrans,
             duration: duration,
           );
         }
+        break;
+      case 7: // Settings
+        launchUrl(Uri.parse("https://wa.me/+918586047520"));
         break;
     }
   }

@@ -20,6 +20,7 @@ class SubscriptionsDetails extends StatefulWidget {
 class _SubscriptionsDetailsState extends State<SubscriptionsDetails> {
   @override
   Widget build(BuildContext context) {
+    debugPrint(widget.subscription.name);
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.subscription.name),
@@ -47,6 +48,9 @@ class _SubscriptionsDetailsState extends State<SubscriptionsDetails> {
                         child: Image(
                           width: 125.w,
                           height: 125.h,
+                          errorBuilder: (context, error, stackTrace) {
+                            return const Text('Image not found');
+                          },
                           image: AssetImage(
                               "assets/ottIcons/${widget.subscription.name.replaceAll(" ", "").toLowerCase()}.png"),
                         ),

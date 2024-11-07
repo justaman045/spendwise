@@ -3,10 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:spendwise/Models/subscription.dart';
 import 'package:spendwise/Requirements/data.dart';
+import 'package:spendwise/Utils/methods.dart';
 import 'package:spendwise/Utils/theme.dart';
 
-class SuscriptionManagerExpense extends StatefulWidget {
-  const SuscriptionManagerExpense({
+class SubscriptionManagerExpense extends StatefulWidget {
+  const SubscriptionManagerExpense({
     super.key,
     required this.getSubs,
   });
@@ -14,11 +15,11 @@ class SuscriptionManagerExpense extends StatefulWidget {
   final Function getSubs;
 
   @override
-  State<SuscriptionManagerExpense> createState() =>
-      _SuscriptionManagerExpenseState();
+  State<SubscriptionManagerExpense> createState() =>
+      _SubscriptionManagerExpenseState();
 }
 
-class _SuscriptionManagerExpenseState extends State<SuscriptionManagerExpense> {
+class _SubscriptionManagerExpenseState extends State<SubscriptionManagerExpense> {
   List<dynamic> subscriptions = [];
   double expense = 0;
 
@@ -42,7 +43,11 @@ class _SuscriptionManagerExpenseState extends State<SuscriptionManagerExpense> {
                 double totalExpense = 0; // Initialize totalExpense to 0
                 for (var subscription in subs) {
                   try {
-                    totalExpense += subscription.amount; // Attempt parsing
+                    if(stringToDateTime(subscription.toDate).difference(DateTime.now()).inDays > 31){
+                      totalExpense += (subscription.amount)/daysToMonths(stringToDateTime(subscription.toDate).difference(DateTime.now()).inDays)["months"]!; // Attempt parsing
+                    } else {
+                      totalExpense += subscription.amount; // Attempt parsing
+                    }
                   } on FormatException {
                     // Handle parsing error (e.g., log the error)
                     //TODO: Remove this

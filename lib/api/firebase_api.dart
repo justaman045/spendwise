@@ -1,9 +1,7 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:spendwise/Requirements/data.dart';
 import 'package:spendwise/Screens/cash_entry.dart';
 import 'package:spendwise/Screens/home_page.dart';
-import 'package:spendwise/main.dart';
 import 'package:get/get.dart';
 
 @pragma('vm:entry-point')

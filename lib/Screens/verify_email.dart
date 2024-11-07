@@ -1,6 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:spendwise/Components/available_balance.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:spendwise/Requirements/data.dart';
 import 'package:spendwise/Screens/home_page.dart';

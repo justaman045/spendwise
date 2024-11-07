@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:showcaseview/showcaseview.dart';
 import 'package:spendwise/Requirements/data.dart';
 import 'package:spendwise/Screens/home_page.dart';
 import 'package:spendwise/Screens/reset_password.dart';
@@ -20,14 +21,13 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
+  bool _showPassword = true;
+  // Editing Controller for the Input handleing
+  final TextEditingController emailEditingController = TextEditingController();
+  final TextEditingController passwordEditingController =
+      TextEditingController();
   @override
   Widget build(BuildContext context) {
-    // Editing Controller for the Input handleing
-    final TextEditingController emailEditingController =
-        TextEditingController();
-    final TextEditingController passwordEditingController =
-        TextEditingController();
-
     // Render the Login Screen
     return Scaffold(
       body: Stack(
@@ -151,9 +151,20 @@ class _LoginState extends State<Login> {
                             },
                             keyboardType: TextInputType.text,
                             controller: passwordEditingController,
-                            obscureText: true,
-                            decoration: const InputDecoration(
+                            obscureText: _showPassword,
+                            decoration: InputDecoration(
                               hintText: "Password",
+                              suffixIcon: GestureDetector(
+                                onTap: () {
+                                  _showPassword = !_showPassword;
+                                  setState(() {});
+                                },
+                                child: Icon(
+                                  _showPassword
+                                      ? Icons.visibility_off_rounded
+                                      : Icons.visibility_rounded,
+                                ),
+                              ),
                             ),
                           ),
                         ),
@@ -201,13 +212,16 @@ class _LoginState extends State<Login> {
                                 try {
                                   await FirebaseAuth.instance
                                       .signInWithEmailAndPassword(
-                                          email: emailEditingController.text,
-                                          password:
-                                              passwordEditingController.text);
-                                  if(FirebaseAuth.instance.currentUser!.emailVerified){
+                                    email: emailEditingController.text,
+                                    password: passwordEditingController.text,
+                                  );
+                                  if (FirebaseAuth
+                                      .instance.currentUser!.emailVerified) {
                                     Get.offAll(
                                       routeName: routes[3],
-                                          () => const HomePage(),
+                                      () => ShowCaseWidget(
+                                        builder: (context) => const HomePage(),
+                                      ),
                                       transition: customTrans,
                                       curve: customCurve,
                                       duration: duration,
@@ -215,7 +229,7 @@ class _LoginState extends State<Login> {
                                   } else {
                                     Get.offAll(
                                       routeName: routes[15],
-                                          () => const VerifyEmail(),
+                                      () => const VerifyEmail(),
                                       transition: customTrans,
                                       curve: customCurve,
                                       duration: duration,

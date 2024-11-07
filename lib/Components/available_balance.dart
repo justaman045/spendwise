@@ -20,8 +20,9 @@ class AvailableBalance extends StatelessWidget {
 
   double calculateBalance() {
     // Calculate available balance
-    return totalIncomeThisMonth(bankTransaction) -
-        totalExpenseThisMonth(bankTransaction);
+    // return totalIncomeThisMonth(bankTransaction) -
+    //     totalExpenseThisMonth(bankTransaction);
+    return totalBalanceRemaining(bankTransaction);
   }
 
   Color getTextColor(double balance) {

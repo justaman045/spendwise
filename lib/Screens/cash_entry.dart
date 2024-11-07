@@ -117,8 +117,8 @@ class _AddCashEntryState extends State<AddCashEntry> {
                           validator: (value) {
                             if (value!.isEmpty) {
                               return "Add a Recipient name";
-                            } else if (value.length < 4) {
-                              return "Name must be atleast 4 charecters";
+                            } else if (value.length < 3) {
+                              return "Name must be at-least 3 characters";
                             }
                             return null;
                           },

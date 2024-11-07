@@ -2,6 +2,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:showcaseview/showcaseview.dart';
 import 'package:spendwise/Components/available_balance.dart';
 import 'package:spendwise/Components/current_flow.dart';
 import 'package:spendwise/Components/custom_appbar.dart';
@@ -31,6 +33,10 @@ class _HomePageState extends State<HomePage> {
   Future? _future;
   dynamic _user;
   dynamic username;
+  final GlobalKey _one = GlobalKey();
+  final GlobalKey _two = GlobalKey();
+  final GlobalKey three = GlobalKey();
+  final GlobalKey _addCashEntry = GlobalKey();
 
   // Function to run everytime a user expects to refresh the data but the value is not being used
   Future<void> _refreshData() async {
@@ -39,7 +45,21 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  // Get the User from the Server and update the Current User only if the User Data have been recived
+  Future<void> _checkFirstTime() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool isFirstTime = prefs.getBool('isFirstTimeHomePage') ?? true;
+
+    if (isFirstTime) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        ShowCaseWidget.of(context)
+            .startShowCase([_one, _two, three, _addCashEntry]);
+      });
+
+      prefs.setBool('isFirstTimeHomePage', false);
+    }
+  }
+
+  // Get the User from the Server and update the Current User only if the User Data have been received
   Future<void> _getData() async {
     dynamic getUserData = await getUser();
     if (_user == null) {
@@ -54,6 +74,7 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     // _getData();
     super.initState();
+    _checkFirstTime();
   }
 
   @override
@@ -88,6 +109,7 @@ class _HomePageState extends State<HomePage> {
               // Custom AppBar for this Page
               appBar: CustomAppBar(
                 username: username["name"].toString(),
+                three: three,
               ),
               // Drawer of the App
               drawer: CustomDrawer(
@@ -101,14 +123,24 @@ class _HomePageState extends State<HomePage> {
                   child: Column(
                     children: [
                       // Available balance widget
-                      AvailableBalance(
-                        width: 300.h,
-                        bankTransaction: bankTransaction,
+                      Showcase(
+                        key: _one,
+                        description:
+                            "All of your Available Balance can be seen here",
+                        child: AvailableBalance(
+                          width: 300.h,
+                          bankTransaction: bankTransaction,
+                        ),
                       ),
 
                       // Current FLow of the Money based on the type of flow
-                      CurrentFlow(
-                        bankTransactions: bankTransaction,
+                      Showcase(
+                        key: _two,
+                        description:
+                            "All of your monthly Income and Expenses are here",
+                        child: CurrentFlow(
+                          bankTransactions: bankTransaction,
+                        ),
                       ),
 
                       // Header of the Transaction List
@@ -206,21 +238,25 @@ class _HomePageState extends State<HomePage> {
               ),
 
               // a floating action button to add the cash entry
-              floatingActionButton: FloatingActionButton.extended(
-                label: const Icon(Icons.add),
-                onPressed: () async {
-                  final toreload = await Get.to(
-                    routeName: routes[12],
-                    () => const AddCashEntry(),
-                    curve: customCurve,
-                    transition: customTrans,
-                    duration: duration,
-                  );
+              floatingActionButton: Showcase(
+                key: _addCashEntry,
+                description: "To add a New Entry",
+                child: FloatingActionButton.extended(
+                  label: const Icon(Icons.add),
+                  onPressed: () async {
+                    final toreload = await Get.to(
+                      routeName: routes[12],
+                      () => const AddCashEntry(),
+                      curve: customCurve,
+                      transition: customTrans,
+                      duration: duration,
+                    );
 
-                  if (toreload != null) {
-                    _refreshData();
-                  }
-                },
+                    if (toreload != null) {
+                      _refreshData();
+                    }
+                  },
+                ),
               ),
             );
 

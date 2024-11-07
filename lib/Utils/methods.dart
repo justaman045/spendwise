@@ -72,3 +72,52 @@ Map<String, int> daysToMonths(int days) {
     'remainingDays': remainingDays,
   };
 }
+
+int getTenureInDays(String tenure){
+  Duration difference;
+  switch (tenure) {
+    case "1 Day":
+      difference = const Duration(days: 1);
+      break;
+    case "3 Days":
+      difference = const Duration(days: 3);
+      break;
+    case "1 Week":
+      difference = const Duration(days: 7);
+      break;
+    case "28 Days":
+      difference = const Duration(days: 28);
+      break;
+    case "1 Month":
+      difference = const Duration(days: 30);
+      break;
+    case "56 Days":
+      difference = const Duration(days: 56);
+      break;
+    case "2 Months":
+      difference = const Duration(days: 60);
+      break;
+    case "84 Days":
+      difference = const Duration(days: 84);
+      break;
+    case "3 Months":
+      difference = const Duration(days: 90);
+      break;
+    case "4 Months":
+      difference = const Duration(days: 120);
+      break;
+    case "6 Months":
+      difference = const Duration(days: 180);
+      break;
+    case "8 Months":
+      difference = const Duration(days: 240);
+      break;
+    case "1 Year":
+      difference = const Duration(days: 365);
+      break;
+    default:
+      difference = const Duration(days: 0);
+  }
+
+  return difference.inDays;
+}

@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:showcaseview/showcaseview.dart';
 import 'package:spendwise/Models/db_helper.dart';
 import 'package:spendwise/Requirements/data.dart';
 import 'package:spendwise/Screens/cash_entry.dart';
@@ -41,8 +43,6 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  FirebaseApi().initNotification();
-
   // Initializing Theme Controller
   Get.put(ThemeModeController());
 
@@ -65,8 +65,7 @@ class _SpendWiseState extends State<SpendWise> {
   @override
   void initState() {
     super.initState();
-
-    // get Android SMS request
+    FirebaseApi().initNotification();
     _requestSmsPermission();
   }
 
@@ -116,7 +115,7 @@ class _SpendWiseState extends State<SpendWise> {
           // else show Intro Page
           home: loggedIn
               ? (currentUser.emailVerified
-                  ? const HomePage()
+                  ? ShowCaseWidget(builder : (context) => const HomePage())
                   : const VerifyEmail())
               : const Intro(),
         );

@@ -64,8 +64,12 @@ class FeaturesToImpliment extends StatelessWidget {
                 return Column(
                   children: [
                     Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 15.r, vertical: 10.h),
-                      child: Text("Features/Bugs Currently known to me, If you encounter any other bug please reach me out to me.", style: TextStyle(fontSize: 18.r),),
+                      padding: EdgeInsets.symmetric(
+                          horizontal: 15.r, vertical: 10.h),
+                      child: Text(
+                        "Features/Bugs Currently known to me, If you encounter any other bug please reach me out to me.",
+                        style: TextStyle(fontSize: 18.r),
+                      ),
                     ),
                     Padding(
                       padding: EdgeInsets.symmetric(
@@ -124,25 +128,51 @@ class FeaturesToImpliment extends StatelessWidget {
                 style: TextStyle(fontSize: 18.r, fontWeight: FontWeight.bold),
               ),
               Padding(
-                padding: EdgeInsets.only(left: 30.w),
+                padding: EdgeInsets.only(left: 15.w),
                 child: Text(point.description),
               ),
               if (point.subPoints != null)
-                ListView.builder(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemCount: point.subPoints!.length,
-                  itemBuilder: (context, index) => Text(
-                    "- ${point.subPoints![index].name}: ${point.subPoints![index].description}",
-                    style: const TextStyle(
-                        fontSize: 16, fontStyle: FontStyle.italic),
+                Padding(
+                  padding: EdgeInsets.only(left: 20.w),
+                  child: ListView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: point.subPoints!.length,
+                    itemBuilder: (context, index) => Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        SizedBox(
+                          width: 300.w,
+                          child: Row(
+                            children: [
+                              SizedBox(
+                                width: 300.w,
+                                child: Text(
+                                  "- ${point.subPoints![index].name}",
+                                  style: const TextStyle(
+                                      fontSize: 16, fontStyle: FontStyle.italic),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(left: 20.w),
+                          child: Text(
+                            point.subPoints![index].description,
+                            style: const TextStyle(
+                                fontSize: 16, fontStyle: FontStyle.italic),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
             ],
           ),
         ),
         SizedBox(
-          height: 10.h,
+          height: 20.h,
         )
       ],
     );

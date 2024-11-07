@@ -44,7 +44,7 @@ class _ActiveSubscriptionState extends State<ActiveSubscription> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SuscriptionManagerExpense(
+            SubscriptionManagerExpense(
               getSubs: _getSubscriptions,
             ),
             Padding(
@@ -75,6 +75,7 @@ class _ActiveSubscriptionState extends State<ActiveSubscription> {
                     );
                   }
                   List<Subscription> subscriptionList = snapshot.data!;
+                  debugPrint(subscriptionList[0].toDate.toString());
                   return Expanded(
                     child: ListView.builder(
                       itemCount: subscriptionList.length,
@@ -106,6 +107,9 @@ class _ActiveSubscriptionState extends State<ActiveSubscription> {
                                           "assets/ottIcons/${subscriptionList[index].name.replaceAll(" ", "").toLowerCase()}.png"),
                                       height: 30.h,
                                       width: 50.w,
+                                      errorBuilder: (context, error, stackTrace) {
+                                        return const Text('Image not found');
+                                      },
                                     ),
                                     Padding(
                                       padding: EdgeInsets.symmetric(

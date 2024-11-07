@@ -192,9 +192,9 @@ double totalAvailableBalance(List<CusTransaction> transactions) {
 double totalBalanceRemaining(List<CusTransaction> transactions) {
   double income = 0;
   for (var element in transactions) {
-    if (element.typeOfTransaction == typeOfTransaction[0]) {
+    if (element.typeOfTransaction.toLowerCase() == typeOfTransaction[0].toLowerCase()) {
       income += element.amount;
-    } else if (element.typeOfTransaction != typeOfTransaction[0]) {
+    } else if (element.typeOfTransaction.toLowerCase() != typeOfTransaction[0].toLowerCase()) {
       income -= element.amount;
     }
   }

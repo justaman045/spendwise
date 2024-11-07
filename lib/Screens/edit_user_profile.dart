@@ -139,6 +139,7 @@ class _EditUserProfileState extends State<EditUserProfile> {
                           child: SizedBox(
                             height: 60.h,
                             child: TextFormField(
+                              readOnly: true,
                               controller: emailEditingController,
                               style: TextStyle(fontSize: 15.r),
                               validator: (value) {
