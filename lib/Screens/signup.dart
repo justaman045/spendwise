@@ -11,21 +11,27 @@ import "package:spendwise/Utils/theme.dart";
 final _formKey = GlobalKey<FormState>();
 
 // TODO: Reduce Lines of Code
-class SignUp extends StatelessWidget {
+class SignUp extends StatefulWidget {
   const SignUp({super.key});
 
   @override
+  State<SignUp> createState() => _SignUpState();
+}
+
+class _SignUpState extends State<SignUp> {
+  final TextEditingController nameEditingController = TextEditingController();
+  final TextEditingController emailEditingController =
+  TextEditingController();
+  final TextEditingController passwordEditingController =
+  TextEditingController();
+  final TextEditingController cpasswordEditingController =
+  TextEditingController();
+  final TextEditingController dreamSavingsController =
+  TextEditingController();
+  final TextEditingController userNameController = TextEditingController();
+  bool _showPassword = true;
+  @override
   Widget build(BuildContext context) {
-    final TextEditingController nameEditingController = TextEditingController();
-    final TextEditingController emailEditingController =
-        TextEditingController();
-    final TextEditingController passwordEditingController =
-        TextEditingController();
-    final TextEditingController cpasswordEditingController =
-        TextEditingController();
-    final TextEditingController dreamSavingsController =
-        TextEditingController();
-    final TextEditingController userNameController = TextEditingController();
     return Scaffold(
       body: Stack(
         children: [
@@ -185,9 +191,20 @@ class SignUp extends StatelessWidget {
                               }
                               return null;
                             },
-                            obscureText: true,
-                            decoration: const InputDecoration(
+                            obscureText: _showPassword,
+                            decoration: InputDecoration(
                               hintText: "Password",
+                              suffixIcon: GestureDetector(
+                                onTap: () {
+                                  _showPassword = !_showPassword;
+                                  setState(() {});
+                                },
+                                child: Icon(
+                                  _showPassword
+                                      ? Icons.visibility_off_rounded
+                                      : Icons.visibility_rounded,
+                                ),
+                              ),
                             ),
                           ),
                         ),
@@ -209,9 +226,20 @@ class SignUp extends StatelessWidget {
                               }
                               return null;
                             },
-                            obscureText: true,
-                            decoration: const InputDecoration(
+                            obscureText: _showPassword,
+                            decoration: InputDecoration(
                               hintText: "Confirm Password",
+                              suffixIcon: GestureDetector(
+                                onTap: () {
+                                  _showPassword = !_showPassword;
+                                  setState(() {});
+                                },
+                                child: Icon(
+                                  _showPassword
+                                      ? Icons.visibility_off_rounded
+                                      : Icons.visibility_rounded,
+                                ),
+                              ),
                             ),
                           ),
                         ),
@@ -241,12 +269,12 @@ class SignUp extends StatelessWidget {
                             controller: dreamSavingsController,
                             validator: (value) {
                               if (value!.isEmpty) {
-                                return "You have to give a Amount between 50 - 100000";
+                                return "You have to give a Amount between 50 - 1,00,00,000";
                               }
                               return null;
                             },
                             decoration: const InputDecoration(
-                              hintText: "Dream Amount to Save",
+                              hintText: "Monthly Salary",
                             ),
                           ),
                         ),

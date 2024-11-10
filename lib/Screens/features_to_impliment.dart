@@ -58,40 +58,34 @@ class FeaturesToImpliment extends StatelessWidget {
               // Handle as a single Object
               // Access points from the single object (adjust based on your structure)
               final List<dynamic> points = jsonData['points'] as List<dynamic>;
-              if (points != null) {
-                final processedPoints =
-                    points.map((point) => Point.fromJson(point)).toList();
-                return Column(
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.symmetric(
-                          horizontal: 15.r, vertical: 10.h),
-                      child: Text(
-                        "Features/Bugs Currently known to me, If you encounter any other bug please reach me out to me.",
-                        style: TextStyle(fontSize: 18.r),
-                      ),
+              final processedPoints =
+                  points.map((point) => Point.fromJson(point)).toList();
+              return Column(
+                children: [
+                  Padding(
+                    padding: EdgeInsets.symmetric(
+                        horizontal: 15.r, vertical: 10.h),
+                    child: Text(
+                      "Features/Bugs Currently known to me, If you encounter any other bug please reach me out to me.",
+                      style: TextStyle(fontSize: 18.r),
                     ),
-                    Padding(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 30.w,
-                      ),
-                      child: const Divider(),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 30.w,
                     ),
-                    Expanded(
-                      child: ListView.builder(
-                        itemCount: processedPoints.length,
-                        itemBuilder: (context, index) =>
-                            _buildPointItem(processedPoints[index]),
-                      ),
+                    child: const Divider(),
+                  ),
+                  Expanded(
+                    child: ListView.builder(
+                      itemCount: processedPoints.length,
+                      itemBuilder: (context, index) =>
+                          _buildPointItem(processedPoints[index]),
                     ),
-                  ],
-                );
-              } else {
-                // Handle case where "points" key might not exist
-                return const Center(
-                    child: Text('Error: JSON object missing "points" key'));
-              }
-            } else {
+                  ),
+                ],
+              );
+                        } else {
               return const Center(child: Text('Unknown JSON data structure'));
             }
           } else {

@@ -43,7 +43,6 @@ class _AddCashEntryState extends State<AddCashEntry> {
       MultiSelectController<String>();
   List<PeopleBalance> _peopleBalanceList = [];
   List<PeopleBalance> people = [];
-  Future? _future;
   double updatedAmount = 0;
   late CusTransaction transaction;
 
@@ -56,7 +55,7 @@ class _AddCashEntryState extends State<AddCashEntry> {
   Future<void> _refreshData() async {
     setState(() {
       _peopleBalanceList.clear();
-      _future = PeopleBalanceSharedMethods().getAllPeopleBalance();
+      PeopleBalanceSharedMethods().getAllPeopleBalance();
     });
   }
 

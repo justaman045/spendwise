@@ -9,7 +9,6 @@ import "package:spendwise/Models/subscription.dart";
 import "package:spendwise/Requirements/data.dart";
 import "package:spendwise/Screens/active_subscription.dart";
 import "package:spendwise/Screens/add_subscriptions.dart";
-import "package:spendwise/Screens/subscriptions_details.dart";
 import "package:spendwise/Utils/methods.dart";
 import "package:spendwise/Utils/subscription_methods.dart";
 import "package:spendwise/Utils/theme.dart";
@@ -27,7 +26,6 @@ class _SubscriptionManagerState extends State<SubscriptionManager> {
   final GlobalKey _showcasekey = GlobalKey();
   dynamic subslengthE = 0;
   dynamic subslengthA = 0;
-  Future? _future;
   final GlobalKey _subscriptionExpense = GlobalKey();
   final GlobalKey _addAExpense = GlobalKey();
 
@@ -129,8 +127,9 @@ class _SubscriptionManagerState extends State<SubscriptionManager> {
   }
 
   Future<void> _refreshData() async {
+    dynamic data;
     setState(() {
-      _future = _getSubscriptions();
+      data = _getSubscriptions();
     });
   }
 
@@ -191,7 +190,7 @@ class _SubscriptionManagerState extends State<SubscriptionManager> {
               ),
             ),
             FutureBuilder(
-              future: _future,
+              future: _getSubscriptions(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.done) {
                   if (snapshot.data == null) {

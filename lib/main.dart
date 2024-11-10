@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:showcaseview/showcaseview.dart';
 import 'package:spendwise/Models/db_helper.dart';
 import 'package:spendwise/Requirements/data.dart';
@@ -65,8 +64,16 @@ class _SpendWiseState extends State<SpendWise> {
   @override
   void initState() {
     super.initState();
-    FirebaseApi().initNotification();
-    _requestSmsPermission();
+    FirebaseApi().initNotification().then((value) => _requestSmsPermission().then((value) => _requestStoragePermission()));
+
+  }
+
+  Future<void> _requestStoragePermission() async {
+    if (await Permission.manageExternalStorage
+        .request()
+        .isGranted) {
+      await Permission.manageExternalStorage.request();
+    }
   }
 
   Future<void> _requestSmsPermission() async {

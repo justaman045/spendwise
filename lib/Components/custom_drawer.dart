@@ -84,7 +84,7 @@ class CustomDrawer extends StatelessWidget {
                 navBars.keys.elementAt(i),
                 style: TextStyle(fontSize: 15.w),
               ),
-              onTap: () => _handleNavigation(context, i),
+              onTap: () { _handleNavigation(context, i); },
             ),
         ],
       ),

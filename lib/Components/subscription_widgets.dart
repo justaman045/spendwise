@@ -72,7 +72,7 @@ class SubscriptionWidgets extends StatelessWidget {
                             if (stringToDateTime(subscriptionList[index].toDate)
                                     .difference(DateTime.now())
                                     .inDays <=
-                                7) ...[Text("Expiring this Week")],
+                                7) ...[const Text("Expiring this Week")],
                             if ((stringToDateTime(
                                             subscriptionList[index].toDate)
                                         .difference(DateTime.now())
@@ -82,7 +82,7 @@ class SubscriptionWidgets extends StatelessWidget {
                                             subscriptionList[index].toDate)
                                         .difference(DateTime.now())
                                         .inDays <=
-                                    14)) ...[Text("Expiring Next Week")],
+                                    14)) ...[const Text("Expiring Next Week")],
                             if((stringToDateTime(subscriptionList[index].toDate).difference(DateTime.now()).inDays < 30) || (stringToDateTime(subscriptionList[index].toDate).difference(DateTime.now()).inDays < 28)) ...[
                               Text(
                                   "${stringToDateTime(subscriptionList[index].toDate).difference(DateTime.now()).inDays} days Remaining"),

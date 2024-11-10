@@ -27,6 +27,12 @@ class _ActiveSubscriptionState extends State<ActiveSubscription> {
         .toList();
   }
 
+  Future<void> _refreshData() async {
+    setState(() {
+      _getSubscriptions();
+    });
+  }
+
   @override
   void initState() {
     super.initState();
@@ -40,7 +46,7 @@ class _ActiveSubscriptionState extends State<ActiveSubscription> {
         centerTitle: true,
       ),
       body: RefreshIndicator(
-        onRefresh: _getSubscriptions,
+        onRefresh: _refreshData,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

@@ -20,7 +20,6 @@ class People extends StatefulWidget {
 
 class _PeopleState extends State<People> {
   final _peopleBalanceList = <PeopleBalance>[];
-  Future? _future;
   final GlobalKey _addAPeople = GlobalKey();
 
   Future<void> _checkFirstTime() async {
@@ -47,7 +46,7 @@ class _PeopleState extends State<People> {
   Future<void> _refreshData() async {
     setState(() {
       _peopleBalanceList.clear();
-      _future = PeopleBalanceSharedMethods().getAllPeopleBalance();
+      PeopleBalanceSharedMethods().getAllPeopleBalance();
     });
   }
 

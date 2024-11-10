@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:showcaseview/showcaseview.dart';
 import 'package:spendwise/Models/people_expense.dart';
 import 'package:spendwise/Requirements/data.dart';
 import 'package:spendwise/Requirements/transaction.dart';
@@ -234,7 +235,11 @@ class _AddPeopleState extends State<AddPeople> {
                           PeopleBalanceSharedMethods()
                               .insertPeopleBalance(peopleBalance)
                               .then(
-                                (value) => Get.offAll(() => const HomePage(),
+                                (value) => Get.offAll(
+                                    () => ShowCaseWidget(
+                                          builder: (context) =>
+                                              const HomePage(),
+                                        ),
                                     curve: customCurve,
                                     duration: duration,
                                     transition: customTrans),
