@@ -2,6 +2,8 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
+import 'package:get/get_common/get_reset.dart';
 
 class Point {
   final String name;
@@ -63,8 +65,8 @@ class FeaturesToImpliment extends StatelessWidget {
               return Column(
                 children: [
                   Padding(
-                    padding: EdgeInsets.symmetric(
-                        horizontal: 15.r, vertical: 10.h),
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 15.r, vertical: 10.h),
                     child: Text(
                       "Features/Bugs Currently known to me, If you encounter any other bug please reach me out to me.",
                       style: TextStyle(fontSize: 18.r),
@@ -85,7 +87,7 @@ class FeaturesToImpliment extends StatelessWidget {
                   ),
                 ],
               );
-                        } else {
+            } else {
               return const Center(child: Text('Unknown JSON data structure'));
             }
           } else {
@@ -125,7 +127,7 @@ class FeaturesToImpliment extends StatelessWidget {
                 padding: EdgeInsets.only(left: 15.w),
                 child: Text(point.description),
               ),
-              if (point.subPoints != null)
+              if (point.subPoints != null) ...[
                 Padding(
                   padding: EdgeInsets.only(left: 20.w),
                   child: ListView.builder(
@@ -144,7 +146,8 @@ class FeaturesToImpliment extends StatelessWidget {
                                 child: Text(
                                   "- ${point.subPoints![index].name}",
                                   style: const TextStyle(
-                                      fontSize: 16, fontStyle: FontStyle.italic),
+                                      fontSize: 16,
+                                      fontStyle: FontStyle.italic),
                                 ),
                               ),
                             ],
@@ -162,6 +165,16 @@ class FeaturesToImpliment extends StatelessWidget {
                     ),
                   ),
                 ),
+              ] else ...[
+                // Display "NO" when subPoints is null or empty
+                Padding(
+                  padding: EdgeInsets.only(left: 15.w),
+                  child: const Text(
+                    "None of the Features have already been Implemented",
+                    style: TextStyle(fontSize: 16, color: Colors.grey),
+                  ),
+                ),
+              ]
             ],
           ),
         ),
