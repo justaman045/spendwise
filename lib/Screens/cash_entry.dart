@@ -30,6 +30,7 @@ class _AddCashEntryState extends State<AddCashEntry> {
   TextEditingController amountEditingController = TextEditingController();
   TextEditingController typeOftransactionEditingController =
       TextEditingController();
+  String save = "";
   TextEditingController expenseTypeEditingController = TextEditingController();
   TextEditingController endingRecurring = TextEditingController();
   String typeOfexp = "";
@@ -254,6 +255,21 @@ class _AddCashEntryState extends State<AddCashEntry> {
                                 typeOftransactionEditingController.text =
                                     typeOftransaction;
                               }
+                              if (typeOftransactionEditingController.text
+                                  .toLowerCase() ==
+                                  typeOfTransaction[4].toLowerCase()) {
+                                for (PeopleBalance people
+                                in _peopleBalanceList) {
+                                  if(multiSelectDropDownController.selectedItems[0].label.toLowerCase() == people.name.toLowerCase()){
+                                    save = amountEditingController.text;
+                                    amountEditingController.text = people.amount.toString();
+                                  }
+                                }
+                              } else if((typeOftransactionEditingController.text
+                                  .toLowerCase() !=
+                                  typeOfTransaction[4].toLowerCase()) && save != ""){
+                                amountEditingController.text = save;
+                              }
                               setState(() {});
                             },
                           ),
@@ -300,9 +316,11 @@ class _AddCashEntryState extends State<AddCashEntry> {
                             right: 20.w,
                           ),
                           child: MultiDropdown<String>(
+                            maxSelections: typeOftransaction.toLowerCase() ==
+                                    typeOfTransaction[4].toLowerCase()
+                                ? 1
+                                : 500,
                             controller: multiSelectDropDownController,
-                            onSelectionChange: (options) =>
-                                {debugPrint(options.toString())},
                             items: _peopleBalanceList.isEmpty
                                 ? []
                                 : _peopleBalanceList
@@ -325,6 +343,23 @@ class _AddCashEntryState extends State<AddCashEntry> {
                               }
 
                               return null;
+                            },
+                            onSelectionChange: (List<String> list) {
+                              if (typeOftransactionEditingController.text
+                                      .toLowerCase() ==
+                                  typeOfTransaction[4].toLowerCase()) {
+                                for (PeopleBalance people
+                                    in _peopleBalanceList) {
+                                  if(multiSelectDropDownController.selectedItems[0].label.toLowerCase() == people.name.toLowerCase()){
+                                    save = amountEditingController.text;
+                                    amountEditingController.text = people.amount.toString();
+                                  }
+                                }
+                              } else if((typeOftransactionEditingController.text
+                                  .toLowerCase() !=
+                                  typeOfTransaction[4].toLowerCase()) && save != ""){
+                                amountEditingController.text = save;
+                              }
                             },
                           ),
                         ),
@@ -563,17 +598,17 @@ class _AddCashEntryState extends State<AddCashEntry> {
                                         .selectedItems) {
                                   if (name.label == peopleBalance.name) {
                                     double newAmount = peopleBalance.amount;
-                                    if(peopleBalance.amount.toInt() > 0){
+                                    if (peopleBalance.amount.toInt() > 0) {
                                       newAmount -= (double.parse(
-                                          amountEditingController.text) /
+                                              amountEditingController.text) /
                                           (multiSelectDropDownController
-                                              .selectedItems.length +
+                                                  .selectedItems.length +
                                               (toIncludeYourself ? 0 : 1)));
                                     } else {
                                       newAmount += (double.parse(
-                                          amountEditingController.text) /
+                                              amountEditingController.text) /
                                           (multiSelectDropDownController
-                                              .selectedItems.length +
+                                                  .selectedItems.length +
                                               (toIncludeYourself ? 0 : 1)));
                                     }
                                     PeopleBalanceSharedMethods()

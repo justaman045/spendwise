@@ -10,7 +10,6 @@ import "package:spendwise/Screens/home_page.dart";
 import "package:spendwise/Screens/people.dart";
 import "package:spendwise/Screens/settings.dart";
 import "package:spendwise/Screens/subscription.dart";
-import "package:spendwise/Screens/test.dart";
 import "package:spendwise/Screens/user_profile.dart";
 import "package:spendwise/Utils/theme.dart";
 import "package:url_launcher/url_launcher.dart"; // Assuming MyAppColors is defined here
@@ -38,8 +37,9 @@ class CustomDrawer extends StatelessWidget {
       "Settings": CupertinoIcons.settings_solid,
       "Features yet to Implement": CupertinoIcons.tray_full,
       "Contact me for Feature Suggestion": Icons.contact_emergency,
-      "Reciept": Icons.one_k_outlined
     };
+
+    final settingsIndex = navBars.keys.toList().indexOf("Settings");
 
     return Drawer(
       width: 250.w,
@@ -78,8 +78,25 @@ class CustomDrawer extends StatelessWidget {
             ),
           ),
 
-          // Dynamic list of drawer items based on navBars
-          for (int i = 0; i < navBars.length; i++)
+          // Items before Settings
+          for (int i = 0; i <= settingsIndex; i++)
+            ListTile(
+              leading: Icon(navBars.values.elementAt(i)),
+              title: Text(
+                navBars.keys.elementAt(i),
+                style: TextStyle(fontSize: 15.w),
+              ),
+              onTap: () { _handleNavigation(context, i); },
+            ),
+
+          // Divider before items after Settings
+          Padding(
+            padding: EdgeInsets.symmetric(vertical: 75.h),
+            child: const Spacer(),
+          ),
+
+          // Items after Settings
+          for (int i = settingsIndex + 1; i < navBars.length; i++)
             ListTile(
               leading: Icon(navBars.values.elementAt(i)),
               title: Text(
@@ -185,17 +202,6 @@ class CustomDrawer extends StatelessWidget {
         break;
       case 7: // Settings
         launchUrl(Uri.parse("https://wa.me/+918586047520"));
-        break;
-      case 8: // Settings
-        if (currentRoute != "receipt") {
-          Get.to(
-            routeName: "receipt",
-                () => const Reciept(),
-            curve: customCurve,
-            transition: customTrans,
-            duration: duration,
-          );
-        }
         break;
     }
   }

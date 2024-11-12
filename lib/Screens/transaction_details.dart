@@ -618,6 +618,6 @@ _shareScreenshot();
                     );
 
                     final file = File(join("/storage/emulated/0/Download",'${widget.expenseType} to ${widget.toName}.pdf'));
-                    await file.writeAsBytes(await pdf.save());
+                    await file.writeAsBytes(await pdf.save()).then((value) => Get.snackbar("PDF Saved", "A sharable PDF file has been saved in your Downloads Directory"));
                   }
 }

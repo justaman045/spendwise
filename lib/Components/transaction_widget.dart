@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:spendwise/Requirements/data.dart';
+import 'package:spendwise/Requirements/transaction.dart';
 import 'package:spendwise/Screens/transaction_details.dart';
 
 // Represents a single transaction with details and navigation
@@ -68,7 +69,7 @@ class _TransactionWidgetState extends State<TransactionWidget> {
               child: Padding(
                 padding: EdgeInsets.all(13.w),
                 child: Icon(
-                  Icons.shopping_cart,
+                  getIconData(widget.expenseType),
                   size: 20.r,
                 ),
               ),

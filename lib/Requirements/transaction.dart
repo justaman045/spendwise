@@ -179,9 +179,11 @@ double totalIncomeThisMonth(List<CusTransaction> transactions) {
 double totalAvailableBalance(List<CusTransaction> transactions) {
   double income = 0;
   for (var element in transactions) {
-    if (element.typeOfTransaction.toString().toLowerCase() == typeOfTransaction[0].toString().toLowerCase()) {
+    if (element.typeOfTransaction.toString().toLowerCase() ==
+        typeOfTransaction[0].toString().toLowerCase()) {
       income += element.amount;
-    } else if (element.typeOfTransaction.toString().toLowerCase() != typeOfTransaction[0].toString().toLowerCase()) {
+    } else if (element.typeOfTransaction.toString().toLowerCase() !=
+        typeOfTransaction[0].toString().toLowerCase()) {
       income -= element.amount;
     }
   }
@@ -192,9 +194,11 @@ double totalAvailableBalance(List<CusTransaction> transactions) {
 double totalBalanceRemaining(List<CusTransaction> transactions) {
   double income = 0;
   for (var element in transactions) {
-    if (element.typeOfTransaction.toLowerCase() == typeOfTransaction[0].toLowerCase()) {
+    if (element.typeOfTransaction.toLowerCase() ==
+        typeOfTransaction[0].toLowerCase()) {
       income += element.amount;
-    } else if (element.typeOfTransaction.toLowerCase() != typeOfTransaction[0].toLowerCase()) {
+    } else if (element.typeOfTransaction.toLowerCase() !=
+        typeOfTransaction[0].toLowerCase()) {
       income -= element.amount;
     }
   }
@@ -388,4 +392,48 @@ List<CusTransaction> combineTransactions(
   combinedList.sort((a, b) => a.dateAndTime.compareTo(b.dateAndTime));
 
   return combinedList;
+}
+
+IconData getIconData(String typeOfExp) {
+  IconData icon = Icons.miscellaneous_services;
+  if (typeOfExpense[0].toLowerCase() == typeOfExp.toLowerCase()) {
+    icon = Icons.motorcycle_rounded;
+  }
+  if (typeOfExpense[1].toLowerCase() == typeOfExp.toLowerCase()) {
+    icon = Icons.receipt;
+  }
+  if (typeOfExpense[2].toLowerCase() == typeOfExp.toLowerCase()) {
+    icon = Icons.receipt_long;
+  }
+  if (typeOfExpense[3].toLowerCase() == typeOfExp.toLowerCase()) {
+    icon = Icons.movie_filter_sharp;
+  }
+  if (typeOfExpense[4].toLowerCase() == typeOfExp.toLowerCase()) {
+    icon = Icons.emoji_food_beverage_rounded;
+  }
+  if (typeOfExpense[5].toLowerCase() == typeOfExp.toLowerCase()) {
+    icon = const IconData(0xea8e, fontFamily: 'MaterialIcons');
+  }
+  if (typeOfExpense[6].toLowerCase() == typeOfExp.toLowerCase()) {
+    icon = Icons.local_grocery_store_rounded;
+  }
+  if (typeOfExpense[7].toLowerCase() == typeOfExp.toLowerCase()) {
+    icon = Icons.health_and_safety;
+  }
+  if (typeOfExpense[8].toLowerCase() == typeOfExp.toLowerCase()) {
+    icon = Icons.money;
+  }
+  if (typeOfExpense[10].toLowerCase() == typeOfExp.toLowerCase()) {
+    icon = Icons.shopping_bag_outlined;
+  }
+  if (typeOfExpense[11].toLowerCase() == typeOfExp.toLowerCase()) {
+    icon = Icons.currency_exchange_outlined;
+  }
+  if (typeOfExpense[12].toLowerCase() == typeOfExp.toLowerCase()) {
+    icon = Icons.currency_exchange_outlined;
+  }
+  if (typeOfExpense[13].toLowerCase() == typeOfExp.toLowerCase()) {
+    icon = Icons.travel_explore_rounded;
+  }
+  return icon;
 }
