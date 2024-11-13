@@ -1,3 +1,10 @@
+import 'dart:io';
+
+import 'package:file_picker/file_picker.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:path/path.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spendwise/Requirements/data.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -25,6 +32,10 @@ class DatabaseHelper {
 
   /// Creates the initial database structure.
   Future<void> _onCreate(Database db, int version) async {
+
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    await preferences.clear();
+
     // Create Transactions table
     await db.execute('''
       CREATE TABLE $tableName (
@@ -75,4 +86,70 @@ class DatabaseHelper {
       )
     ''');
   }
+
+  Future<String> exportDatabase() async {
+    String backupPath ="";
+    // Get the database path
+    final databasesPath = await getDatabasesPath();
+    final dbPath = join(databasesPath, 'spendwise.db');
+
+    // Get the Downloads directory
+    final downloadsDirectory = await getDownloadsDirectory();
+
+    if (downloadsDirectory != null) {
+
+      if(Platform.isAndroid){
+        backupPath = join("/storage/emulated/0/Download", 'spendwise_backup.db');
+      } else {
+        backupPath = join(downloadsDirectory.path, 'spendwise_backup.db');
+      }
+
+      // Copy the database file
+      await File(dbPath).copy(backupPath);
+      debugPrint('Database copied to Downloads folder successfully!');
+    } else {
+      debugPrint('Could not access Downloads folder.');
+    }
+    return backupPath;
+  }
+
+  Future<void> importDatabase() async {
+    final dbPath = await getDatabasesPath();
+    final path = '$dbPath/spendwise.db';
+    debugPrint(path);
+    final result = await FilePicker.platform.pickFiles();
+    if (result != null) {
+      final file = result.files.first;
+      if(file.path != null){
+        if(_database != null){
+          await _database!.close();
+        }
+        File(path).delete();
+        File(file.path!).copy(join(path));
+      }
+    } else {
+      // User canceled the file picker
+    }
+
+
+  }
+
+  Future<int> getTotalEntryCount() async {
+    final db = await database;
+
+    // List of table names (replace with your actual table names)
+    final tableNames = ['transactions', 'subscriptions', 'peopleBalance', 'expenseTypes'];
+
+    int totalEntries = 0;
+
+    for (final tableName in tableNames) {
+      final result = await db.rawQuery('SELECT COUNT(*) FROM $tableName');
+      final count = Sqflite.firstIntValue(result);
+      totalEntries += count!;
+    }
+
+    return totalEntries;
+  }
+
+
 }

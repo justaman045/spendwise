@@ -29,18 +29,18 @@ const String introText =
 const String introSkipLogin = "Use app without Login/Signup for Free forever.";
 const bool skipSignIn = false;
 const int animationDuration = 2;
-const Transition customTrans = Transition.circularReveal;
-const Curve customCurve = Curves.bounceInOut;
+const Transition customTrans = Transition.cupertino;
+const Curve customCurve = Curves.easeInOut;
 const Duration duration = Duration(seconds: 1);
 const List<String> typeOfTransaction = [
   "income",
   "expense",
   "he/She Didn't Pay",
-  "you Didn't Paid"
+  "you Didn't Paid",
+  "balancing People's Balance"
 ];
 const List<String> typeOfExpense = [
-  "Bike",
-  "Travel",
+  "Bike and Travel",
   "Bills",
   "EMI",
   "Entertainment",
@@ -52,7 +52,8 @@ const List<String> typeOfExpense = [
   "Other",
   "Shopping",
   "Transfer",
-  "Transfer to Self",
+  "Transfer to self",
+  "Travel"
 ];
 // const String openingQuery =
 //     "CREATE TABLE IF NOT EXISTS cus_transaction (amount REAL NOT NULL,  date_and_time TEXT NOT NULL,  name TEXT NOT NULL,  type_of_transaction TEXT NOT NULL,  expense_type TEXT,  transaction_reference_number INTEGER PRIMARY KEY);";

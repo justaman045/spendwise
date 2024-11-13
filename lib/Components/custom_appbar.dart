@@ -1,6 +1,7 @@
 import "package:flutter/material.dart";
 import "package:flutter_screenutil/flutter_screenutil.dart";
 import "package:get/get.dart";
+import "package:showcaseview/showcaseview.dart";
 import "package:spendwise/Requirements/data.dart";
 import "package:spendwise/Screens/recognized_accounts.dart";
 
@@ -8,10 +9,11 @@ import "package:spendwise/Screens/recognized_accounts.dart";
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   const CustomAppBar({
     super.key,
-    required this.username,
+    required this.username, required this.three,
   });
 
   final String username;
+  final GlobalKey three;
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +29,10 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 
       // Action icon for navigating to recognized accounts
       actions: [
-        IconButton(
+      Showcase(
+      key: three,
+      description: "All of your Wallets recognised can be seen from here",
+      child: IconButton(
           onPressed: () => Get.to(
             routeName: "Accounts",
             () => const RecognizedAccounts(),
@@ -40,7 +45,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
             size: 20.h,
           ),
           tooltip: "Wallets Recognised",
-        ),
+        ),),
       ],
     );
   }

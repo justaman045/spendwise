@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:showcaseview/showcaseview.dart';
 import 'package:spendwise/Models/db_helper.dart';
 import 'package:spendwise/Requirements/data.dart';
 import 'package:spendwise/Screens/cash_entry.dart';
@@ -41,8 +42,6 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  FirebaseApi().initNotification();
-
   // Initializing Theme Controller
   Get.put(ThemeModeController());
 
@@ -65,9 +64,16 @@ class _SpendWiseState extends State<SpendWise> {
   @override
   void initState() {
     super.initState();
+    FirebaseApi().initNotification().then((value) => _requestSmsPermission().then((value) => _requestStoragePermission()));
 
-    // get Android SMS request
-    _requestSmsPermission();
+  }
+
+  Future<void> _requestStoragePermission() async {
+    if (await Permission.manageExternalStorage
+        .request()
+        .isGranted) {
+      await Permission.manageExternalStorage.request();
+    }
   }
 
   Future<void> _requestSmsPermission() async {
@@ -76,21 +82,21 @@ class _SpendWiseState extends State<SpendWise> {
       // if the user is logged in then get user session
       final tcurrentUser = FirebaseAuth.instance.currentUser;
 
-      // get the current user that is already logged in and then if it is not null then update the currentUser
+      // get the current user that is already logged in and then if it is not
+      // null then update the currentUser
       if (tcurrentUser != null) {
         setState(() {
           currentUser = tcurrentUser;
         });
       }
     }
-
   }
 
   @override
   Widget build(BuildContext context) {
     bool loggedIn = true;
 
-    if(FirebaseAuth.instance.currentUser != null){
+    if (FirebaseAuth.instance.currentUser != null) {
       currentUser = FirebaseAuth.instance.currentUser!;
     } else {
       loggedIn = false;
@@ -112,8 +118,13 @@ class _SpendWiseState extends State<SpendWise> {
           themeMode: ThemeMode.system,
           darkTheme: MyAppThemes.darkTheme,
 
-          // if the user is logged in then show the homepage else show Intro Page
-          home: loggedIn ? (currentUser.emailVerified ? const HomePage() : const VerifyEmail()) : const Intro(),
+          // if the user is logged in then show the homepage
+          // else show Intro Page
+          home: loggedIn
+              ? (currentUser.emailVerified
+                  ? ShowCaseWidget(builder : (context) => const HomePage())
+                  : const VerifyEmail())
+              : const Intro(),
         );
       },
     );

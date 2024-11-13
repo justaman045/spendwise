@@ -1,6 +1,7 @@
 import "package:flutter/material.dart";
 import "package:flutter_screenutil/flutter_screenutil.dart";
 import "package:get/get.dart";
+import "package:showcaseview/showcaseview.dart";
 import "package:spendwise/Components/transaction_charts.dart";
 import "package:spendwise/Components/transaction_widget.dart";
 import "package:spendwise/Models/cus_transaction.dart";
@@ -34,6 +35,7 @@ class _AllTransactionsState extends State<AllTransactions> {
   // ignore: unused_field
   Future? _future;
   dynamic username;
+  final GlobalKey _one = GlobalKey();
 
   // Function to run everytime a user expects to refresh the data but the value is not being used
   Future<void> _refreshData() async {
@@ -47,6 +49,8 @@ class _AllTransactionsState extends State<AllTransactions> {
   void initState() {
     // _getData();
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback(
+            (_) => ShowCaseWidget.of(context).startShowCase([_one]));
   }
 
   @override

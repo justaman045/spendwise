@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:search_choices/search_choices.dart';
 import 'package:spendwise/Models/subscription.dart';
 import 'package:spendwise/Utils/methods.dart';
 import 'package:spendwise/Utils/subscription_methods.dart';
@@ -27,7 +28,7 @@ class _AddSubscriptionsState extends State<AddSubscriptions> {
   List<Subscription> subsbriptions = [];
   List<String> availableSubscriptions = [];
   bool isRecurring = false;
-
+  String? selectedValue;
 
   void getSubs() async {
     List<String> subs = await getSubscriptionApps();
@@ -40,6 +41,7 @@ class _AddSubscriptionsState extends State<AddSubscriptions> {
                 .inDays
                 .isLowerThan(0))))
         .toList();
+    availableSubscriptions.sort();
 
     setState(() {});
   }
@@ -76,24 +78,27 @@ class _AddSubscriptionsState extends State<AddSubscriptions> {
             ),
             Padding(
               padding: EdgeInsets.symmetric(vertical: 10.r),
-              child: DropdownButtonFormField(
-                decoration: InputDecoration(
-                  label: const Text("Name Of the Subscription"),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(15.r),
-                  ),
+              child: Container(
+                decoration: BoxDecoration(
+                    border: Border.all(color: Colors.white54),
+                    borderRadius: BorderRadius.all(Radius.circular(22.r))),
+                child: SearchChoices.single(
+                  items: availableSubscriptions
+                      .map((subs) => DropdownMenuItem(
+                            value: subs,
+                            child: Text(subs),
+                          ))
+                      .toList(),
+                  value: selectedValue,
+                  hint: "Select any Subscription Name",
+                  searchHint: "Select any Subscription Name",
+                  onChanged: (value) {
+                    setState(() {
+                      selectedValue = value;
+                    });
+                  },
+                  isExpanded: true,
                 ),
-                items: availableSubscriptions.map((subscriptionName) {
-                  return DropdownMenuItem(
-                    value: subscriptionName,
-                    child: Text(subscriptionName),
-                  );
-                }).toList(),
-                onChanged: (element) {
-                  if (element != null) {
-                    selectedApp = element;
-                  }
-                },
               ),
             ),
             Padding(
@@ -131,7 +136,21 @@ class _AddSubscriptionsState extends State<AddSubscriptions> {
                     borderRadius: BorderRadius.circular(15.r),
                   ),
                 ),
-                items: ["1 Day", "3 Days", "1 Week", "1 Month", "2 Months", "3 Months", "4 Months", "6 Months", "8 Months", "1 Year"].map((subscriptionName) {
+                items: [
+                  "1 Day",
+                  "3 Days",
+                  "1 Week",
+                  "28 Days",
+                  "1 Month",
+                  "56 Days",
+                  "2 Months",
+                  "84 Days",
+                  "3 Months",
+                  "4 Months",
+                  "6 Months",
+                  "8 Months",
+                  "1 Year"
+                ].map((subscriptionName) {
                   return DropdownMenuItem(
                     value: subscriptionName,
                     child: Text(subscriptionName),
@@ -197,59 +216,91 @@ class _AddSubscriptionsState extends State<AddSubscriptions> {
                     ),
                     child: TextButton(
                       onPressed: () {
-                        switch (selectedTenure){
-                          case "1 Day": {
-                            todate = fromdate!.add(const Duration(days: 1));
-                            break;
-                          }
-                          case "3 Days": {
-                            todate = fromdate!.add(const Duration(days: 3));
-                            break;
-                          }
-                          case "1 Week": {
-                            todate = fromdate!.add(const Duration(days: 7));
-                            break;
-                          }
-                          case "1 Month": {
-                            todate = fromdate!.add(const Duration(days: (30*1)));
-                            break;
-                          }
-                          case "2 Months": {
-                            todate = fromdate!.add(const Duration(days: (30*2)));
-                            break;
-                          }
-                          case "3 Months": {
-                            todate = fromdate!.add(const Duration(days: (30*3)));
-                            break;
-                          }
-                          case "4 Months": {
-                            todate = fromdate!.add(const Duration(days: (30*4)));
-                            break;
-                          }
-                          case "6 Months": {
-                            todate = fromdate!.add(const Duration(days: (30*6)));
-                            break;
-                          }
-                          case "8 Months": {
-                            todate = fromdate!.add(const Duration(days: (30*8)));
-                            break;
-                          }
-                          case "1 Year": {
-                            todate = fromdate!.add(const Duration(days: (30*12)));
-                            break;
-                          }
+                        switch (selectedTenure) {
+                          case "1 Day":
+                            {
+                              todate = fromdate!.add(const Duration(days: 1));
+                              break;
+                            }
+                          case "3 Days":
+                            {
+                              todate = fromdate!.add(const Duration(days: 3));
+                              break;
+                            }
+                          case "1 Week":
+                            {
+                              todate = fromdate!.add(const Duration(days: 7));
+                              break;
+                            }
+                          case "28 Days":
+                            {
+                              todate = fromdate!.add(const Duration(days: 28));
+                              break;
+                            }
+                          case "1 Month":
+                            {
+                              todate =
+                                  fromdate!.add(const Duration(days: (30 * 1)));
+                              break;
+                            }
+                          case "56 Days":
+                            {
+                              todate =
+                                  fromdate!.add(const Duration(days: (56)));
+                              break;
+                            }
+                          case "2 Months":
+                            {
+                              todate =
+                                  fromdate!.add(const Duration(days: (30 * 2)));
+                              break;
+                            }
+                          case "84 Days":
+                            {
+                              todate =
+                                  fromdate!.add(const Duration(days: (84)));
+                              break;
+                            }
+                          case "3 Months":
+                            {
+                              todate =
+                                  fromdate!.add(const Duration(days: (30 * 3)));
+                              break;
+                            }
+                          case "4 Months":
+                            {
+                              todate =
+                                  fromdate!.add(const Duration(days: (30 * 4)));
+                              break;
+                            }
+                          case "6 Months":
+                            {
+                              todate =
+                                  fromdate!.add(const Duration(days: (30 * 6)));
+                              break;
+                            }
+                          case "8 Months":
+                            {
+                              todate =
+                                  fromdate!.add(const Duration(days: (30 * 8)));
+                              break;
+                            }
+                          case "1 Year":
+                            {
+                              todate = DateTime(stringToDateTime(fromDate.text).year+1, stringToDateTime(fromDate.text).month, stringToDateTime(fromDate.text).day);
+                              debugPrint(todate.toString());
+                              break;
+                            }
                         }
-
                         if (fromdate != null && todate != null) {
-                            toDate.text = DateFormat.yMMMMd().format(todate!);
+                          toDate.text = DateFormat.yMMMMd().format(todate!);
                           Subscription subscription = Subscription(
-                            fromDate: fromDate.text,
-                            toDate: toDate.text,
-                            amount: double.parse(amount.text),
-                            isRecurring: isRecurring.toString(),
-                            name: selectedApp,
-                            tenure: selectedTenure
-                          );
+                              fromDate: fromDate.text,
+                              toDate: toDate.text,
+                              amount: double.parse(amount.text),
+                              isRecurring: isRecurring.toString(),
+                              name: selectedValue.toString(),
+                              tenure: selectedTenure);
                           SubscriptionMethods()
                               .insertSubscription(subscription)
                               .then((value) => Get.back(result: "refresh"));

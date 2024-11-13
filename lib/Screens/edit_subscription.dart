@@ -22,7 +22,7 @@ class EditSubscription extends StatefulWidget {
 
 class _EditSubscriptionState extends State<EditSubscription> {
   TextEditingController amountController = TextEditingController();
-  TextEditingController TenureController = TextEditingController();
+  TextEditingController tenureController = TextEditingController();
   TextEditingController endingRecurring = TextEditingController();
   TextEditingController dateController = TextEditingController();
   late bool isRecurring;
@@ -35,7 +35,7 @@ class _EditSubscriptionState extends State<EditSubscription> {
     isRecurring =
         widget.subscription.isRecurring.toString().toLowerCase() == "true";
     dateController.text = widget.subscription.fromDate;
-    TenureController.text = widget.subscription.tenure;
+    tenureController.text = widget.subscription.tenure;
     super.initState();
   }
 
@@ -184,7 +184,7 @@ class _EditSubscriptionState extends State<EditSubscription> {
                     }).toList(),
                     onChanged: (element) {
                       if (element != null) {
-                        TenureController.text = element;
+                        tenureController.text = element;
                       }
                     },
                   ),
@@ -222,7 +222,7 @@ class _EditSubscriptionState extends State<EditSubscription> {
                     DateTime? todate =
                         stringToDateTime(widget.subscription.toDate);
                     if (dateController.text != widget.subscription.fromDate &&
-                        widget.subscription.tenure == TenureController.text) {
+                        widget.subscription.tenure == tenureController.text) {
                       switch (widget.subscription.tenure) {
                         case "1 Day":
                           {
@@ -287,8 +287,8 @@ class _EditSubscriptionState extends State<EditSubscription> {
                       }
                     } else if (widget.subscription.fromDate !=
                             dateController.text &&
-                        TenureController.text != widget.subscription.tenure) {
-                      switch (TenureController.text) {
+                        tenureController.text != widget.subscription.tenure) {
+                      switch (tenureController.text) {
                         case "1 Day":
                           {
                             todate = stringToDateTime(dateController.text)
@@ -352,8 +352,8 @@ class _EditSubscriptionState extends State<EditSubscription> {
                       }
                     } else if (widget.subscription.fromDate ==
                             dateController.text &&
-                        TenureController.text != widget.subscription.tenure) {
-                      switch (TenureController.text) {
+                        tenureController.text != widget.subscription.tenure) {
+                      switch (tenureController.text) {
                         case "1 Day":
                           {
                             todate = stringToDateTime(dateController.text)
@@ -422,7 +422,7 @@ class _EditSubscriptionState extends State<EditSubscription> {
                       amount: double.parse(amountController.text),
                       name: widget.subscription.name,
                       isRecurring: isRecurring.toString(),
-                      tenure: TenureController.text,
+                      tenure: tenureController.text,
                     );
                     if (subscription.fromDate == widget.subscription.fromDate &&
                         subscription.toDate == widget.subscription.toDate &&

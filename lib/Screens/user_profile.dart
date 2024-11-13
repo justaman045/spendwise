@@ -1,9 +1,9 @@
-import "dart:math";
-
 import "package:firebase_auth/firebase_auth.dart";
 import "package:flutter/material.dart";
 import "package:flutter_screenutil/flutter_screenutil.dart";
 import "package:get/get.dart";
+import "package:shared_preferences/shared_preferences.dart";
+import "package:showcaseview/showcaseview.dart";
 import "package:spendwise/Models/cus_transaction.dart";
 import "package:spendwise/Requirements/data.dart";
 import "package:spendwise/Requirements/transaction.dart";
@@ -30,6 +30,8 @@ class _UserProfileState extends State<UserProfile> {
   Future? _future;
   dynamic _user;
   dynamic username;
+  final GlobalKey _allPayments = GlobalKey();
+  final GlobalKey _allIncome = GlobalKey();
 
   // // Function to run everytime a user expects to refresh the data but the value is not being used
   // Future<void> _refreshData() async {
@@ -38,7 +40,7 @@ class _UserProfileState extends State<UserProfile> {
   //   });
   // }
 
-  // Get the User from the Server and update the Current User only if the User Data have been recived
+  // Get the User from the Server and update the Current User only if the User Data have been received
   Future<void> _getData() async {
     dynamic getUserData = await getUser();
     if (_user == null) {
@@ -48,11 +50,25 @@ class _UserProfileState extends State<UserProfile> {
     }
   }
 
+  Future<void> _checkFirstTime() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool isFirstTime = prefs.getBool('isFirstTimeUserProfile') ?? true;
+
+    if (isFirstTime) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        ShowCaseWidget.of(context).startShowCase([_allPayments, _allIncome]);
+      });
+
+      prefs.setBool('isFirstTimeUserProfile', false);
+    }
+  }
+
   // Override default method to get the initial data beforehand only
   @override
   void initState() {
     // _getData();
     super.initState();
+    _checkFirstTime();
   }
 
   @override
@@ -71,6 +87,7 @@ class _UserProfileState extends State<UserProfile> {
               user = use;
             }
           }
+          bankTransaction = allTransactions(snapshot.data);
           return Scaffold(
             appBar: AppBar(
               title: Text(
@@ -100,7 +117,13 @@ class _UserProfileState extends State<UserProfile> {
                               width: 120.w,
                               height: 120.h,
                             ),
-                            Center(child: Image(image: const AssetImage("assets/pfp/4.png"),height: 105.h,)),
+                            Padding(
+                              padding: EdgeInsets.only(right: 15.w, top: 2.5.h),
+                              child: Image(
+                                image: const AssetImage("assets/pfp/4.png"),
+                                height: 110.h,
+                              ),
+                            ),
                           ],
                         ),
                         Padding(
@@ -123,7 +146,7 @@ class _UserProfileState extends State<UserProfile> {
                                     SizedBox(
                                       width: 150.w,
                                       child: Text(
-                                        "Rs. ${int.parse(user["dreamToSave"]) - totalAvailableBalance(bankTransaction)} more to Save",
+                                        "Rs. ${totalAvailableBalance(bankTransaction)} more to Save",
                                         style: TextStyle(fontSize: 13.r),
                                       ),
                                     ),
@@ -165,41 +188,51 @@ class _UserProfileState extends State<UserProfile> {
                     padding: EdgeInsets.symmetric(horizontal: 30.w),
                     child: const Divider(),
                   ),
-                  MyProfileButtons(
-                    fn: () {
-                      Get.to(
-                        routeName: routes[4],
-                        () => const AllTransactions(
-                          type: "withhiddenexpense",
-                          pageTitle: "All Payments",
-                          chartTitle: "Payments",
-                          chartType: "Payments",
-                        ),
-                        curve: customCurve,
-                        transition: customTrans,
-                        duration: duration,
-                      );
-                    },
-                    icons: Icons.wallet_rounded,
-                    text: "All Payments",
+                  Showcase(
+                    key: _allPayments,
+                    description:
+                        "All of your Payments can be viewed from here, even Expenses that are hidden",
+                    child: MyProfileButtons(
+                      fn: () {
+                        Get.to(
+                          routeName: routes[4],
+                          () => const AllTransactions(
+                            type: "withhiddenexpense",
+                            pageTitle: "All Payments",
+                            chartTitle: "Payments",
+                            chartType: "Payments",
+                          ),
+                          curve: customCurve,
+                          transition: customTrans,
+                          duration: duration,
+                        );
+                      },
+                      icons: Icons.wallet_rounded,
+                      text: "All Payments",
+                    ),
                   ),
-                  MyProfileButtons(
-                    fn: () {
-                      Get.to(
-                        routeName: "Monthly Income",
-                        () => const AllTransactions(
-                          type: "withhiddenincome",
-                          pageTitle: "All Income",
-                          chartTitle: "Income",
-                          chartType: "Income",
-                        ),
-                        transition: customTrans,
-                        curve: customCurve,
-                        duration: duration,
-                      );
-                    },
-                    icons: Icons.wallet_rounded,
-                    text: "All Income",
+                  Showcase(
+                    key: _allIncome,
+                    description:
+                        "All of your Income can be viewed from here, even Income that are hidden",
+                    child: MyProfileButtons(
+                      fn: () {
+                        Get.to(
+                          routeName: "Monthly Income",
+                          () => const AllTransactions(
+                            type: "withhiddenincome",
+                            pageTitle: "All Income",
+                            chartTitle: "Income",
+                            chartType: "Income",
+                          ),
+                          transition: customTrans,
+                          curve: customCurve,
+                          duration: duration,
+                        );
+                      },
+                      icons: Icons.wallet_rounded,
+                      text: "All Income",
+                    ),
                   ),
                   MyProfileButtons(
                     fn: () {

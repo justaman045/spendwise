@@ -90,7 +90,7 @@ class _EditUserProfileState extends State<EditUserProfile> {
                               controller: nameEditingController,
                               validator: (value) {
                                 if (value!.length < 4) {
-                                  return "Name must be atleast 4 Charecters";
+                                  return "Name must be at-least 4 Characters";
                                 }
                                 return null;
                               },
@@ -117,14 +117,14 @@ class _EditUserProfileState extends State<EditUserProfile> {
                               validator: (value) {
                                 if (int.parse(value!) > 10000000000 ||
                                     int.parse(value) < 50) {
-                                  return "Amount to Save must be between 50 - 10000000000";
+                                  return "state your Income per month";
                                 }
                                 return null;
                               },
                               style: TextStyle(fontSize: 15.r),
                               decoration: InputDecoration(
                                 label: Text(
-                                  "Dream to Save the amount of",
+                                  "Monthly Salary",
                                   style: TextStyle(fontSize: 15.r),
                                 ),
                               ),
@@ -139,6 +139,7 @@ class _EditUserProfileState extends State<EditUserProfile> {
                           child: SizedBox(
                             height: 60.h,
                             child: TextFormField(
+                              readOnly: true,
                               controller: emailEditingController,
                               style: TextStyle(fontSize: 15.r),
                               validator: (value) {

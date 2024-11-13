@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:showcaseview/showcaseview.dart';
 import 'package:spendwise/Models/people_expense.dart';
 import 'package:spendwise/Requirements/data.dart';
 import 'package:spendwise/Screens/add_people.dart';
 import 'package:spendwise/Utils/people_balance_shared_methods.dart';
+import 'package:spendwise/Utils/theme.dart';
 
 //TODO: Make page a bit beautiful
 
@@ -12,24 +15,38 @@ class People extends StatefulWidget {
   const People({super.key});
 
   @override
-  _PeopleState createState() => _PeopleState();
+  State<People> createState() => _PeopleState();
 }
 
 class _PeopleState extends State<People> {
   final _peopleBalanceList = <PeopleBalance>[];
-  // ignore: unused_field
-  Future? _future;
+  final GlobalKey _addAPeople = GlobalKey();
+
+  Future<void> _checkFirstTime() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool isFirstTime = prefs.getBool('isFirstTimePeople') ?? true;
+
+    if (isFirstTime) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        ShowCaseWidget.of(context)
+            .startShowCase([_addAPeople]);
+      });
+
+      prefs.setBool('isFirstTimePeople', false);
+    }
+  }
 
   @override
   void initState() {
     super.initState();
+    _checkFirstTime();
   }
 
   // Function to run everytime a user expects to refresh the data but the value is not being used
   Future<void> _refreshData() async {
     setState(() {
       _peopleBalanceList.clear();
-      _future = PeopleBalanceSharedMethods().getAllPeopleBalance();
+      PeopleBalanceSharedMethods().getAllPeopleBalance();
     });
   }
 
@@ -170,11 +187,22 @@ class _PeopleState extends State<People> {
                       child: Column(
                         children: [
                           const Text("No Balance to settle"),
-                          TextButton(
+                          SizedBox(height: 10.h,),
+                          Container(
+                            decoration: BoxDecoration(
+                              gradient: colorsOfGradient(),
+                              borderRadius: BorderRadius.circular(10.r),
+                            ),
+                            child: TextButton(
                               onPressed: () {
                                 _refreshData();
                               },
-                              child: const Text("Click Here to referesh"))
+                              child: const Text(
+                                "Click Here to refresh",
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            ),
+                          )
                         ],
                       ),
                     )
@@ -183,7 +211,10 @@ class _PeopleState extends State<People> {
               ),
 
               // a floating action button to add the cash entry
-              floatingActionButton: FloatingActionButton.extended(
+              floatingActionButton: Showcase(
+        key: _addAPeople,
+        description: "Add a new Person from here, to use this in New Transaction Page",
+        child: FloatingActionButton.extended(
                 label: const Icon(Icons.add),
                 onPressed: () async {
                   final toreload = await Get.to(
@@ -198,7 +229,7 @@ class _PeopleState extends State<People> {
                     _refreshData();
                   }
                 },
-              ),
+              ),),
             ),
           );
         } else {

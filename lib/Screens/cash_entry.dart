@@ -30,6 +30,7 @@ class _AddCashEntryState extends State<AddCashEntry> {
   TextEditingController amountEditingController = TextEditingController();
   TextEditingController typeOftransactionEditingController =
       TextEditingController();
+  String save = "";
   TextEditingController expenseTypeEditingController = TextEditingController();
   TextEditingController endingRecurring = TextEditingController();
   String typeOfexp = "";
@@ -43,10 +44,8 @@ class _AddCashEntryState extends State<AddCashEntry> {
       MultiSelectController<String>();
   List<PeopleBalance> _peopleBalanceList = [];
   List<PeopleBalance> people = [];
-  Future? _future;
   double updatedAmount = 0;
   late CusTransaction transaction;
-
 
   Future<void> _fetchData() async {
     _peopleBalanceList =
@@ -57,7 +56,7 @@ class _AddCashEntryState extends State<AddCashEntry> {
   Future<void> _refreshData() async {
     setState(() {
       _peopleBalanceList.clear();
-      _future = PeopleBalanceSharedMethods().getAllPeopleBalance();
+      PeopleBalanceSharedMethods().getAllPeopleBalance();
     });
   }
 
@@ -118,8 +117,8 @@ class _AddCashEntryState extends State<AddCashEntry> {
                           validator: (value) {
                             if (value!.isEmpty) {
                               return "Add a Recipient name";
-                            } else if (value.length < 4) {
-                              return "Name must be atleast 4 charecters";
+                            } else if (value.length < 3) {
+                              return "Name must be at-least 3 characters";
                             }
                             return null;
                           },
@@ -155,9 +154,9 @@ class _AddCashEntryState extends State<AddCashEntry> {
                           ],
                           validator: (value) {
                             if (value!.isEmpty) {
-                              return "Enter a amount that have been paid or recived";
-                            } else if (int.parse(value) <= 1) {
-                              return "Amount cannot be in negetive";
+                              return "Enter a amount that have been paid or received";
+                            } else if (int.parse(value) < 1) {
+                              return "Amount cannot be in negative";
                             }
                             return null;
                           },
@@ -256,6 +255,21 @@ class _AddCashEntryState extends State<AddCashEntry> {
                                 typeOftransactionEditingController.text =
                                     typeOftransaction;
                               }
+                              if (typeOftransactionEditingController.text
+                                  .toLowerCase() ==
+                                  typeOfTransaction[4].toLowerCase()) {
+                                for (PeopleBalance people
+                                in _peopleBalanceList) {
+                                  if(multiSelectDropDownController.selectedItems[0].label.toLowerCase() == people.name.toLowerCase()){
+                                    save = amountEditingController.text;
+                                    amountEditingController.text = people.amount.toString();
+                                  }
+                                }
+                              } else if((typeOftransactionEditingController.text
+                                  .toLowerCase() !=
+                                  typeOfTransaction[4].toLowerCase()) && save != ""){
+                                amountEditingController.text = save;
+                              }
                               setState(() {});
                             },
                           ),
@@ -302,9 +316,11 @@ class _AddCashEntryState extends State<AddCashEntry> {
                             right: 20.w,
                           ),
                           child: MultiDropdown<String>(
+                            maxSelections: typeOftransaction.toLowerCase() ==
+                                    typeOfTransaction[4].toLowerCase()
+                                ? 1
+                                : 500,
                             controller: multiSelectDropDownController,
-                            onSelectionChange: (options) =>
-                                {debugPrint(options.toString())},
                             items: _peopleBalanceList.isEmpty
                                 ? []
                                 : _peopleBalanceList
@@ -327,6 +343,23 @@ class _AddCashEntryState extends State<AddCashEntry> {
                               }
 
                               return null;
+                            },
+                            onSelectionChange: (List<String> list) {
+                              if (typeOftransactionEditingController.text
+                                      .toLowerCase() ==
+                                  typeOfTransaction[4].toLowerCase()) {
+                                for (PeopleBalance people
+                                    in _peopleBalanceList) {
+                                  if(multiSelectDropDownController.selectedItems[0].label.toLowerCase() == people.name.toLowerCase()){
+                                    save = amountEditingController.text;
+                                    amountEditingController.text = people.amount.toString();
+                                  }
+                                }
+                              } else if((typeOftransactionEditingController.text
+                                  .toLowerCase() !=
+                                  typeOfTransaction[4].toLowerCase()) && save != ""){
+                                amountEditingController.text = save;
+                              }
                             },
                           ),
                         ),
@@ -490,7 +523,8 @@ class _AddCashEntryState extends State<AddCashEntry> {
                                                 peopleBalance
                                                     .transactionReferanceNumber));
                                     transaction = CusTransaction(
-                                      amount: double.parse(amountEditingController.text),
+                                      amount: double.parse(
+                                          amountEditingController.text),
                                       dateAndTime: DateTime.now(),
                                       name: nameEditingController.text,
                                       typeOfTransaction:
@@ -536,7 +570,63 @@ class _AddCashEntryState extends State<AddCashEntry> {
                                                 peopleBalance
                                                     .transactionReferanceNumber));
                                     transaction = CusTransaction(
-                                      amount: double.parse(amountEditingController.text),
+                                      amount: double.parse(
+                                          amountEditingController.text),
+                                      dateAndTime: DateTime.now(),
+                                      name: nameEditingController.text,
+                                      typeOfTransaction:
+                                          typeOftransactionEditingController
+                                              .text,
+                                      expenseType: typeOfexp,
+                                      transactionReferanceNumber:
+                                          generateUniqueRefNumber(),
+                                    );
+                                  }
+                                }
+                              }
+                            }
+                          } else if (typeOftransactionEditingController.text
+                                  .toLowerCase() ==
+                              typeOfTransaction[4].toLowerCase()) {
+                            if (multiSelectDropDownController
+                                .selectedItems.length
+                                .isGreaterThan(0)) {
+                              for (PeopleBalance peopleBalance
+                                  in _peopleBalanceList) {
+                                for (DropdownItem name
+                                    in multiSelectDropDownController
+                                        .selectedItems) {
+                                  if (name.label == peopleBalance.name) {
+                                    double newAmount = peopleBalance.amount;
+                                    if (peopleBalance.amount.toInt() > 0) {
+                                      newAmount -= (double.parse(
+                                              amountEditingController.text) /
+                                          (multiSelectDropDownController
+                                                  .selectedItems.length +
+                                              (toIncludeYourself ? 0 : 1)));
+                                    } else {
+                                      newAmount += (double.parse(
+                                              amountEditingController.text) /
+                                          (multiSelectDropDownController
+                                                  .selectedItems.length +
+                                              (toIncludeYourself ? 0 : 1)));
+                                    }
+                                    PeopleBalanceSharedMethods()
+                                        .updatePeopleBalance(PeopleBalance(
+                                            name: peopleBalance.name,
+                                            amount: newAmount,
+                                            dateAndTime:
+                                                peopleBalance.dateAndTime,
+                                            transactionFor:
+                                                peopleBalance.transactionFor,
+                                            relationFrom:
+                                                peopleBalance.relationFrom,
+                                            transactionReferanceNumber:
+                                                peopleBalance
+                                                    .transactionReferanceNumber));
+                                    transaction = CusTransaction(
+                                      amount: double.parse(
+                                          amountEditingController.text),
                                       dateAndTime: DateTime.now(),
                                       name: nameEditingController.text,
                                       typeOfTransaction:
@@ -552,23 +642,30 @@ class _AddCashEntryState extends State<AddCashEntry> {
                             }
                           } else {
                             transaction = CusTransaction(
-                              amount: double.parse(
-                                  amountEditingController.text),
+                              amount:
+                                  double.parse(amountEditingController.text),
                               dateAndTime: DateTime.now(),
                               name: nameEditingController.text,
                               typeOfTransaction:
-                              typeOftransactionEditingController.text,
+                                  typeOftransactionEditingController.text,
                               expenseType: typeOfexp,
                               transactionReferanceNumber:
-                              generateUniqueRefNumber(),
+                                  generateUniqueRefNumber(),
                             );
                           }
 
-                          await TransactionMethods()
-                              .insertTransaction(transaction)
-                              .then(
-                                (value) => Get.back(result: "refresh"),
-                              );
+                          if (transaction.typeOfTransaction
+                                  .toString()
+                                  .toLowerCase() !=
+                              typeOfTransaction[3].toString().toLowerCase()) {
+                            await TransactionMethods()
+                                .insertTransaction(transaction)
+                                .then(
+                                  (value) => Get.back(result: "refresh"),
+                                );
+                          } else {
+                            Get.back(result: "result");
+                          }
                         }
                       },
                       child: Container(
