@@ -105,157 +105,165 @@ class _HomePageState extends State<HomePage> {
             }
 
             // Render homepage screen
-            return Scaffold(
-              // Custom AppBar for this Page
-              appBar: CustomAppBar(
-                username: username["name"].toString(),
-                three: three,
-              ),
-              // Drawer of the App
-              drawer: CustomDrawer(
-                username: username["name"].toString(),
-                scaffoldKey: scaffoldKey,
-              ),
-              body: SafeArea(
-                child: GestureDetector(
-                  // Error of Refetching the Data when being clicked/touched on Today's Transaction HEader
-                  // onVerticalDragEnd: (details) => _refreshData(),
-                  child: Column(
-                    children: [
-                      // Available balance widget
-                      Showcase(
-                        key: _one,
-                        description:
-                            "All of your Available Balance can be seen here",
-                        child: AvailableBalance(
-                          width: 300.h,
-                          bankTransaction: bankTransaction,
+            return GestureDetector(
+              onVerticalDragEnd: (details) {
+                if (details.primaryVelocity! > 0) { // Check for downward swipe
+                  _refreshData();
+                }
+              },
+              child: Scaffold(
+                // Custom AppBar for this Page
+                appBar: CustomAppBar(
+                  username: username["name"].toString(),
+                  three: three,
+                ),
+                // Drawer of the App
+                drawer: CustomDrawer(
+                  username: username["name"].toString(),
+                  scaffoldKey: scaffoldKey,
+                ),
+                body: SafeArea(
+                  child: GestureDetector(
+                    // Error of Refetching the Data when being clicked/touched on Today's Transaction HEader
+                    // onVerticalDragEnd: (details) => _refreshData(),
+                    child: Column(
+                      children: [
+                        // Available balance widget
+                        Showcase(
+                          key: _one,
+                          description:
+                              "All of your Available Balance can be seen here",
+                          child: AvailableBalance(
+                            width: 300.h,
+                            bankTransaction: bankTransaction,
+                          ),
                         ),
-                      ),
 
-                      // Current FLow of the Money based on the type of flow
-                      Showcase(
-                        key: _two,
-                        description:
-                            "All of your monthly Income and Expenses are here",
-                        child: CurrentFlow(
+                        // Current FLow of the Money based on the type of flow
+                        Showcase(
+                          key: _two,
+                          description:
+                              "All of your monthly Income and Expenses are here",
+                          child: CurrentFlow(
+                            bankTransactions: bankTransaction,
+                          ),
+                        ),
+
+                        // Header of the Transaction List
+                        RecentTransactionHeader(
                           bankTransactions: bankTransaction,
                         ),
-                      ),
 
-                      // Header of the Transaction List
-                      RecentTransactionHeader(
-                        bankTransactions: bankTransaction,
-                      ),
-
-                      // if there are no transactions made today then show there are no transactions today
-                      if (allTransactions(bankTransaction,
-                              todayTrans: true, thisMonth: true)
-                          .isEmpty) ...[
-                        Expanded(
-                          child: Center(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                // If there is no Transaction Recorded today then display a text of no transaction
-                                Text(
-                                  "No Transactions Today",
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 20.r,
-                                    color: Get.isDarkMode
-                                        ? MyAppColors
-                                            .normalColoredWidgetTextColorLightMode
-                                        : MyAppColors
-                                            .normalColoredWidgetTextColorDarkMode,
-                                  ),
-                                ),
-
-                                // Display a Refresh button because if there is no transaction then it woun't refresh on drag
-                                Padding(
-                                  padding: EdgeInsets.only(top: 10.h),
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      gradient: colorsOfGradient(),
-                                      borderRadius: BorderRadius.circular(10.r),
+                        // if there are no transactions made today then show there are no transactions today
+                        if (allTransactions(bankTransaction,
+                                todayTrans: true, thisMonth: true)
+                            .isEmpty) ...[
+                          Expanded(
+                            child: Center(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  // If there is no Transaction Recorded today then display a text of no transaction
+                                  Text(
+                                    "No Transactions Today",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 20.r,
+                                      color: Get.isDarkMode
+                                          ? MyAppColors
+                                              .normalColoredWidgetTextColorLightMode
+                                          : MyAppColors
+                                              .normalColoredWidgetTextColorDarkMode,
                                     ),
-                                    child: TextButton(
-                                      onPressed: () {
-                                        setState(() {
-                                          _refreshData();
-                                        });
-                                      },
-                                      child: Text(
-                                        "Refresh",
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 13.r,
+                                  ),
+
+                                  // Display a Refresh button because if there is no transaction then it woun't refresh on drag
+                                  Padding(
+                                    padding: EdgeInsets.only(top: 10.h),
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        gradient: colorsOfGradient(),
+                                        borderRadius: BorderRadius.circular(10.r),
+                                      ),
+                                      child: TextButton(
+                                        onPressed: () {
+                                          setState(() {
+                                            _refreshData();
+                                          });
+                                        },
+                                        child: Text(
+                                          "Refresh",
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 13.r,
+                                          ),
                                         ),
                                       ),
                                     ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                           ),
-                        ),
 
-                        // else show all the transactions made today
-                      ] else ...[
-                        Expanded(
-                          child: ListView.builder(
-                            // reverse: true,
-                            itemCount: allTransactions(bankTransaction,
-                                    thisMonth: true, todayTrans: true)
-                                .length, // Use todaysTransactions length
+                          // else show all the transactions made today
+                        ] else ...[
+                          Expanded(
+                            child: ListView.builder(
+                              // reverse: true,
+                              itemCount: allTransactions(bankTransaction,
+                                      thisMonth: true, todayTrans: true)
+                                  .length, // Use todaysTransactions length
 
-                            // Item builder with a list of Today's transaction of this month
-                            itemBuilder: (context, index) {
-                              final transaction = allTransactions(
-                                  bankTransaction,
-                                  thisMonth: true,
-                                  todayTrans: true);
+                              // Item builder with a list of Today's transaction of this month
+                              itemBuilder: (context, index) {
+                                final transaction = allTransactions(
+                                    bankTransaction,
+                                    thisMonth: true,
+                                    todayTrans: true);
 
-                              // Return the Transaction Widget with the transaction details
-                              return TransactionWidget(
-                                expenseType: transaction[index].expenseType,
-                                amount: transaction[index].amount.toInt(),
-                                dateAndTime: transaction[index].dateAndTime,
-                                name: transaction[index].name,
-                                typeOfTransaction:
-                                    transaction[index].typeOfTransaction,
-                                transactionReferanceNumber: transaction[index]
-                                    .transactionReferanceNumber,
-                                toIncl: transaction[index].toInclude,
-                              );
-                            },
+                                // Return the Transaction Widget with the transaction details
+                                return TransactionWidget(
+                                  expenseType: transaction[index].expenseType,
+                                  amount: transaction[index].amount.toInt(),
+                                  dateAndTime: transaction[index].dateAndTime,
+                                  name: transaction[index].name,
+                                  typeOfTransaction:
+                                      transaction[index].typeOfTransaction,
+                                  transactionReferanceNumber: transaction[index]
+                                      .transactionReferanceNumber,
+                                  toIncl: transaction[index].toInclude,
+                                  refreshData: _refreshData,
+                                );
+                              },
+                            ),
                           ),
-                        ),
-                      ]
-                    ],
+                        ]
+                      ],
+                    ),
                   ),
                 ),
-              ),
 
-              // a floating action button to add the cash entry
-              floatingActionButton: Showcase(
-                key: _addCashEntry,
-                description: "To add a New Entry",
-                child: FloatingActionButton.extended(
-                  label: const Icon(Icons.add),
-                  onPressed: () async {
-                    final toreload = await Get.to(
-                      routeName: routes[12],
-                      () => const AddCashEntry(),
-                      curve: customCurve,
-                      transition: customTrans,
-                      duration: duration,
-                    );
+                // a floating action button to add the cash entry
+                floatingActionButton: Showcase(
+                  key: _addCashEntry,
+                  description: "To add a New Entry",
+                  child: FloatingActionButton.extended(
+                    label: const Icon(Icons.add),
+                    onPressed: () async {
+                      final toreload = await Get.to(
+                        routeName: routes[12],
+                        () => const AddCashEntry(),
+                        curve: customCurve,
+                        transition: customTrans,
+                        duration: duration,
+                      );
 
-                    if (toreload != null) {
-                      _refreshData();
-                    }
-                  },
+                      if (toreload != null) {
+                        _refreshData();
+                      }
+                    },
+                  ),
                 ),
               ),
             );

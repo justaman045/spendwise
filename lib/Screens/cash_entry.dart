@@ -160,6 +160,10 @@ class _AddCashEntryState extends State<AddCashEntry> {
                             }
                             return null;
                           },
+                          readOnly: typeOftransaction.toLowerCase() ==
+                              typeOfTransaction[4].toLowerCase()
+                              ? true
+                              : false,
                           decoration: InputDecoration(
                             label: Text(
                               "Amount",
@@ -238,7 +242,7 @@ class _AddCashEntryState extends State<AddCashEntry> {
                           items: typeOfTransaction
                               .map(
                                 (e) => DropdownMenuItem(
-                                  value: toBeginningOfSentenceCase(e),
+                                  value: e,
                                   child: Text(
                                     toBeginningOfSentenceCase(e),
                                     style: TextStyle(
@@ -255,20 +259,23 @@ class _AddCashEntryState extends State<AddCashEntry> {
                                 typeOftransactionEditingController.text =
                                     typeOftransaction;
                               }
-                              if (typeOftransactionEditingController.text
-                                  .toLowerCase() ==
-                                  typeOfTransaction[4].toLowerCase()) {
-                                for (PeopleBalance people
-                                in _peopleBalanceList) {
-                                  if(multiSelectDropDownController.selectedItems[0].label.toLowerCase() == people.name.toLowerCase()){
-                                    save = amountEditingController.text;
-                                    amountEditingController.text = people.amount.toString();
+                              if(multiSelectDropDownController.selectedItems.isNotEmpty){
+                                if (typeOftransactionEditingController.text
+                                    .toLowerCase() ==
+                                    typeOfTransaction[4].toLowerCase()) {
+                                  for (PeopleBalance people
+                                  in _peopleBalanceList) {
+                                    if(multiSelectDropDownController.selectedItems[0].label.toLowerCase() == people.name.toLowerCase()){
+                                      save = amountEditingController.text;
+                                      debugPrint((people.amount*-1).toString());
+                                      amountEditingController.text = ((people.amount)*-1).toString();
+                                    }
                                   }
+                                } else if((typeOftransactionEditingController.text
+                                    .toLowerCase() !=
+                                    typeOfTransaction[4].toLowerCase()) && save != ""){
+                                  amountEditingController.text = save;
                                 }
-                              } else if((typeOftransactionEditingController.text
-                                  .toLowerCase() !=
-                                  typeOfTransaction[4].toLowerCase()) && save != ""){
-                                amountEditingController.text = save;
                               }
                               setState(() {});
                             },
@@ -352,7 +359,7 @@ class _AddCashEntryState extends State<AddCashEntry> {
                                     in _peopleBalanceList) {
                                   if(multiSelectDropDownController.selectedItems[0].label.toLowerCase() == people.name.toLowerCase()){
                                     save = amountEditingController.text;
-                                    amountEditingController.text = people.amount.toString();
+                                    amountEditingController.text = (((people.amount) *-1).toInt()).toString();
                                   }
                                 }
                               } else if((typeOftransactionEditingController.text

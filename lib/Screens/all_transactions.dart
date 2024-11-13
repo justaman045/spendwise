@@ -137,6 +137,7 @@ class _AllTransactionsState extends State<AllTransactions> {
                                   transactionReferanceNumber:
                                       transaction.transactionReferanceNumber,
                                   toIncl: transaction.toInclude,
+                                  refreshData: _refreshData,
                                 );
                               },
                             ),

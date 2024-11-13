@@ -334,7 +334,9 @@ class _SubscriptionManagerState extends State<SubscriptionManager> {
               );
 
               if (toreload != null) {
-                setState(() {});
+                setState(() {
+                  _refreshData();
+                });
               }
             } else {
               Get.snackbar(

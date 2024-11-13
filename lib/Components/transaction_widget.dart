@@ -18,6 +18,7 @@ class TransactionWidget extends StatefulWidget {
     required this.expenseType,
     required this.transactionReferanceNumber,
     required this.toIncl,
+    required this.refreshData,
   });
 
   final String name;
@@ -27,6 +28,7 @@ class TransactionWidget extends StatefulWidget {
   final String expenseType;
   final int transactionReferanceNumber;
   final int toIncl;
+  final Function refreshData;
 
   @override
   State<TransactionWidget> createState() => _TransactionWidgetState();
@@ -54,7 +56,9 @@ class _TransactionWidgetState extends State<TransactionWidget> {
         );
 
         if (refresh != null) {
-          setState(() {});
+          setState(() {
+            widget.refreshData();
+          });
         }
       },
       child: Row(
