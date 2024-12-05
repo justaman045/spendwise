@@ -1,6 +1,8 @@
+import "package:calendar_date_picker2/calendar_date_picker2.dart";
 import "package:flutter/material.dart";
 import "package:flutter_screenutil/flutter_screenutil.dart";
 import "package:get/get.dart";
+import "package:intl/intl.dart";
 import "package:showcaseview/showcaseview.dart";
 import "package:spendwise/Components/transaction_charts.dart";
 import "package:spendwise/Components/transaction_widget.dart";
@@ -32,10 +34,12 @@ class AllTransactions extends StatefulWidget {
 class _AllTransactionsState extends State<AllTransactions> {
   // Local Variable Declaration to use it in rendering
   List<CusTransaction> bankTransaction = [];
-  // ignore: unused_field
+// ignore: unused_field
   Future? _future;
   dynamic username;
   final GlobalKey _one = GlobalKey();
+  DateTime startDate = DateTime.now();
+  DateTime endDate = DateTime.now();
 
   // Function to run everytime a user expects to refresh the data but the value is not being used
   Future<void> _refreshData() async {
@@ -50,7 +54,7 @@ class _AllTransactionsState extends State<AllTransactions> {
     // _getData();
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback(
-            (_) => ShowCaseWidget.of(context).startShowCase([_one]));
+        (_) => ShowCaseWidget.of(context).startShowCase([_one]));
   }
 
   @override
@@ -87,6 +91,7 @@ class _AllTransactionsState extends State<AllTransactions> {
               bankTransactions =
                   allTransactions(snapshot.data, thisMonth: true);
             }
+            bankTransactions.sort((a,b) => a.dateAndTime.compareTo(b.dateAndTime));
             return Scaffold(
               appBar: AppBar(
                 title: Text(
@@ -116,6 +121,74 @@ class _AllTransactionsState extends State<AllTransactions> {
                       )
                     : Column(
                         children: [
+                          //TODO: Add a Date Based Transaction Filtering option
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              Container(
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(20.r),
+                                    gradient: colorsOfGradient()),
+                                child: TextButton(
+                                  onPressed: () async {
+                                    var results =
+                                        await showCalendarDatePicker2Dialog(
+                                      context: context,
+                                      config:
+                                          CalendarDatePicker2WithActionButtonsConfig(
+                                        firstDayOfWeek: 1,
+                                        calendarType:
+                                            CalendarDatePicker2Type.range,
+                                        selectedDayTextStyle: const TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.w700,
+                                        ),
+                                        selectedDayHighlightColor:
+                                            Colors.purple,
+                                        centerAlignModePicker: true,
+                                        customModePickerIcon: const SizedBox(),
+                                        dayBuilder: dayBuilder(context),
+                                        yearBuilder: yearBuilder(),
+                                      ),
+                                      dialogSize: const Size(325, 400),
+                                    );
+                                    if (results != null) {
+                                      startDate = results[0]!;
+                                      endDate = results[1]!;
+                                      final filteredTransactions = snapshot.data.where((element) =>
+                                      element.dateAndTime.isAfter(startDate) &&
+                                          element.dateAndTime.isBefore(endDate)
+                                      ).toList();
+
+                                      setState(() {
+                                        bankTransactions = filteredTransactions;
+                                      });
+                                    }
+                                    // CalendarDatePicker2(
+                                    //   config: CalendarDatePicker2Config(
+                                    //     calendarType: CalendarDatePicker2Type.multi,
+                                    //   ),
+                                    //   value: _rangeDatePickerValueWithDefaultValue,
+                                    //   onValueChanged: (dates) => _rangeDatePickerValueWithDefaultValue = dates,
+                                    // );
+                                  },
+                                  child: Text(
+                                      DateFormat.yMMMMd().format(startDate)),
+                                ),
+                              ),
+                              const Text("-"),
+                              Container(
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(20.r),
+                                    gradient: colorsOfGradient()),
+                                child: TextButton(
+                                  onPressed: () {},
+                                  child:
+                                      Text(DateFormat.yMMMMd().format(endDate)),
+                                ),
+                              ),
+                            ],
+                          ),
                           TransactionCharts(
                             chartTitle: widget.chartTitle,
                             chartName: widget.chartType,

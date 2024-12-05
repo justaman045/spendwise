@@ -37,7 +37,7 @@ class TransactionCharts extends StatelessWidget {
         tooltipBehavior: TooltipBehavior(enable: true),
         series: <CartesianSeries<ExpenseData, int>>[
           LineSeries<ExpenseData, int>(
-            dataSource: dataSource.reversed.toList(),
+            dataSource: dataSource.toList(),
             xValueMapper: (ExpenseData data, _) => data.date,
             yValueMapper: (ExpenseData data, _) => data.expense,
             name: chartName,

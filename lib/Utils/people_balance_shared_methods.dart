@@ -34,6 +34,19 @@ class PeopleBalanceSharedMethods {
     }
     return null;
   }
+  // **Read (Fetch One by Reference Number)** PeopleBalance
+  Future<List<PeopleBalance>> getPeopleBalanceByName(String name) async {
+    final db = await DatabaseHelper().database;
+    final List<Map<String, dynamic>> maps = await db.query(
+      peopleBalanceTable,
+      where: 'name = ?',
+      whereArgs: [name],
+    );
+    if (maps.isNotEmpty) {
+      return List.generate(maps.length, (i) => PeopleBalance.fromMap(maps[i]));
+    }
+    return [];
+  }
 
   // **Update** PeopleBalance
   Future<void> updatePeopleBalance(PeopleBalance peopleBalance) async {

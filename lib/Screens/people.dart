@@ -6,6 +6,7 @@ import 'package:showcaseview/showcaseview.dart';
 import 'package:spendwise/Models/people_expense.dart';
 import 'package:spendwise/Requirements/data.dart';
 import 'package:spendwise/Screens/add_people.dart';
+import 'package:spendwise/Screens/people_transactions.dart';
 import 'package:spendwise/Utils/people_balance_shared_methods.dart';
 import 'package:spendwise/Utils/theme.dart';
 
@@ -80,103 +81,114 @@ class _PeopleState extends State<People> {
                               horizontal: 20.w,
                               vertical: 10.h,
                             ),
-                            child: Row(
-                              children: [
-                                Container(
-                                  decoration: BoxDecoration(
-                                    border: Border.all(width: 1.r),
-                                    borderRadius: BorderRadius.circular(20.r),
-                                    color: Colors.blueGrey,
-                                  ),
-                                  child: Padding(
-                                    padding: EdgeInsets.all(10.r),
-                                    child: const Icon(Icons.payment_rounded),
-                                  ),
-                                ),
-                                SizedBox(
-                                  width: 275.w,
-                                  child: Padding(
-                                    padding: EdgeInsets.only(left: 20.w),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceAround,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(snapshot.data[index].name),
-                                            Row(
-                                              children: [
-                                                // Text(snapshot
-                                                //     .data[index].dateAndTime),
-                                                if (snapshot
-                                                    .data[index].transactionFor
-                                                    .toString()
-                                                    .isNotEmpty) ...[
-                                                  const Text(" - "),
-                                                  Text(snapshot.data[index]
-                                                      .transactionFor),
-                                                ],
-                                              ],
-                                            ),
-                                            if (snapshot.data[index].amount >
-                                                0) ...[
-                                              Padding(
-                                                padding: EdgeInsets.symmetric(
-                                                    vertical: 7.h),
-                                                child: SizedBox(
-                                                  width: 150.w,
-                                                  child: snapshot.data[index]
-                                                              .amount ==
-                                                          0
-                                                      ? const Text(
-                                                          "No Balance to Settle")
-                                                      : Text(
-                                                          "You've to Recieve Rs. ${snapshot.data[index].amount} from ${snapshot.data[index].name}"),
-                                                ),
-                                              ),
-                                            ] else ...[
-                                              Padding(
-                                                padding: EdgeInsets.symmetric(
-                                                    vertical: 7.h),
-                                                child: SizedBox(
-                                                  width: 150.w,
-                                                  child: snapshot.data[index]
-                                                              .amount ==
-                                                          0
-                                                      ? const Text(
-                                                          "No Balance to Settle")
-                                                      : Text(
-                                                          "You've to Give Rs. ${snapshot.data[index].amount} to ${snapshot.data[index].name}"),
-                                                ),
-                                              ),
-                                            ],
-                                          ],
-                                        ),
-                                        Text(
-                                            "Rs. ${snapshot.data[index].amount.toString()}"),
-                                        GestureDetector(
-                                          onTap: () {
-                                            PeopleBalanceSharedMethods()
-                                                .deletePeopleBalance(snapshot
-                                                    .data[index]
-                                                    .transactionReferanceNumber)
-                                                .then(
-                                              (value) {
-                                                _refreshData();
-                                              },
-                                            );
-                                          },
-                                          child: const Icon(Icons.delete),
-                                        )
-                                      ],
+                            child: GestureDetector(
+                              onTap: (){
+                                Get.off(
+                                  routeName: routes[16],
+                                      () => PeopleTransactions(peopleBalance: snapshot.data[index]),
+                                  transition: customTrans,
+                                  curve: customCurve,
+                                  duration: duration,
+                                );
+                              },
+                              child: Row(
+                                children: [
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      border: Border.all(width: 1.r),
+                                      borderRadius: BorderRadius.circular(20.r),
+                                      color: Colors.blueGrey,
+                                    ),
+                                    child: Padding(
+                                      padding: EdgeInsets.all(10.r),
+                                      child: const Icon(Icons.payment_rounded),
                                     ),
                                   ),
-                                ),
-                              ],
+                                  SizedBox(
+                                    width: 275.w,
+                                    child: Padding(
+                                      padding: EdgeInsets.only(left: 20.w),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceAround,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(snapshot.data[index].name),
+                                              Row(
+                                                children: [
+                                                  // Text(snapshot
+                                                  //     .data[index].dateAndTime),
+                                                  if (snapshot
+                                                      .data[index].transactionFor
+                                                      .toString()
+                                                      .isNotEmpty) ...[
+                                                    const Text(" - "),
+                                                    Text(snapshot.data[index]
+                                                        .transactionFor),
+                                                  ],
+                                                ],
+                                              ),
+                                              if (snapshot.data[index].amount >
+                                                  0) ...[
+                                                Padding(
+                                                  padding: EdgeInsets.symmetric(
+                                                      vertical: 7.h),
+                                                  child: SizedBox(
+                                                    width: 150.w,
+                                                    child: snapshot.data[index]
+                                                                .amount ==
+                                                            0
+                                                        ? const Text(
+                                                            "No Balance to Settle")
+                                                        : Text(
+                                                            "You've to Recieve Rs. ${snapshot.data[index].amount} from ${snapshot.data[index].name}"),
+                                                  ),
+                                                ),
+                                              ] else ...[
+                                                Padding(
+                                                  padding: EdgeInsets.symmetric(
+                                                      vertical: 7.h),
+                                                  child: SizedBox(
+                                                    width: 150.w,
+                                                    child: snapshot.data[index]
+                                                                .amount ==
+                                                            0
+                                                        ? const Text(
+                                                            "No Balance to Settle")
+                                                        : Text(
+                                                            "You've to Give Rs. ${snapshot.data[index].amount} to ${snapshot.data[index].name}"),
+                                                  ),
+                                                ),
+                                              ],
+                                            ],
+                                          ),
+                                          Text(
+                                              "Rs. ${snapshot.data[index].amount.toString()}"),
+                                          GestureDetector(
+                                            onTap: () {
+                                              PeopleBalanceSharedMethods()
+                                                  .deletePeopleBalance(snapshot
+                                                      .data[index]
+                                                      .transactionReferanceNumber)
+                                                  .then(
+                                                (value) {
+                                                  _refreshData();
+                                                },
+                                              );
+                                            },
+                                            child: const Icon(Icons.delete),
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                           );
                         },

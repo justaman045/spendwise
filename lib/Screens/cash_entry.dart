@@ -9,9 +9,11 @@ import "package:spendwise/Models/people_expense.dart";
 import "package:spendwise/Requirements/data.dart";
 import "package:spendwise/Requirements/transaction.dart";
 import "package:spendwise/Screens/add_people.dart";
+import "package:spendwise/Utils/methods.dart";
 import "package:spendwise/Utils/people_balance_shared_methods.dart";
 import "package:spendwise/Utils/theme.dart";
 import "package:spendwise/Utils/transaction_methods.dart";
+import "package:spendwise/Utils/utils.dart";
 
 // TODO: Reduce Lines of Code
 final _formKey = GlobalKey<FormState>();
@@ -28,6 +30,7 @@ class AddCashEntry extends StatefulWidget {
 class _AddCashEntryState extends State<AddCashEntry> {
   TextEditingController nameEditingController = TextEditingController();
   TextEditingController amountEditingController = TextEditingController();
+  TextEditingController fromDate = TextEditingController();
   TextEditingController typeOftransactionEditingController =
       TextEditingController();
   String save = "";
@@ -40,12 +43,14 @@ class _AddCashEntryState extends State<AddCashEntry> {
   bool isSharable = true;
   bool toAddNewPerson = false;
   bool toIncludeYourself = false;
+  bool pastDateTransaction = false;
   MultiSelectController<String> multiSelectDropDownController =
       MultiSelectController<String>();
   List<PeopleBalance> _peopleBalanceList = [];
   List<PeopleBalance> people = [];
   double updatedAmount = 0;
   late CusTransaction transaction;
+  DateTime? fromdate;
 
   Future<void> _fetchData() async {
     _peopleBalanceList =
@@ -100,189 +105,72 @@ class _AddCashEntryState extends State<AddCashEntry> {
                 key: _formKey,
                 child: Column(
                   children: [
-                    Padding(
-                      padding: EdgeInsets.only(
-                        left: 20.r,
-                        top: 15.h,
-                        right: 20.w,
-                      ),
-                      child: SizedBox(
-                        height: 60.h,
-                        child: TextFormField(
-                          controller: nameEditingController,
-                          inputFormatters: <TextInputFormatter>[
-                            FilteringTextInputFormatter.allow(
-                                RegExp('[a-z A-Z]'))
-                          ],
-                          validator: (value) {
-                            if (value!.isEmpty) {
-                              return "Add a Recipient name";
-                            } else if (value.length < 3) {
-                              return "Name must be at-least 3 characters";
-                            }
-                            return null;
-                          },
-                          decoration: InputDecoration(
-                            label: Text(
-                              "Recipient Name",
-                              style: TextStyle(
-                                fontSize: 13.r,
-                              ),
-                            ),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(15.h),
-                            ),
-                          ),
-                        ),
-                      ),
+                    TextBox(
+                      controller: nameEditingController,
+                      formatter: formatters["Name"]!,
+                      labelString: "Recipient Name",
+                      function: validators["Name"]!,
                     ),
-                    Padding(
-                      padding: EdgeInsets.only(
-                        left: 20.r,
-                        top: 15.h,
-                        right: 20.w,
-                      ),
-                      child: SizedBox(
-                        height: 60.h,
-                        child: TextFormField(
-                          controller: amountEditingController,
-                          keyboardType: const TextInputType.numberWithOptions(
-                              decimal: true, signed: true),
-                          inputFormatters: [
-                            FilteringTextInputFormatter.allow(
-                                RegExp(r'^\+?\d*'))
-                          ],
-                          validator: (value) {
-                            if (value!.isEmpty) {
-                              return "Enter a amount that have been paid or received";
-                            } else if (int.parse(value) < 1) {
-                              return "Amount cannot be in negative";
-                            }
-                            return null;
-                          },
-                          readOnly: typeOftransaction.toLowerCase() ==
+                    TextBox(
+                      controller: amountEditingController,
+                      formatter: formatters["Amount"]!,
+                      labelString: "Amount",
+                      function: validators["Amount"]!,
+                      readOnly: typeOftransaction.toLowerCase() ==
                               typeOfTransaction[4].toLowerCase()
-                              ? true
-                              : false,
-                          decoration: InputDecoration(
-                            label: Text(
-                              "Amount",
-                              style: TextStyle(
-                                fontSize: 13.r,
-                              ),
-                            ),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(15.h),
-                            ),
-                          ),
-                        ),
-                      ),
+                          ? true
+                          : false,
                     ),
-                    Padding(
-                      padding: EdgeInsets.only(
-                        left: 20.r,
-                        top: 15.h,
-                        right: 20.w,
-                      ),
-                      child: SizedBox(
-                        height: 60.h,
-                        child: DropdownButtonFormField(
-                          decoration: InputDecoration(
-                            label: Text(
-                              "Type of Expense",
-                              style: TextStyle(
-                                fontSize: 13.r,
-                              ),
-                            ),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(15.h),
-                            ),
-                          ),
-                          items: typeOfExpense
-                              .map(
-                                (e) => DropdownMenuItem(
-                                  value: toBeginningOfSentenceCase(e),
-                                  child: Text(
-                                    toBeginningOfSentenceCase(e),
-                                    style: TextStyle(
-                                      fontSize: 13.r,
-                                    ),
-                                  ),
-                                ),
-                              )
-                              .toList(),
-                          onChanged: (String? value) => setState(
-                            () {
-                              if (value != null) typeOfexp = value;
-                            },
-                          ),
-                        ),
-                      ),
+                    OptionBox(
+                      function: (newValue) => setState(() {
+                        typeOfexp = newValue!;
+                      }),
+                      items: getDropDownMenuItems(typeOfExpense),
+                      labelString: "Type Of Expense",
                     ),
-                    Padding(
-                      padding: EdgeInsets.only(
-                        left: 20.r,
-                        top: 15.h,
-                        right: 20.w,
-                      ),
-                      child: SizedBox(
-                        height: 60.h,
-                        child: DropdownButtonFormField(
-                          decoration: InputDecoration(
-                            label: Text(
-                              "Income/Expense",
-                              style: TextStyle(
-                                fontSize: 13.r,
-                              ),
-                            ),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(15.h),
-                            ),
-                          ),
-                          items: typeOfTransaction
-                              .map(
-                                (e) => DropdownMenuItem(
-                                  value: e,
-                                  child: Text(
-                                    toBeginningOfSentenceCase(e),
-                                    style: TextStyle(
-                                      fontSize: 13.r,
-                                    ),
-                                  ),
-                                ),
-                              )
-                              .toList(),
-                          onChanged: (String? value) => setState(
+                    OptionBox(
+                      function: (String? value) => setState(
                             () {
-                              if (value != null) {
-                                typeOftransaction = value;
-                                typeOftransactionEditingController.text =
-                                    typeOftransaction;
-                              }
-                              if(multiSelectDropDownController.selectedItems.isNotEmpty){
-                                if (typeOftransactionEditingController.text
+                          if (value != null) {
+                            typeOftransaction = value;
+                            typeOftransactionEditingController.text =
+                                typeOftransaction;
+                          }
+                          if (multiSelectDropDownController
+                              .selectedItems.isNotEmpty) {
+                            if (typeOftransactionEditingController.text
+                                .toLowerCase() ==
+                                typeOfTransaction[4].toLowerCase()) {
+                              for (PeopleBalance people
+                              in _peopleBalanceList) {
+                                if (multiSelectDropDownController
+                                    .selectedItems[0].label
                                     .toLowerCase() ==
-                                    typeOfTransaction[4].toLowerCase()) {
-                                  for (PeopleBalance people
-                                  in _peopleBalanceList) {
-                                    if(multiSelectDropDownController.selectedItems[0].label.toLowerCase() == people.name.toLowerCase()){
-                                      save = amountEditingController.text;
-                                      debugPrint((people.amount*-1).toString());
-                                      amountEditingController.text = ((people.amount)*-1).toString();
-                                    }
-                                  }
-                                } else if((typeOftransactionEditingController.text
-                                    .toLowerCase() !=
-                                    typeOfTransaction[4].toLowerCase()) && save != ""){
-                                  amountEditingController.text = save;
+                                    people.name.toLowerCase()) {
+                                  save = amountEditingController.text;
+                                  debugPrint(
+                                      (people.amount * -1).toString());
+                                  amountEditingController.text =
+                                      ((people.amount) * -1).toString();
                                 }
                               }
-                              setState(() {});
-                            },
-                          ),
-                        ),
+                            } else if ((typeOftransactionEditingController
+                                .text
+                                .toLowerCase() !=
+                                typeOfTransaction[4].toLowerCase()) &&
+                                save != "") {
+                              amountEditingController.text = save;
+                            }
+                          }
+                          setState(() {});
+                        },
                       ),
+                      items: getDropDownMenuItems(typeOfTransaction),
+                      labelString: "InDev Income/Expense",
                     ),
+                    if (pastDateTransaction == true) ...[
+                      DateField(dateController: fromDate),
+                    ],
                     if (((typeOftransactionEditingController.text)
                                 .toLowerCase() !=
                             (typeOfTransaction[0]).toLowerCase()) &&
@@ -357,14 +245,21 @@ class _AddCashEntryState extends State<AddCashEntry> {
                                   typeOfTransaction[4].toLowerCase()) {
                                 for (PeopleBalance people
                                     in _peopleBalanceList) {
-                                  if(multiSelectDropDownController.selectedItems[0].label.toLowerCase() == people.name.toLowerCase()){
+                                  if (multiSelectDropDownController
+                                          .selectedItems[0].label
+                                          .toLowerCase() ==
+                                      people.name.toLowerCase()) {
                                     save = amountEditingController.text;
-                                    amountEditingController.text = (((people.amount) *-1).toInt()).toString();
+                                    amountEditingController.text =
+                                        (((people.amount) * -1).toInt())
+                                            .toString();
                                   }
                                 }
-                              } else if((typeOftransactionEditingController.text
-                                  .toLowerCase() !=
-                                  typeOfTransaction[4].toLowerCase()) && save != ""){
+                              } else if ((typeOftransactionEditingController
+                                          .text
+                                          .toLowerCase() !=
+                                      typeOfTransaction[4].toLowerCase()) &&
+                                  save != "") {
                                 amountEditingController.text = save;
                               }
                             },
@@ -404,6 +299,35 @@ class _AddCashEntryState extends State<AddCashEntry> {
                         ),
                       ]
                     ],
+                    if (true) ...[
+                      Padding(
+                        padding: EdgeInsets.only(
+                          left: 30.r,
+                          right: 20.w,
+                          top: 10.h,
+                        ),
+                        child: Row(
+                          children: [
+                            Checkbox(
+                              value: toIncludeYourself,
+                              onChanged: (bool? value) {
+                                endingRecurring.text = "";
+                                setState(
+                                  () {
+                                    toIncludeYourself = value!;
+                                  },
+                                );
+                              },
+                            ),
+                            SizedBox(
+                              width: 250.w,
+                              child: const Text(
+                                  "Click here to divide the amount between only the selected Persons"),
+                            )
+                          ],
+                        ),
+                      ),
+                    ],
                     Padding(
                       padding: EdgeInsets.only(
                         left: 30.r,
@@ -413,12 +337,11 @@ class _AddCashEntryState extends State<AddCashEntry> {
                       child: Row(
                         children: [
                           Checkbox(
-                            value: toIncludeYourself,
+                            value: pastDateTransaction,
                             onChanged: (bool? value) {
-                              endingRecurring.text = "";
                               setState(
                                 () {
-                                  toIncludeYourself = value!;
+                                  pastDateTransaction = value!;
                                 },
                               );
                             },
@@ -426,7 +349,7 @@ class _AddCashEntryState extends State<AddCashEntry> {
                           SizedBox(
                             width: 250.w,
                             child: const Text(
-                                "Click here to divide the amount between only the selected Persons"),
+                                "Click here to add a Date Of the Transaction"),
                           )
                         ],
                       ),
@@ -446,7 +369,9 @@ class _AddCashEntryState extends State<AddCashEntry> {
                         if (_formKey.currentState!.validate()) {
                           CusTransaction transaction = CusTransaction(
                             amount: double.parse(amountEditingController.text),
-                            dateAndTime: DateTime.now(),
+                            dateAndTime: pastDateTransaction == true
+                                ? stringToDateTime(fromDate.text)
+                                : DateTime.now(),
                             name: nameEditingController.text,
                             typeOfTransaction: typeOftransaction,
                             expenseType: typeOfexp,
@@ -532,7 +457,9 @@ class _AddCashEntryState extends State<AddCashEntry> {
                                     transaction = CusTransaction(
                                       amount: double.parse(
                                           amountEditingController.text),
-                                      dateAndTime: DateTime.now(),
+                                      dateAndTime: pastDateTransaction == true
+                                          ? stringToDateTime(fromDate.text)
+                                          : DateTime.now(),
                                       name: nameEditingController.text,
                                       typeOfTransaction:
                                           typeOftransactionEditingController
@@ -579,7 +506,9 @@ class _AddCashEntryState extends State<AddCashEntry> {
                                     transaction = CusTransaction(
                                       amount: double.parse(
                                           amountEditingController.text),
-                                      dateAndTime: DateTime.now(),
+                                      dateAndTime: pastDateTransaction == true
+                                          ? stringToDateTime(fromDate.text)
+                                          : DateTime.now(),
                                       name: nameEditingController.text,
                                       typeOfTransaction:
                                           typeOftransactionEditingController
@@ -634,7 +563,9 @@ class _AddCashEntryState extends State<AddCashEntry> {
                                     transaction = CusTransaction(
                                       amount: double.parse(
                                           amountEditingController.text),
-                                      dateAndTime: DateTime.now(),
+                                      dateAndTime: pastDateTransaction == true
+                                          ? stringToDateTime(fromDate.text)
+                                          : DateTime.now(),
                                       name: nameEditingController.text,
                                       typeOfTransaction:
                                           typeOftransactionEditingController
@@ -651,7 +582,9 @@ class _AddCashEntryState extends State<AddCashEntry> {
                             transaction = CusTransaction(
                               amount:
                                   double.parse(amountEditingController.text),
-                              dateAndTime: DateTime.now(),
+                              dateAndTime: pastDateTransaction == true
+                                  ? stringToDateTime(fromDate.text)
+                                  : DateTime.now(),
                               name: nameEditingController.text,
                               typeOfTransaction:
                                   typeOftransactionEditingController.text,
@@ -750,3 +683,138 @@ class _AddCashEntryState extends State<AddCashEntry> {
     );
   }
 }
+
+class OptionBox extends StatelessWidget {
+  const OptionBox({
+    super.key,
+    required this.function,
+    required this.labelString,
+    required this.items,
+  });
+
+  final Function function;
+  final String labelString;
+  final List<DropdownMenuItem<String>> items;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.only(
+        left: 20.r,
+        top: 15.h,
+        right: 20.w,
+      ),
+      child: SizedBox(
+        height: 48.h,
+        child: DropdownButtonFormField(
+          decoration: InputDecoration(
+            label: Text(
+              labelString,
+              style: TextStyle(
+                fontSize: 13.r,
+              ),
+            ),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(15.h),
+            ),
+          ),
+          items: items,
+          onChanged: (String? value) => function(value),
+        ),
+      ),
+    );
+  }
+}
+
+class TextBox extends StatelessWidget {
+  const TextBox({
+    super.key,
+    required this.controller,
+    required this.formatter,
+    required this.function,
+    required this.labelString,
+    this.readOnly = false,
+  });
+
+  final TextEditingController controller;
+  final List<FilteringTextInputFormatter> formatter;
+  final Function function;
+  final String labelString;
+  final bool readOnly;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.only(
+        left: 20.r,
+        top: 15.h,
+        right: 20.w,
+      ),
+      child: SizedBox(
+        height: 50.h,
+        child: TextFormField(
+          controller: controller,
+          inputFormatters: formatter,
+          validator: (value) => function(value),
+          decoration: InputDecoration(
+            label: Text(
+              labelString,
+              style: TextStyle(
+                fontSize: 13.r,
+              ),
+            ),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(15.h),
+            ),
+          ),
+          readOnly: readOnly,
+        ),
+      ),
+    );
+  }
+}
+
+class DateField extends StatelessWidget {
+  const DateField({super.key, required this.dateController});
+
+  final TextEditingController dateController;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.only(
+        left: 20.r,
+        top: 15.h,
+        right: 20.w,
+      ),
+      child: SizedBox(
+        height: 48.h,
+        child: TextFormField(
+          canRequestFocus: false,
+          keyboardType: TextInputType.none,
+          controller: dateController,
+          decoration: InputDecoration(
+            suffixIcon: IconButton(
+              icon: const Icon(Icons.calendar_month_rounded),
+              onPressed: () async {
+                dynamic date = await showDatePicker(
+                    context: context,
+                    firstDate:
+                    DateTime(DateTime.now().year - 1),
+                    lastDate: DateTime(2099));
+                dateController.text =
+                    DateFormat.yMMMMd().format(date);
+              },
+            ),
+            label: const Text("Transaction Date"),
+            hintText: dateController.text,
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(15.r),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
