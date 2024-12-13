@@ -34,13 +34,42 @@ class PeopleBalanceSharedMethods {
     }
     return null;
   }
+
   // **Read (Fetch One by Reference Number)** PeopleBalance
+  Future<List<PeopleBalance>?> getAllPeopleBalanceByRef(int refNumber) async {
+    final db = await DatabaseHelper().database;
+    final List<Map<String, dynamic>> maps = await db.query(
+      peopleBalanceTable,
+      where: 'transactionReferanceNumber = ?',
+      whereArgs: [refNumber],
+    );
+    if (maps.isNotEmpty) {
+      return List.generate(maps.length, (i) => PeopleBalance.fromMap(maps[i]));
+    }
+    return null;
+  }
+
+  // **Read (Fetch All Balance by Name)** PeopleBalance
   Future<List<PeopleBalance>> getPeopleBalanceByName(String name) async {
     final db = await DatabaseHelper().database;
     final List<Map<String, dynamic>> maps = await db.query(
       peopleBalanceTable,
       where: 'name = ?',
       whereArgs: [name],
+    );
+    if (maps.isNotEmpty) {
+      return List.generate(maps.length, (i) => PeopleBalance.fromMap(maps[i]));
+    }
+    return [];
+  }
+
+  // **Read (Fetch All by Name)** PeopleBalance
+  Future<List<PeopleBalance>> getPeopleNames() async {
+    final db = await DatabaseHelper().database;
+    final List<Map<String, dynamic>> maps = await db.query(
+      peopleBalanceTable,
+      distinct: true,
+      groupBy: "name"
     );
     if (maps.isNotEmpty) {
       return List.generate(maps.length, (i) => PeopleBalance.fromMap(maps[i]));
@@ -67,5 +96,38 @@ class PeopleBalanceSharedMethods {
       where: 'transactionReferanceNumber = ?',
       whereArgs: [refNumber],
     );
+  }
+
+  Future<List<PeopleBalance>> calculateFinalAmount(List<PeopleBalance> data) async {
+    // Group data by name
+    final Map<String, List<PeopleBalance>> groupedData =
+    data.fold<Map<String, List<PeopleBalance>>>(
+        {},
+            (Map<String, List<PeopleBalance>> acc, PeopleBalance item) {
+          acc[item.name] = (acc[item.name] ?? []).toList()..add(item);
+          return acc;
+        });
+
+    // Calculate final amount for each group
+    final List<PeopleBalance> result = groupedData.entries.map((entry) {
+      final name = entry.key;
+      final transactions = entry.value;
+
+      // Calculate total amount (considering both positive and negative values)
+      final double totalAmount = transactions.fold<double>(
+          0, (double sum, PeopleBalance item) => sum + item.amount);
+
+      return PeopleBalance(
+        name: name,
+        amount: totalAmount,
+        // Copy other relevant data from the first transaction
+        dateAndTime: transactions.first.dateAndTime,
+        transactionFor: transactions.first.transactionFor,
+        relationFrom: transactions.first.relationFrom,
+        transactionReferanceNumber: transactions.first.transactionReferanceNumber,
+      );
+    }).toList();
+
+    return result;
   }
 }

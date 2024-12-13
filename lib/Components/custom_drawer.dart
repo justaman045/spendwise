@@ -39,8 +39,6 @@ class CustomDrawer extends StatelessWidget {
       "Contact me for Feature Suggestion": Icons.contact_emergency,
     };
 
-    final settingsIndex = navBars.keys.toList().indexOf("Settings");
-
     return Drawer(
       width: 250.w,
       elevation: 10.h,
@@ -88,34 +86,6 @@ class CustomDrawer extends StatelessWidget {
               ),
               onTap: () { _handleNavigation(context, i); },
             ),
-
-          // // Items before Settings
-          // for (int i = 0; i <= settingsIndex; i++)
-          //   ListTile(
-          //     leading: Icon(navBars.values.elementAt(i)),
-          //     title: Text(
-          //       navBars.keys.elementAt(i),
-          //       style: TextStyle(fontSize: 15.w),
-          //     ),
-          //     onTap: () { _handleNavigation(context, i); },
-          //   ),
-          //
-          // // Divider before items after Settings
-          // Padding(
-          //   padding: EdgeInsets.symmetric(vertical: 75.h),
-          //   child: const Spacer(),
-          // ),
-          //
-          // // Items after Settings
-          // for (int i = settingsIndex + 1; i < navBars.length; i++)
-          //   ListTile(
-          //     leading: Icon(navBars.values.elementAt(i)),
-          //     title: Text(
-          //       navBars.keys.elementAt(i),
-          //       style: TextStyle(fontSize: 15.w),
-          //     ),
-          //     onTap: () { _handleNavigation(context, i); },
-          //   ),
         ],
       ),
     );

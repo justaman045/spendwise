@@ -1,9 +1,14 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_sms_inbox/flutter_sms_inbox.dart';
+import 'package:intl/intl.dart';
+import 'package:multi_dropdown/multi_dropdown.dart';
 import 'package:spendwise/Models/cus_transaction.dart';
 import 'package:spendwise/Models/expense.dart';
+import 'package:spendwise/Models/people_expense.dart';
 import 'package:spendwise/Requirements/data.dart';
+import 'package:spendwise/Utils/methods.dart';
+import 'package:spendwise/Utils/people_balance_shared_methods.dart';
 import 'package:spendwise/Utils/transaction_methods.dart';
 
 // TODO: Reduce Lines of Code
@@ -436,4 +441,95 @@ IconData getIconData(String typeOfExp) {
     icon = Icons.travel_explore_rounded;
   }
   return icon;
+}
+
+Future<bool> addIncomeAndExpense(
+    String name,
+    String amount,
+    String typeOfExpense,
+    String date,
+    bool setCustomDate,
+    String typeOfTransaction) async {
+  //
+  // Create the Transaction based on the Options
+  CusTransaction transaction = CusTransaction(
+    amount: double.parse(amount),
+    dateAndTime: date.isEmpty ? DateTime.now() : stringToDateTime(date),
+    name: name,
+    typeOfTransaction: typeOfTransaction,
+    expenseType: typeOfExpense,
+    transactionReferanceNumber: generateUniqueRefNumber(),
+  );
+
+  // Insert the Transaction to Database
+  await TransactionMethods().insertTransaction(transaction);
+
+  // Search Database if the Transaction is Saved or not
+  CusTransaction? testTransaction = await TransactionMethods()
+      .getTransactionByRef(transaction.transactionReferanceNumber);
+
+  // Confirm the Transaction, and if not then return Error
+  if (testTransaction != null) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+Future<bool> addSharedIncomeAndExpense(
+  String name,
+  String amount,
+  String typeOfExpense,
+  String typeOfTransaction,
+  List<DropdownItem<String>> sharedNames,
+  bool toExcludeYourself,
+  String date,
+  bool pastDateTransaction,
+) async {
+  // Create the Transaction based on the Options
+  CusTransaction transaction = CusTransaction(
+    amount: sharedNames.isEmpty
+        ? double.parse(amount)
+        : double.parse(amount) / (sharedNames.length + (toExcludeYourself ? 0 : 1)),
+    dateAndTime: !pastDateTransaction ? DateTime.now() : stringToDateTime(date),
+    name: name,
+    typeOfTransaction: typeOfTransaction,
+    expenseType: typeOfExpense,
+    transactionReferanceNumber: generateUniqueRefNumber(),
+  );
+
+  // Insert the Transaction to Database
+  await TransactionMethods().insertTransaction(transaction);
+
+  // Search Database if the Transaction is Saved or not
+  CusTransaction? testTransaction = await TransactionMethods()
+      .getTransactionByRef(transaction.transactionReferanceNumber);
+
+  // Confirm the Transaction, and if not then return Error
+  if (testTransaction != null) {
+    if (sharedNames.isNotEmpty) {
+      List<PeopleBalance> peopleBalanceList = await PeopleBalanceSharedMethods().getAllPeopleBalance();
+      for (DropdownItem dropdownItem in sharedNames) {
+        for (PeopleBalance peopleBalance in peopleBalanceList) {
+          debugPrint((dropdownItem.label.toLowerCase() == peopleBalance.name.toLowerCase()).toString());
+          if (peopleBalance.name == dropdownItem.label) {
+            await PeopleBalanceSharedMethods().insertPeopleBalance(
+              PeopleBalance(
+                name: peopleBalance.name,
+                amount: double.parse(amount) / (sharedNames.length + (toExcludeYourself ? 0 : 1)),
+                dateAndTime: DateFormat.yMMMMd().format(stringToDateTime(date)).toString(),
+                transactionFor: name,
+                relationFrom: peopleBalance.relationFrom,
+                transactionReferanceNumber:
+                    transaction.transactionReferanceNumber,
+              ),
+            );
+          }
+        }
+      }
+    }
+    return true;
+  } else {
+    return false;
+  }
 }

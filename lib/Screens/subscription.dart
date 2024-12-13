@@ -127,9 +127,8 @@ class _SubscriptionManagerState extends State<SubscriptionManager> {
   }
 
   Future<void> _refreshData() async {
-    dynamic data;
     setState(() {
-      data = _getSubscriptions();
+      _getSubscriptions();
     });
   }
 

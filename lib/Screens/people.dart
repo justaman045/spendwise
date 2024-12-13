@@ -20,7 +20,7 @@ class People extends StatefulWidget {
 }
 
 class _PeopleState extends State<People> {
-  final _peopleBalanceList = <PeopleBalance>[];
+  var _peopleBalanceList = <PeopleBalance>[];
   final GlobalKey _addAPeople = GlobalKey();
 
   Future<void> _checkFirstTime() async {
@@ -37,30 +37,42 @@ class _PeopleState extends State<People> {
     }
   }
 
+  void _fetchInitialData() async {
+    _peopleBalanceList = await PeopleBalanceSharedMethods().getAllPeopleBalance();
+    setState(() {
+      _peopleBalanceList;
+    });
+  }
+
   @override
   void initState() {
+    _fetchInitialData();
     super.initState();
     _checkFirstTime();
   }
 
   // Function to run everytime a user expects to refresh the data but the value is not being used
   Future<void> _refreshData() async {
+    List<PeopleBalance> tempList = await PeopleBalanceSharedMethods().getAllPeopleBalance();
+    tempList = await PeopleBalanceSharedMethods().calculateFinalAmount(tempList);
     setState(() {
       _peopleBalanceList.clear();
-      PeopleBalanceSharedMethods().getAllPeopleBalance();
+      _peopleBalanceList.addAll(tempList);
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    debugPrint(_peopleBalanceList.length.toString());
     return FutureBuilder(
-      future: PeopleBalanceSharedMethods().getAllPeopleBalance(),
+      future: PeopleBalanceSharedMethods().calculateFinalAmount(_peopleBalanceList),
       builder: (BuildContext context, AsyncSnapshot snapshot) {
         if (ConnectionState.done == snapshot.connectionState) {
           if (_peopleBalanceList.length != snapshot.data.length) {
             _peopleBalanceList.clear();
             _peopleBalanceList.addAll(snapshot.data);
           }
+          debugPrint(_peopleBalanceList.length.toString());
           return RefreshIndicator(
             onRefresh: _refreshData,
             child: Scaffold(
@@ -83,7 +95,7 @@ class _PeopleState extends State<People> {
                             ),
                             child: GestureDetector(
                               onTap: (){
-                                Get.off(
+                                Get.to(
                                   routeName: routes[16],
                                       () => PeopleTransactions(peopleBalance: snapshot.data[index]),
                                   transition: customTrans,
@@ -104,6 +116,7 @@ class _PeopleState extends State<People> {
                                       child: const Icon(Icons.payment_rounded),
                                     ),
                                   ),
+                                  //TODO: to make the description less populated
                                   SizedBox(
                                     width: 275.w,
                                     child: Padding(
@@ -119,34 +132,20 @@ class _PeopleState extends State<People> {
                                                 CrossAxisAlignment.start,
                                             children: [
                                               Text(snapshot.data[index].name),
-                                              Row(
-                                                children: [
-                                                  // Text(snapshot
-                                                  //     .data[index].dateAndTime),
-                                                  if (snapshot
-                                                      .data[index].transactionFor
-                                                      .toString()
-                                                      .isNotEmpty) ...[
-                                                    const Text(" - "),
-                                                    Text(snapshot.data[index]
-                                                        .transactionFor),
-                                                  ],
-                                                ],
-                                              ),
                                               if (snapshot.data[index].amount >
                                                   0) ...[
                                                 Padding(
                                                   padding: EdgeInsets.symmetric(
                                                       vertical: 7.h),
                                                   child: SizedBox(
-                                                    width: 150.w,
+                                                    width: 200.w,
                                                     child: snapshot.data[index]
                                                                 .amount ==
                                                             0
                                                         ? const Text(
                                                             "No Balance to Settle")
                                                         : Text(
-                                                            "You've to Recieve Rs. ${snapshot.data[index].amount} from ${snapshot.data[index].name}"),
+                                                            "You've to Receive Rs. ${snapshot.data[index].amount} from ${snapshot.data[index].name}"),
                                                   ),
                                                 ),
                                               ] else ...[
@@ -169,20 +168,6 @@ class _PeopleState extends State<People> {
                                           ),
                                           Text(
                                               "Rs. ${snapshot.data[index].amount.toString()}"),
-                                          GestureDetector(
-                                            onTap: () {
-                                              PeopleBalanceSharedMethods()
-                                                  .deletePeopleBalance(snapshot
-                                                      .data[index]
-                                                      .transactionReferanceNumber)
-                                                  .then(
-                                                (value) {
-                                                  _refreshData();
-                                                },
-                                              );
-                                            },
-                                            child: const Icon(Icons.delete),
-                                          )
                                         ],
                                       ),
                                     ),
