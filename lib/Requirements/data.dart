@@ -38,9 +38,6 @@ const List<String> typeOfTransaction = [
   "expense",
   "he/She Didn't Pay",
   "you Didn't Paid",
-  "balancing People's Balance",
-  "Income from",
-  "Payment to"
 ];
 const List<String> typeOfExpense = [
   "Bike and Travel",

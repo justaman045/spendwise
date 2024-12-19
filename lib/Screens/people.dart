@@ -138,7 +138,7 @@ class _PeopleState extends State<People> {
                                                   padding: EdgeInsets.symmetric(
                                                       vertical: 7.h),
                                                   child: SizedBox(
-                                                    width: 200.w,
+                                                    width: 180.w,
                                                     child: snapshot.data[index]
                                                                 .amount ==
                                                             0
@@ -153,7 +153,7 @@ class _PeopleState extends State<People> {
                                                   padding: EdgeInsets.symmetric(
                                                       vertical: 7.h),
                                                   child: SizedBox(
-                                                    width: 150.w,
+                                                    width: 180.w,
                                                     child: snapshot.data[index]
                                                                 .amount ==
                                                             0

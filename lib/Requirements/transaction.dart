@@ -26,117 +26,79 @@ List<CusTransaction> allTransactions(
   bool expense = false,
   bool todayTrans = false,
 }) {
-  final today = DateTime.now();
-  if (showHidden == true &&
-      income == false &&
-      thisMonth == false &&
-      expense == false &&
-      todayTrans == false) {
-    debugPrint("from showhidden");
-    return transactions
-        .where((transaction) => transaction.toInclude == 1)
-        .toList()
-        .reversed
-        .toList();
-  } else if (thisMonth == true &&
-      income == true &&
-      expense == false &&
-      todayTrans == false &&
-      showHidden == false) {
-    debugPrint("from thismonthincome");
-    return transactions
-        .where((transaction) =>
-            transaction.dateAndTime.year == today.year &&
-            transaction.dateAndTime.month == today.month &&
-            transaction.typeOfTransaction.toLowerCase() ==
-                typeOfTransaction[0] &&
-            transaction.toInclude == 1)
-        .toList()
-        .reversed
-        .toList();
-  } else if (thisMonth == true &&
-      expense == true &&
-      todayTrans == false &&
-      income == false &&
-      showHidden == false) {
-    debugPrint("from thismonthexpense");
-    return transactions
-        .where((transaction) =>
-            transaction.dateAndTime.year == today.year &&
-            transaction.dateAndTime.month == today.month &&
-            transaction.typeOfTransaction.toLowerCase() !=
-                typeOfTransaction[0] &&
-            transaction.toInclude == 1)
-        .toList()
-        .reversed
-        .toList();
-  } else if (income == true &&
-      showHidden == true &&
-      expense == false &&
-      todayTrans == false &&
-      thisMonth == false) {
-    debugPrint("from incomeshowhidden");
-    return transactions
-        .where((transaction) =>
-            transaction.typeOfTransaction.toLowerCase() == typeOfTransaction[0])
-        .toList()
-        .reversed
-        .toList();
-  } else if (expense == true &&
-      showHidden == true &&
-      thisMonth == false &&
-      todayTrans == false &&
-      income == false) {
-    debugPrint("from expenseshowhidden");
-    return transactions
-        .where((transaction) =>
-            transaction.typeOfTransaction.toLowerCase() != typeOfTransaction[0])
-        .toList()
-        .reversed
-        .toList();
-  } else if (thisMonth == true &&
-      expense == true &&
-      showHidden == false &&
-      todayTrans == false &&
-      income == false) {
-    debugPrint("from thismonthexpense");
-    return transactions
-        .where((transaction) =>
-            transaction.dateAndTime.month == today.month &&
-            transaction.dateAndTime.year == today.year &&
-            transaction.expenseType != typeOfTransaction[0] &&
-            transaction.toInclude == 1)
-        .toList()
-        .reversed
-        .toList();
-  } else if (thisMonth == true &&
-      expense == false &&
-      showHidden == false &&
-      todayTrans == true &&
-      income == false) {
-    debugPrint("from todayTrans");
-    return transactions
-        .where((transaction) =>
-            transaction.dateAndTime.month == today.month &&
-            transaction.dateAndTime.year == today.year &&
-            transaction.dateAndTime.day == today.day &&
-            transaction.toInclude == 1)
-        .toList()
-        .reversed
-        .toList();
-  } else {
-    // debugPrint(expense.toString());
-    // debugPrint(showHidden.toString());
-    debugPrint("from else");
-    return transactions
-        .where((transaction) =>
-            transaction.dateAndTime.month == today.month &&
-            transaction.dateAndTime.year == today.year &&
-            transaction.toInclude == 1)
-        .toList()
-        .reversed
-        .toList();
+  if (showHidden) {
+    if (expense) {
+      return transactions
+          .where((trans) =>
+              (trans.typeOfTransaction.toLowerCase() ==
+                  typeOfTransaction[1].toLowerCase()) ||
+              (trans.typeOfTransaction.toLowerCase() ==
+                  typeOfTransaction[2].toLowerCase()))
+          .toList();
+    }
+    if (income) {
+      return transactions
+          .where((trans) => (trans.typeOfTransaction.toLowerCase() ==
+              typeOfTransaction[0].toLowerCase()))
+          .toList();
+    }
   }
+
+  if (!showHidden) {
+    List<CusTransaction> nonHiddenTransaction =
+        transactions.where((trans) => trans.toInclude == 1).toList();
+    if (income && !thisMonth) {
+      return nonHiddenTransaction
+          .where((trans) =>
+              trans.typeOfTransaction.toLowerCase() ==
+              typeOfTransaction[0].toLowerCase())
+          .toList();
+    }
+    if (expense && !thisMonth) {
+      return nonHiddenTransaction
+          .where((trans) =>
+              (trans.typeOfTransaction.toLowerCase() ==
+                  typeOfTransaction[1].toLowerCase()) ||
+              (trans.typeOfTransaction.toLowerCase() ==
+                  typeOfTransaction[2].toLowerCase()))
+          .toList();
+    }
+    if (todayTrans) {
+      return nonHiddenTransaction
+          .where((trans) =>
+              (trans.dateAndTime.day == DateTime.now().day) &&
+              (trans.dateAndTime.month == DateTime.now().month) &&
+              (trans.dateAndTime.year == DateTime.now().year))
+          .toList();
+    }
+    if (thisMonth) {
+      List<CusTransaction> nonHiddenThisMonthTransaction = nonHiddenTransaction
+          .where((trans) =>
+              (trans.dateAndTime.month == DateTime.now().month) &&
+              (trans.dateAndTime.year == DateTime.now().year))
+          .toList();
+
+      if (income) {
+        return nonHiddenThisMonthTransaction
+            .where((trans) =>
+                trans.typeOfTransaction.toLowerCase() ==
+                typeOfTransaction[0].toLowerCase())
+            .toList();
+      }
+      if (expense) {
+        return nonHiddenThisMonthTransaction
+            .where((trans) =>
+                (trans.typeOfTransaction.toLowerCase() ==
+                    typeOfTransaction[1].toLowerCase()) ||
+                (trans.typeOfTransaction.toLowerCase() ==
+                    typeOfTransaction[2].toLowerCase()))
+            .toList();
+      }
+
+      return nonHiddenThisMonthTransaction;
+    }
+  }
+  return transactions.where((trans) => trans.toInclude == 1).toList();
 }
 
 double totalExpenseThisMonth(List<CusTransaction> transactions) {
@@ -480,7 +442,7 @@ Future<bool> addSharedIncomeAndExpense(
   String name,
   String amount,
   String typeOfExpense,
-  String typeOfTransaction,
+  String typeOfTransactionLocal,
   List<DropdownItem<String>> sharedNames,
   bool toExcludeYourself,
   String date,
@@ -488,36 +450,49 @@ Future<bool> addSharedIncomeAndExpense(
 ) async {
   // Create the Transaction based on the Options
   CusTransaction transaction = CusTransaction(
-    amount: sharedNames.isEmpty
-        ? double.parse(amount)
-        : double.parse(amount) / (sharedNames.length + (toExcludeYourself ? 0 : 1)),
+    amount: double.parse(amount),
     dateAndTime: !pastDateTransaction ? DateTime.now() : stringToDateTime(date),
     name: name,
-    typeOfTransaction: typeOfTransaction,
+    typeOfTransaction: typeOfTransactionLocal,
     expenseType: typeOfExpense,
     transactionReferanceNumber: generateUniqueRefNumber(),
   );
 
   // Insert the Transaction to Database
-  await TransactionMethods().insertTransaction(transaction);
+  if (transaction.typeOfTransaction.toLowerCase() ==
+      typeOfTransaction[2].toLowerCase()) {
+    await TransactionMethods().insertTransaction(transaction);
+  }
 
   // Search Database if the Transaction is Saved or not
   CusTransaction? testTransaction = await TransactionMethods()
       .getTransactionByRef(transaction.transactionReferanceNumber);
 
   // Confirm the Transaction, and if not then return Error
-  if (testTransaction != null) {
+  if ((testTransaction != null) ||
+      ((transaction.typeOfTransaction.toLowerCase() ==
+          typeOfTransaction[3].toLowerCase()))) {
     if (sharedNames.isNotEmpty) {
-      List<PeopleBalance> peopleBalanceList = await PeopleBalanceSharedMethods().getAllPeopleBalance();
+      List<PeopleBalance> peopleBalanceList =
+          await PeopleBalanceSharedMethods().getAllPeopleBalance();
       for (DropdownItem dropdownItem in sharedNames) {
         for (PeopleBalance peopleBalance in peopleBalanceList) {
-          debugPrint((dropdownItem.label.toLowerCase() == peopleBalance.name.toLowerCase()).toString());
+          debugPrint((dropdownItem.label.toLowerCase() ==
+                  peopleBalance.name.toLowerCase())
+              .toString());
           if (peopleBalance.name == dropdownItem.label) {
             await PeopleBalanceSharedMethods().insertPeopleBalance(
               PeopleBalance(
                 name: peopleBalance.name,
-                amount: double.parse(amount) / (sharedNames.length + (toExcludeYourself ? 0 : 1)),
-                dateAndTime: DateFormat.yMMMMd().format(stringToDateTime(date)).toString(),
+                amount: transaction.typeOfTransaction.toLowerCase() ==
+                        typeOfTransaction[2].toLowerCase()
+                    ? double.parse(amount) /
+                        (sharedNames.length + (toExcludeYourself ? 0 : 1))
+                    : -(double.parse(amount) /
+                        (sharedNames.length + (toExcludeYourself ? 0 : 1))),
+                dateAndTime: DateFormat.yMMMMd()
+                    .format(stringToDateTime(date))
+                    .toString(),
                 transactionFor: name,
                 relationFrom: peopleBalance.relationFrom,
                 transactionReferanceNumber:

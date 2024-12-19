@@ -197,7 +197,8 @@ class _UserProfileState extends State<UserProfile> {
                         Get.to(
                           routeName: routes[4],
                           () => const AllTransactions(
-                            type: "withhiddenexpense",
+                            showHidden: true,
+                            expense: true,
                             pageTitle: "All Payments",
                             chartTitle: "Payments",
                             chartType: "Payments",
@@ -220,7 +221,8 @@ class _UserProfileState extends State<UserProfile> {
                         Get.to(
                           routeName: "Monthly Income",
                           () => const AllTransactions(
-                            type: "withhiddenincome",
+                            showHidden: true,
+                            income: true,
                             pageTitle: "All Income",
                             chartTitle: "Income",
                             chartType: "Income",

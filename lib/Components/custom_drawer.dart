@@ -113,7 +113,6 @@ class CustomDrawer extends StatelessWidget {
             routeName: routes[4],
             () => ShowCaseWidget(
               builder: (context) => const AllTransactions(
-                type: "allTransactions",
                 pageTitle: "All Transactions",
                 chartTitle: "All Transactions from SMS",
                 chartType: "Transaction",

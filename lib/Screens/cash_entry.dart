@@ -34,10 +34,8 @@ class _AddCashEntryState extends State<AddCashEntry> {
   TextEditingController fromDate = TextEditingController();
   TextEditingController typeOftransactionEditingController =
       TextEditingController();
-  String save = "";
   TextEditingController expenseTypeEditingController = TextEditingController();
   String typeOfExp = "";
-  String typeOftransaction = "";
   String transactionReferanceNumber = "";
   DateTime? recurringDate;
   bool isSharable = false;
@@ -53,7 +51,9 @@ class _AddCashEntryState extends State<AddCashEntry> {
 
   Future<void> _fetchData() async {
     _peopleBalanceList = await PeopleBalanceSharedMethods().getPeopleNames();
-    setState(() {});
+    setState(() {
+      _peopleBalanceList;
+    });
   }
 
   Future<void> _refreshData() async {
@@ -103,22 +103,24 @@ class _AddCashEntryState extends State<AddCashEntry> {
                 key: _formKey,
                 child: Column(
                   children: [
+                    // Recipient Name
                     TextBox(
                       controller: nameEditingController,
                       formatter: formatters["Name"]!,
                       labelString: "Recipient Name",
                       function: validators["Name"]!,
                     ),
+
+                    // Amount
                     TextBox(
                       controller: amountEditingController,
                       formatter: formatters["Amount"]!,
                       labelString: "Amount",
                       function: validators["Amount"]!,
-                      readOnly: typeOftransaction.toLowerCase() ==
-                              typeOfTransaction[4].toLowerCase()
-                          ? true
-                          : false,
+                      readOnly: false,
                     ),
+
+                    // Category of Expense
                     OptionBox(
                       function: (newValue) => setState(() {
                         typeOfExp = newValue!;
@@ -126,6 +128,8 @@ class _AddCashEntryState extends State<AddCashEntry> {
                       items: getDropDownMenuItems(typeOfExpense),
                       labelString: "Type Of Expense",
                     ),
+
+                    // Type Of Transaction
                     OptionBox(
                       function: (String? value) => setState(
                         () {
@@ -145,23 +149,30 @@ class _AddCashEntryState extends State<AddCashEntry> {
                         },
                       ),
                       items: getDropDownMenuItems(typeOfTransaction),
-                      labelString: "InDev Income/Expense",
+                      labelString: "Income/Expense",
                     ),
+
+                    // Add a Date to the Transaction
                     if (pastDateTransaction == true) ...[
                       DateField(dateController: fromDate),
                     ],
+
+                    // Option to Add a New User
                     if (isSharable) ...[
                       OptionCheckBox(
-                          stringLabel:
-                              "If the person is not available in the list, Click here",
-                          dataValue: toAddNewPerson,
-                          function: (value) {
-                            setState(
-                              () {
-                                toAddNewPerson = value!;
-                              },
-                            );
-                          }),
+                        stringLabel:
+                            "If the person is not available in the list, Click here",
+                        dataValue: toAddNewPerson,
+                        function: (value) {
+                          setState(
+                            () {
+                              toAddNewPerson = value!;
+                            },
+                          );
+                        },
+                      ),
+
+                      // Multi Select Dropdown to Select Persons
                       if (toAddNewPerson == false) ...[
                         //TODO: to look into future
                         Padding(
@@ -171,10 +182,7 @@ class _AddCashEntryState extends State<AddCashEntry> {
                             right: 20.w,
                           ),
                           child: MultiDropdown<String>(
-                            maxSelections: typeOftransaction.toLowerCase() ==
-                                    typeOfTransaction[4].toLowerCase()
-                                ? 1
-                                : _peopleBalanceList.length,
+                            maxSelections: _peopleBalanceList.length,
                             controller: multiSelectDropDownController,
                             items: _peopleBalanceList.isEmpty
                                 ? []
@@ -196,7 +204,6 @@ class _AddCashEntryState extends State<AddCashEntry> {
                               if (selectedOptions!.isEmpty) {
                                 return "Select any Person to share the Expense/Income";
                               }
-
                               return null;
                             },
                             onSelectionChange: (List<String> list) {
@@ -205,6 +212,7 @@ class _AddCashEntryState extends State<AddCashEntry> {
                           ),
                         ),
                       ] else ...[
+                        // Add People Feature
                         GestureDetector(
                           onTap: () async {
                             final reload = await Get.to(
@@ -241,7 +249,7 @@ class _AddCashEntryState extends State<AddCashEntry> {
                     if ((isSharable == true) && (toAddNewPerson == false)) ...[
                       OptionCheckBox(
                         stringLabel:
-                            "Click here to divide the amount between only the selected Persons",
+                            "Exclude yourself from the Split of Amount",
                         dataValue: toIncludeYourself,
                         function: (bool? value) {
                           setState(
@@ -313,14 +321,18 @@ class _AddCashEntryState extends State<AddCashEntry> {
                       onTap: () async {
                         if (_formKey.currentState!.validate()) {
                           //TODO: add the transaction based on different income/expense
-                          if ([typeOfTransaction[0].toLowerCase(), typeOfTransaction[1].toString()].contains(typeOftransactionEditingController.text.toLowerCase())) {
+                          if ([
+                            typeOfTransaction[0].toLowerCase(),
+                            typeOfTransaction[1].toString()
+                          ].contains(typeOftransactionEditingController.text
+                              .toLowerCase())) {
                             bool inserted = await addIncomeAndExpense(
-                                nameEditingController.text,
-                                amountEditingController.text,
-                                typeOfExp,
-                                fromDate.text,
-                                pastDateTransaction,
-                                typeOftransactionEditingController.text,
+                              nameEditingController.text,
+                              amountEditingController.text,
+                              typeOfExp,
+                              fromDate.text,
+                              pastDateTransaction,
+                              typeOftransactionEditingController.text,
                             );
                             if (inserted) {
                               Get.back(result: "refresh");
@@ -328,18 +340,21 @@ class _AddCashEntryState extends State<AddCashEntry> {
                               Get.snackbar("Internal Error",
                                   "Your Transaction wasn't saved");
                             }
-                          } else if([typeOfTransaction[2].toLowerCase(), typeOfTransaction[3].toLowerCase()].contains(typeOftransactionEditingController.text.toLowerCase())){
+                          } else if ([
+                            typeOfTransaction[2].toLowerCase(),
+                            typeOfTransaction[3].toLowerCase()
+                          ].contains(typeOftransactionEditingController.text
+                              .toLowerCase())) {
                             debugPrint("Yes");
                             bool inserted = await addSharedIncomeAndExpense(
-                              nameEditingController.text,
-                              amountEditingController.text,
-                              typeOfExp,
-                              typeOftransactionEditingController.text,
-                              multiSelectDropDownController.selectedItems,
-                              toIncludeYourself,
-                              fromDate.text,
-                              pastDateTransaction
-                            );
+                                nameEditingController.text,
+                                amountEditingController.text,
+                                typeOfExp,
+                                typeOftransactionEditingController.text,
+                                multiSelectDropDownController.selectedItems,
+                                toIncludeYourself,
+                                fromDate.text,
+                                pastDateTransaction);
                             if (inserted) {
                               Get.back(result: "refresh");
                             } else {

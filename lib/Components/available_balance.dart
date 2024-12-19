@@ -19,10 +19,7 @@ class AvailableBalance extends StatelessWidget {
   final List<CusTransaction> bankTransaction;
 
   double calculateBalance() {
-    // Calculate available balance
-    // return totalIncomeThisMonth(bankTransaction) -
-    //     totalExpenseThisMonth(bankTransaction);
-    return totalBalanceRemaining(bankTransaction);
+    return totalBalanceRemaining(allTransactions(bankTransaction));
   }
 
   Color getTextColor(double balance) {
@@ -40,7 +37,7 @@ class AvailableBalance extends StatelessWidget {
           pageTitle: "Monthly Transactions",
           chartTitle: "This months Transactions from SMS",
           chartType: "Transaction",
-          type: "thisMonthTransactions",
+          thisMonth: true,
         ),
         transition: customTrans,
         curve: customCurve,

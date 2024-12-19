@@ -24,7 +24,8 @@ class CurrentFlow extends StatelessWidget {
           onTap: () => Get.to(
             routeName: "Monthly Income",
             () => const AllTransactions(
-              type: "thismonthincome",
+              thisMonth: true,
+              income: true,
               pageTitle: "All Income this Month",
               chartTitle: "Income Read from SMS",
               chartType: "Income",
@@ -34,13 +35,16 @@ class CurrentFlow extends StatelessWidget {
             duration: duration,
           ),
           flowText: "Income this Month",
-          flowAmount: totalIncomeThisMonth(bankTransactions).toInt(),
+          flowAmount: totalIncomeThisMonth(
+            allTransactions(bankTransactions, thisMonth: true, income: true),
+          ).toInt(),
         ),
         _buildCashFlowItem(
           onTap: () => Get.to(
             routeName: "Monthly Expense",
             () => const AllTransactions(
-              type: "thismonthexpense",
+              thisMonth: true,
+              expense: true,
               pageTitle: "All Expense this Month",
               chartTitle: "Expense Read from SMS",
               chartType: "Expense",
@@ -50,7 +54,9 @@ class CurrentFlow extends StatelessWidget {
             duration: duration,
           ),
           flowText: "Expenses this Month",
-          flowAmount: totalExpenseThisMonth(bankTransactions).toInt(),
+          flowAmount: totalExpenseThisMonth(
+            allTransactions(bankTransactions, thisMonth: true, expense: true),
+          ).toInt(),
         ),
       ],
     );
