@@ -9,6 +9,7 @@ import "package:path_provider/path_provider.dart";
 import 'package:pdf/widgets.dart' as pw;
 import "package:screenshot/screenshot.dart";
 import "package:spendwise/Components/details_button.dart";
+import "package:spendwise/Models/cus_transaction.dart";
 import "package:spendwise/Models/people_expense.dart";
 import "package:spendwise/Requirements/data.dart";
 import "package:spendwise/Screens/edit_transaction.dart";
@@ -21,22 +22,10 @@ import 'package:path/path.dart';
 class TransactionDetails extends StatefulWidget {
   const TransactionDetails({
     super.key,
-    required this.toName,
-    required this.amount,
-    required this.dateTime,
-    required this.transactionReferanceNumber,
-    required this.expenseType,
-    required this.transactionType,
-    required this.toIncl,
+    required this.transaction,
   });
 
-  final String toName;
-  final int amount;
-  final DateTime dateTime;
-  final int transactionReferanceNumber;
-  final String expenseType;
-  final String transactionType;
-  final int toIncl;
+  final CusTransaction transaction;
 
   @override
   State<TransactionDetails> createState() => _TransactionDetailsState();
@@ -46,9 +35,10 @@ class _TransactionDetailsState extends State<TransactionDetails> {
   List<PeopleBalance>? peopleBalance;
   final ScreenshotController _screenshotController = ScreenshotController();
 
-  void _getSharedTransaction () async {
-    peopleBalance = await PeopleBalanceSharedMethods().getAllPeopleBalanceByRef(widget.transactionReferanceNumber);
-    if(peopleBalance != null){
+  void _getSharedTransaction() async {
+    peopleBalance = await PeopleBalanceSharedMethods().getAllPeopleBalanceByRef(
+        widget.transaction.transactionReferanceNumber);
+    if (peopleBalance != null) {
       setState(() {
         peopleBalance;
       });
@@ -64,7 +54,7 @@ class _TransactionDetailsState extends State<TransactionDetails> {
 
       final dir = await getApplicationDocumentsDirectory();
       final imagePath = await File(
-              '${dir.path}/${widget.transactionType.replaceAll("/", "")} to ${widget.toName}.png')
+              '${dir.path}/${widget.transaction.typeOfTransaction.replaceAll("/", "")} to ${widget.transaction.name}.png')
           .create();
       await imagePath.writeAsBytes(image!);
 
@@ -100,7 +90,9 @@ class _TransactionDetailsState extends State<TransactionDetails> {
                   ),
                 ),
               ),
-              if (widget.transactionType.toString().toLowerCase() !=
+              if (widget.transaction.typeOfTransaction
+                      .toString()
+                      .toLowerCase() !=
                   typeOfTransaction[0].toLowerCase()) ...[
                 Center(
                   child: Text(
@@ -119,7 +111,7 @@ class _TransactionDetailsState extends State<TransactionDetails> {
                       horizontal: 20.w,
                     ),
                     child: Text(
-                      "You've paid to ${widget.toName}",
+                      "You've paid to ${widget.transaction.name}",
                       style: TextStyle(fontSize: 13.r),
                     ),
                   ),
@@ -179,7 +171,7 @@ class _TransactionDetailsState extends State<TransactionDetails> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    if (widget.expenseType == typeOfExpense[0]) ...[
+                    if (widget.transaction.expenseType == typeOfExpense[0]) ...[
                       Text(
                         "From",
                         style: TextStyle(
@@ -195,7 +187,7 @@ class _TransactionDetailsState extends State<TransactionDetails> {
                       ),
                     ],
                     Text(
-                      widget.toName,
+                      widget.transaction.name,
                       style: TextStyle(
                         fontSize: 13.r,
                       ),
@@ -217,7 +209,7 @@ class _TransactionDetailsState extends State<TransactionDetails> {
                       style: TextStyle(fontSize: 13.r),
                     ),
                     Text(
-                      widget.transactionReferanceNumber.toString(),
+                      widget.transaction.transactionReferanceNumber.toString(),
                       style: TextStyle(
                         fontSize: 13.r,
                       ),
@@ -244,7 +236,7 @@ class _TransactionDetailsState extends State<TransactionDetails> {
                       children: [
                         Text(
                           DateFormat.yMMMMd('en_US')
-                              .format(widget.dateTime)
+                              .format(widget.transaction.dateAndTime)
                               .toString(),
                           style: TextStyle(
                             fontSize: 13.r,
@@ -257,7 +249,9 @@ class _TransactionDetailsState extends State<TransactionDetails> {
                           ),
                         ),
                         Text(
-                          DateFormat.jm().format(widget.dateTime).toString(),
+                          DateFormat.jm()
+                              .format(widget.transaction.dateAndTime)
+                              .toString(),
                           style: TextStyle(
                             fontSize: 13.r,
                           ),
@@ -277,13 +271,13 @@ class _TransactionDetailsState extends State<TransactionDetails> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      widget.transactionType,
+                      widget.transaction.typeOfTransaction,
                       style: TextStyle(
                         fontSize: 13.r,
                       ),
                     ),
                     Text(
-                      "Rs. ${widget.amount}",
+                      "Rs. ${widget.transaction.amount}",
                       style: TextStyle(
                         fontSize: 13.r,
                       ),
@@ -307,7 +301,7 @@ class _TransactionDetailsState extends State<TransactionDetails> {
                       ),
                     ),
                     Text(
-                      widget.transactionType,
+                      widget.transaction.typeOfTransaction,
                       style: TextStyle(
                         fontSize: 13.r,
                       ),
@@ -315,7 +309,7 @@ class _TransactionDetailsState extends State<TransactionDetails> {
                   ],
                 ),
               ),
-              if(peopleBalance != null) ...[
+              if (peopleBalance != null) ...[
                 Padding(
                   padding: EdgeInsets.only(
                     left: 30.w,
@@ -331,12 +325,18 @@ class _TransactionDetailsState extends State<TransactionDetails> {
                           fontSize: 13.r,
                         ),
                       ),
-                      Row( children: peopleBalance!.map((e) => Text(
-                        e.name,
-                        style: TextStyle(
-                          fontSize: 13.r,
-                        ),
-                      )).toList() )
+                      Row(
+                        children: peopleBalance!
+                            .map(
+                              (e) => Text(
+                                e.name,
+                                style: TextStyle(
+                                  fontSize: 13.r,
+                                ),
+                              ),
+                            )
+                            .toList(),
+                      ),
                     ],
                   ),
                 ),
@@ -365,7 +365,7 @@ class _TransactionDetailsState extends State<TransactionDetails> {
                       ),
                     ),
                     Text(
-                      "Rs. ${widget.amount}",
+                      "Rs. ${widget.transaction.amount}",
                       style: TextStyle(
                         fontSize: 13.r,
                       ),
@@ -400,14 +400,7 @@ class _TransactionDetailsState extends State<TransactionDetails> {
                       dynamic refresh = await Get.to(
                         routeName: "editTransaction",
                         () => EditTransaction(
-                          amount: widget.amount,
-                          dateTime: widget.dateTime,
-                          expenseType: widget.expenseType,
-                          toName: widget.toName,
-                          transactionReferanceNumber:
-                              widget.transactionReferanceNumber,
-                          transactionType: widget.transactionType,
-                          toIncl: widget.toIncl,
+                          transaction: widget.transaction,
                         ),
                         curve: customCurve,
                         transition: customTrans,
@@ -535,7 +528,7 @@ class _TransactionDetailsState extends State<TransactionDetails> {
                         mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
                         children: [
                           pw.Text("Transaction Amount"),
-                          pw.Text(widget.amount.toString())
+                          pw.Text(widget.transaction.amount.toString())
                         ],
                       ),
                     ),
@@ -549,7 +542,8 @@ class _TransactionDetailsState extends State<TransactionDetails> {
                         mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
                         children: [
                           pw.Text("Transaction Type"),
-                          pw.Text(widget.transactionType.toString())
+                          pw.Text(
+                              widget.transaction.typeOfTransaction.toString())
                         ],
                       ),
                     ),
@@ -563,7 +557,7 @@ class _TransactionDetailsState extends State<TransactionDetails> {
                         mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
                         children: [
                           pw.Text("Transaction Date"),
-                          pw.Text(widget.dateTime.toString())
+                          pw.Text(widget.transaction.dateAndTime.toString())
                         ],
                       ),
                     ),
@@ -591,7 +585,7 @@ class _TransactionDetailsState extends State<TransactionDetails> {
                         mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
                         children: [
                           pw.Text("Beneficiary"),
-                          pw.Text(widget.toName.toString())
+                          pw.Text(widget.transaction.name.toString())
                         ],
                       ),
                     ),
@@ -617,7 +611,8 @@ class _TransactionDetailsState extends State<TransactionDetails> {
                         mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
                         children: [
                           pw.Text("Transaction Reference"),
-                          pw.Text(widget.transactionReferanceNumber.toString())
+                          pw.Text(widget.transaction.transactionReferanceNumber
+                              .toString())
                         ],
                       ),
                     ),
@@ -668,7 +663,7 @@ class _TransactionDetailsState extends State<TransactionDetails> {
     );
 
     final file = File(join("/storage/emulated/0/Download",
-        '${widget.expenseType} to ${widget.toName}.pdf'));
+        '${widget.transaction.expenseType} to ${widget.transaction.name}.pdf'));
     await file.writeAsBytes(await pdf.save()).then((value) => Get.snackbar(
         "PDF Saved",
         "A sharable PDF file has been saved in your Downloads Directory"));

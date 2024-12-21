@@ -14,23 +14,10 @@ final _formKey = GlobalKey<FormState>();
 // TODO: Reduce Lines of Code
 class EditTransaction extends StatefulWidget {
   const EditTransaction({
-    super.key,
-    required this.toName,
-    required this.amount,
-    required this.dateTime,
-    required this.transactionReferanceNumber,
-    required this.expenseType,
-    required this.transactionType,
-    required this.toIncl,
+    super.key, required this.transaction,
   });
 
-  final String toName;
-  final int amount;
-  final DateTime dateTime;
-  final int transactionReferanceNumber;
-  final String expenseType;
-  final String transactionType;
-  final int toIncl;
+  final CusTransaction transaction;
 
   @override
   State<EditTransaction> createState() => _EditTransactionState();
@@ -55,9 +42,9 @@ class _EditTransactionState extends State<EditTransaction> {
   @override
   Widget build(BuildContext context) {
     List<String> typeOfTransaction = typeOfExpense;
-    nameController.text = widget.toName;
-    fromDate.text = DateFormat.yMMMMd().format(widget.dateTime);
-    amountEditingController.text = widget.amount.toString();
+    nameController.text = widget.transaction.name;
+    fromDate.text = DateFormat.yMMMMd().format(widget.transaction.dateAndTime);
+    amountEditingController.text = widget.transaction.amount.toString();
     // TextEditingController expenseEditingController = TextEditingController();
 
     return Scaffold(
@@ -118,7 +105,7 @@ class _EditTransactionState extends State<EditTransaction> {
                     style: TextStyle(fontSize: 13.r),
                   ),
                   Text(
-                    widget.transactionReferanceNumber.toString(),
+                    widget.transaction.transactionReferanceNumber.toString(),
                     style: TextStyle(
                       fontSize: 13.r,
                     ),
@@ -237,7 +224,7 @@ class _EditTransactionState extends State<EditTransaction> {
                           updateTransaction(value);
                         }
                       },
-                      value: widget.expenseType,
+                      value: widget.transaction.expenseType,
                     ),
                   ),
                 ),
@@ -280,7 +267,7 @@ class _EditTransactionState extends State<EditTransaction> {
                           updatetoInclude(value);
                         }
                       },
-                      value: widget.toIncl == 1 ? "No" : "Yes",
+                      value: widget.transaction.toInclude == 1 ? "No" : "Yes",
                     ),
                   ),
                 ),
@@ -336,12 +323,12 @@ class _EditTransactionState extends State<EditTransaction> {
                             amount: double.parse(amountEditingController.text),
                             dateAndTime: stringToDateTime(fromDate.text),
                             name: nameController.text,
-                            typeOfTransaction: widget.transactionType,
+                            typeOfTransaction: widget.transaction.typeOfTransaction,
                             expenseType: _expType.isEmpty
-                                ? widget.expenseType
+                                ? widget.transaction.expenseType
                                 : _expType,
                             transactionReferanceNumber:
-                            widget.transactionReferanceNumber,
+                            widget.transaction.transactionReferanceNumber,
                             toInclude: _toExclude == "No" ? 1 : 0,
                           );
                           await TransactionMethods()
@@ -385,7 +372,7 @@ class _EditTransactionState extends State<EditTransaction> {
                     child: GestureDetector(
                       onTap: () async {
                         await TransactionMethods()
-                            .deleteTransaction(widget.transactionReferanceNumber)
+                            .deleteTransaction(widget.transaction.transactionReferanceNumber)
                             .then((value) => Get.back(result: "refresh"))
                             .then((value) => Get.back(result: "refresh"));
                       },

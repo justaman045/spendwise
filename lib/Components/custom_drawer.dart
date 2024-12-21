@@ -34,6 +34,7 @@ class CustomDrawer extends StatelessWidget {
       "Profile": Icons.person_2,
       "Subscriptions": Icons.subscriptions,
       "People": CupertinoIcons.group_solid,
+      "Spends": CupertinoIcons.arrow_right_arrow_left,
       "Settings": CupertinoIcons.settings_solid,
       "Features yet to Implement": CupertinoIcons.tray_full,
       "Contact me for Feature Suggestion": Icons.contact_emergency,
@@ -158,7 +159,18 @@ class CustomDrawer extends StatelessWidget {
           );
         }
         break;
-      case 5: // Settings
+        case 5: // Settings
+        if (currentRoute != "spends") {
+          Get.to(
+            routeName: "spends",
+            () => ShowCaseWidget(builder: (context) => const People()),
+            curve: customCurve,
+            transition: customTrans,
+            duration: duration,
+          );
+        }
+        break;
+      case 6: // Settings
         if (currentRoute != routes[7]) {
           Get.to(
             routeName: routes[7],
@@ -169,7 +181,7 @@ class CustomDrawer extends StatelessWidget {
           );
         }
         break;
-      case 6: // Settings
+      case 7: // Settings
         if (currentRoute != "features") {
           Get.to(
             routeName: "features",
@@ -180,7 +192,7 @@ class CustomDrawer extends StatelessWidget {
           );
         }
         break;
-      case 7: // Settings
+      case 8: // Settings
         launchUrl(Uri.parse("https://wa.me/+918586047520"));
         break;
     }

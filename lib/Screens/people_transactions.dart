@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:spendwise/Models/people_expense.dart';
+import 'package:spendwise/Requirements/data.dart';
+import 'package:spendwise/Screens/people_transaction_details.dart';
+import 'package:spendwise/Screens/transaction_details.dart';
 import 'package:spendwise/Utils/people_balance_shared_methods.dart';
 
 class PeopleTransactions extends StatefulWidget {
@@ -54,7 +58,23 @@ class _PeopleTransactionsState extends State<PeopleTransactions> {
                               vertical: 10.h,
                             ),
                             child: GestureDetector(
-                              onTap: () {},
+                              onTap: () async {
+                                dynamic refresh = await Get.to(
+                                  routeName: "Shared Transaction Details",
+                                      () => PeopleTransactionDetails(
+                                        transaction: snapshot.data[index],
+                                  ),
+                                  transition: customTrans,
+                                  curve: customCurve,
+                                  duration: duration,
+                                );
+
+                                if (refresh != null) {
+                                  setState(() {
+                                    _refreshData();
+                                  });
+                                }
+                              },
                               child: Row(
                                 children: [
                                   Container(

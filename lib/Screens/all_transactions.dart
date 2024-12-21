@@ -73,7 +73,7 @@ class _AllTransactionsState extends State<AllTransactions> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     bool filterOptions = prefs.getBool('filterOptions') ?? false;
 
-    if(getStatus){
+    if (getStatus) {
       return filterOptions;
     }
 
@@ -228,17 +228,8 @@ class _AllTransactionsState extends State<AllTransactions> {
                               itemCount: bankTransactions
                                   .length, // Use todayTransactions length
                               itemBuilder: (context, index) {
-                                final transaction = bankTransactions[index];
                                 return TransactionWidget(
-                                  expenseType: transaction.expenseType,
-                                  amount: transaction.amount.toInt(),
-                                  dateAndTime: transaction.dateAndTime,
-                                  name: transaction.name,
-                                  typeOfTransaction:
-                                      transaction.typeOfTransaction,
-                                  transactionReferanceNumber:
-                                      transaction.transactionReferanceNumber,
-                                  toIncl: transaction.toInclude,
+                                  transaction: bankTransactions[index],
                                   refreshData: _refreshData,
                                 );
                               },

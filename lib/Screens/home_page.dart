@@ -228,15 +228,7 @@ class _HomePageState extends State<HomePage> {
 
                                 // Return the Transaction Widget with the transaction details
                                 return TransactionWidget(
-                                  expenseType: transaction[index].expenseType,
-                                  amount: transaction[index].amount.toInt(),
-                                  dateAndTime: transaction[index].dateAndTime,
-                                  name: transaction[index].name,
-                                  typeOfTransaction:
-                                      transaction[index].typeOfTransaction,
-                                  transactionReferanceNumber: transaction[index]
-                                      .transactionReferanceNumber,
-                                  toIncl: transaction[index].toInclude,
+                                  transaction: transaction[index],
                                   refreshData: _refreshData,
                                 );
                               },

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:spendwise/Models/cus_transaction.dart';
 import 'package:spendwise/Requirements/data.dart';
 import 'package:spendwise/Requirements/transaction.dart';
 import 'package:spendwise/Screens/transaction_details.dart';
@@ -11,23 +12,10 @@ import 'package:spendwise/Screens/transaction_details.dart';
 class TransactionWidget extends StatefulWidget {
   const TransactionWidget({
     super.key,
-    required this.name,
-    required this.typeOfTransaction,
-    required this.amount,
-    required this.dateAndTime,
-    required this.expenseType,
-    required this.transactionReferanceNumber,
-    required this.toIncl,
-    required this.refreshData,
+    required this.refreshData, required this.transaction,
   });
 
-  final String name;
-  final String typeOfTransaction;
-  final int amount;
-  final DateTime dateAndTime;
-  final String expenseType;
-  final int transactionReferanceNumber;
-  final int toIncl;
+  final CusTransaction transaction;
   final Function refreshData;
 
   @override
@@ -41,14 +29,7 @@ class _TransactionWidgetState extends State<TransactionWidget> {
       onTap: () async {
         dynamic refresh = await Get.to(
           routeName: "Transaction Details",
-          () => TransactionDetails(
-            amount: widget.amount,
-            dateTime: widget.dateAndTime,
-            toName: widget.name,
-            transactionReferanceNumber: widget.transactionReferanceNumber,
-            expenseType: widget.expenseType,
-            transactionType: widget.typeOfTransaction,
-            toIncl: widget.toIncl,
+          () => TransactionDetails(transaction: widget.transaction,
           ),
           transition: customTrans,
           curve: customCurve,
@@ -73,7 +54,7 @@ class _TransactionWidgetState extends State<TransactionWidget> {
               child: Padding(
                 padding: EdgeInsets.all(13.w),
                 child: Icon(
-                  getIconData(widget.expenseType),
+                  getIconData(widget.transaction.expenseType),
                   size: 20.r,
                 ),
               ),
@@ -90,14 +71,14 @@ class _TransactionWidgetState extends State<TransactionWidget> {
                     SizedBox(
                       width: 150.w,
                       child: Text(
-                        widget.name,
+                        widget.transaction.name,
                         style: TextStyle(
                             fontWeight: FontWeight.bold, fontSize: 15.r),
                       ),
                     ),
                     Row(
                       children: [
-                        if (widget.typeOfTransaction.toLowerCase() !=
+                        if (widget.transaction.typeOfTransaction.toLowerCase() !=
                             typeOfTransaction[0]) ...[
                           Text(
                             "Rs. -",
@@ -115,12 +96,12 @@ class _TransactionWidgetState extends State<TransactionWidget> {
                                 fontWeight: FontWeight.bold),
                           ),
                         ],
-                        if (widget.typeOfTransaction.toLowerCase() !=
+                        if (widget.transaction.typeOfTransaction.toLowerCase() !=
                             typeOfTransaction[0]) ...[
                           Countup(
                             begin: 0,
                             duration: duration,
-                            end: widget.amount.toDouble(),
+                            end: widget.transaction.amount.toDouble(),
                             style: TextStyle(
                                 color: Colors.redAccent,
                                 fontSize: 20.r,
@@ -130,7 +111,7 @@ class _TransactionWidgetState extends State<TransactionWidget> {
                           Countup(
                             begin: 0,
                             duration: duration,
-                            end: widget.amount.toDouble(),
+                            end: widget.transaction.amount.toDouble(),
                             style: TextStyle(
                                 color: Colors.green,
                                 fontSize: 20.r,
@@ -145,11 +126,11 @@ class _TransactionWidgetState extends State<TransactionWidget> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      widget.expenseType,
+                      widget.transaction.expenseType,
                       style: TextStyle(fontSize: 13.r),
                     ),
                     Text(
-                      "${DateFormat.yMMMMd('en_US').format(widget.dateAndTime)}, ${DateFormat.jm().format(widget.dateAndTime)}",
+                      "${DateFormat.yMMMMd('en_US').format(widget.transaction.dateAndTime)}, ${DateFormat.jm().format(widget.transaction.dateAndTime)}",
                       style: TextStyle(fontSize: 11.r),
                     ),
                   ],
