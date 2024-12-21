@@ -35,6 +35,20 @@ class TransactionMethods {
     return null;
   }
 
+  // **Read (Fetch One by Reference Number)**
+  Future<List<CusTransaction>?> getTransactionByType(String type) async {
+    final db = await DatabaseHelper().database;
+    final List<Map<String, dynamic>> maps = await db.query(
+      tableName,
+      where: 'expenseType = ?',
+      whereArgs: [type],
+    );
+    if (maps.isNotEmpty) {
+      return List.generate(maps.length, (i) => CusTransaction.fromMap(maps[i]));
+    }
+    return null;
+  }
+
 // Future<CusTransaction?> getTransactionByRef(int refNumber) async {
 //   final db = await database;
 //   final List<Map<String, dynamic>> maps = await db.query(

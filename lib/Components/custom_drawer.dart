@@ -9,6 +9,7 @@ import "package:spendwise/Screens/features_to_impliment.dart";
 import "package:spendwise/Screens/home_page.dart";
 import "package:spendwise/Screens/people.dart";
 import "package:spendwise/Screens/settings.dart";
+import "package:spendwise/Screens/spends_by_type.dart";
 import "package:spendwise/Screens/subscription.dart";
 import "package:spendwise/Screens/user_profile.dart";
 import "package:spendwise/Utils/theme.dart";
@@ -163,7 +164,7 @@ class CustomDrawer extends StatelessWidget {
         if (currentRoute != "spends") {
           Get.to(
             routeName: "spends",
-            () => ShowCaseWidget(builder: (context) => const People()),
+            () => ShowCaseWidget(builder: (context) => const SpendsByType()),
             curve: customCurve,
             transition: customTrans,
             duration: duration,

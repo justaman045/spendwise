@@ -27,7 +27,7 @@ class DatabaseHelper {
     final dbPath = await getDatabasesPath();
     final path = '$dbPath/spendwise.db';
 
-    return openDatabase(path, version: 1, onCreate: _onCreate);
+    return openDatabase(path, version: 2, onCreate: _onCreate, onUpgrade: _onUpgrade);
   }
 
   /// Creates the initial database structure.
@@ -78,13 +78,24 @@ class DatabaseHelper {
       )
     ''');
 
-    // Create ExpenseTypes table
+    // Create ExpenseTypes table (only in onCreate for initial creation)
     await db.execute('''
       CREATE TABLE $expenseTypesTable (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         name TEXT NOT NULL UNIQUE
       )
     ''');
+  }
+
+  Future<void> _onUpgrade(Database db, int oldVersion, int newVersion) async {
+    if (oldVersion < newVersion) {
+      debugPrint("Testing Complete");
+      // Create the ExpenseTypes table if it doesn't exist
+      await db.execute('''
+        ALTER TABLE $expenseTypesTable 
+        ADD COLUMN amount REAL;
+      ''');
+    }
   }
 
   Future<String> exportDatabase() async {

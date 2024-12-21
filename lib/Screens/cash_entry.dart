@@ -2,10 +2,12 @@ import "package:flutter/material.dart";
 import "package:flutter_screenutil/flutter_screenutil.dart";
 import "package:get/get.dart";
 import "package:multi_dropdown/multi_dropdown.dart";
+import "package:spendwise/Models/expense_type.dart";
 import "package:spendwise/Models/people_expense.dart";
 import "package:spendwise/Requirements/data.dart";
 import "package:spendwise/Requirements/transaction.dart";
 import "package:spendwise/Screens/add_people.dart";
+import "package:spendwise/Utils/expense_type_methods.dart";
 import "package:spendwise/Utils/methods.dart";
 import "package:spendwise/Utils/people_balance_shared_methods.dart";
 import "package:spendwise/Utils/theme.dart";
@@ -45,14 +47,20 @@ class _AddCashEntryState extends State<AddCashEntry> {
   MultiSelectController<String> multiSelectDropDownController =
       MultiSelectController<String>();
   List<PeopleBalance> _peopleBalanceList = [];
+  List<String> _expenseTypeList = [];
   List<PeopleBalance> people = [];
   double updatedAmount = 0;
   DateTime? fromdate;
 
   Future<void> _fetchData() async {
     _peopleBalanceList = await PeopleBalanceSharedMethods().getPeopleNames();
+    List<ExpenseType> expenseTypeListTemp =
+        await ExpenseTypeMethods().getAllExpenseTypes();
+    List<String> defaultExpenseTypes =
+        expenseTypeListTemp.map((expense) => expense.name).toList();
     setState(() {
       _peopleBalanceList;
+      _expenseTypeList = [...defaultExpenseTypes, ...typeOfExpense];
     });
   }
 
@@ -125,7 +133,7 @@ class _AddCashEntryState extends State<AddCashEntry> {
                       function: (newValue) => setState(() {
                         typeOfExp = newValue!;
                       }),
-                      items: getDropDownMenuItems(typeOfExpense),
+                      items: getDropDownMenuItems(_expenseTypeList),
                       labelString: "Type Of Expense",
                     ),
 

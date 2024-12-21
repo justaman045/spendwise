@@ -1,16 +1,16 @@
 import 'package:spendwise/Models/db_helper.dart';
 import 'package:spendwise/Models/expense_type.dart';
 import 'package:spendwise/Requirements/data.dart';
-import 'package:sqflite/sqflite.dart';
+import 'package:sqflite/sqflite.dart'; // Assuming ExpenseType class exists
 
 class ExpenseTypeMethods {
   // Create (Insert)
-  Future<void> insertExpenseType(ExpenseType expenseType) async {
+  Future<void> createExpenseType(ExpenseType expenseType) async {
     final db = await DatabaseHelper().database;
     await db.insert(
       expenseTypesTable,
       expenseType.toMap(),
-      conflictAlgorithm: ConflictAlgorithm.replace, // Replace on conflict
+      conflictAlgorithm: ConflictAlgorithm.replace,
     );
   }
 
@@ -21,7 +21,7 @@ class ExpenseTypeMethods {
     return List.generate(maps.length, (i) => ExpenseType.fromMap(maps[i]));
   }
 
-  // Read (Fetch One by ID)
+  // Read (Fetch One by ID) - Assuming ID is the primary key
   Future<ExpenseType?> getExpenseTypeById(int id) async {
     final db = await DatabaseHelper().database;
     final List<Map<String, dynamic>> maps = await db.query(
@@ -56,12 +56,11 @@ class ExpenseTypeMethods {
     );
   }
 
-  Future<bool> isExpenseTypeNameExists(String expenseTypeName) async {
+  // Search by name
+  Future<ExpenseType> searchExpenseTypesByName(String name) async {
     final db = await DatabaseHelper().database;
-    final count = Sqflite.firstIntValue(await db.rawQuery(
-      'SELECT COUNT(*) FROM $expenseTypesTable WHERE name = ?',
-      [expenseTypeName],
-    ));
-    return count != null && count > 0;
+    final maps = await db
+        .query(expenseTypesTable, where: 'name LIKE ?', whereArgs: ['%$name%']);
+    return maps.map((map) => ExpenseType.fromMap(map)).toList().first;
   }
 }
