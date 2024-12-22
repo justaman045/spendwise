@@ -1,8 +1,10 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:spendwise/Models/expense_type.dart';
 import 'package:spendwise/Requirements/data.dart';
+import 'package:spendwise/Requirements/transaction.dart';
 import 'package:spendwise/Screens/add_expense_type.dart';
 import 'package:spendwise/Screens/expense_type_transactions.dart';
 import 'package:spendwise/Utils/expense_type_methods.dart';
@@ -26,7 +28,6 @@ class _SpendsByTypeState extends State<SpendsByType> {
     setState(() {
       _expenseTypes = [...fetchedExpenseTypes, ...defaultExpenseTypes];
     });
-    setState(() {});
   }
 
   List<ExpenseType> _expenseTypes = [];
@@ -63,8 +64,11 @@ class _SpendsByTypeState extends State<SpendsByType> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              IconButton(onPressed: (){
+                Get.back();
+              }, icon: const Icon(CupertinoIcons.left_chevron)),
               Padding(
-                padding: EdgeInsets.only(left: 30.w, top: 25.h, bottom: 15.h),
+                padding: EdgeInsets.only(left: 30.w, bottom: 15.h),
                 child: Text(
                   "Classify Transactions",
                   style: TextStyle(fontSize: 25.r),
@@ -141,7 +145,11 @@ class _SpendsByTypeState extends State<SpendsByType> {
         child: Padding(
           padding: EdgeInsets.all(10.w),
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
+              Icon(getIconData(expenseType.name)),
+              SizedBox(height: 10.h,),
               Text(expenseType.name),
             ],
           ),

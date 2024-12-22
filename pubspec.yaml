@@ -65,6 +65,7 @@ dependencies:
   pdf: ^3.11.1
   share_plus: ^10.1.2
   calendar_date_picker2: ^1.1.7
+  confirm_dialog: ^1.0.4
 
 dev_dependencies:
   flutter_test:
