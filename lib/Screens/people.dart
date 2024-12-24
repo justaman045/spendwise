@@ -166,8 +166,11 @@ class _PeopleState extends State<People> {
                                               ],
                                             ],
                                           ),
-                                          Text(
-                                              "Rs. ${snapshot.data[index].amount.toString()}"),
+                                          SizedBox(
+                                            width: 50.w,
+                                            child: Text(
+                                                "Rs. ${snapshot.data[index].amount.toString()}"),
+                                          ),
                                         ],
                                       ),
                                     ),

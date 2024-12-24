@@ -4,7 +4,6 @@ import 'package:get/get.dart';
 import 'package:spendwise/Models/people_expense.dart';
 import 'package:spendwise/Requirements/data.dart';
 import 'package:spendwise/Screens/people_transaction_details.dart';
-import 'package:spendwise/Screens/transaction_details.dart';
 import 'package:spendwise/Utils/people_balance_shared_methods.dart';
 
 class PeopleTransactions extends StatefulWidget {
@@ -114,8 +113,11 @@ class _PeopleTransactionsState extends State<PeopleTransactions> {
                                               ),
                                             ],
                                           ),
-                                          Text(
-                                              "Rs. ${snapshot.data[index].amount.toString()}"),
+                                          SizedBox(
+                                            width: 50.w,
+                                            child: Text(
+                                                "Rs. ${snapshot.data[index].amount.toString()}"),
+                                          ),
                                           GestureDetector(
                                             onTap: () {
                                               PeopleBalanceSharedMethods()

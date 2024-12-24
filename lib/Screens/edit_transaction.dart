@@ -160,7 +160,7 @@ class _EditTransactionState extends State<EditTransaction> {
                   validator: (value) {
                     if (value!.isEmpty) {
                       return "Enter a amount that have been paid or received";
-                    } else if (int.parse(value) < 1) {
+                    } else if (int.parse(double.parse(value).toInt().toString()) < 1) {
                       return "Amount cannot be in negative";
                     }
                     return null;

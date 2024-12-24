@@ -50,8 +50,7 @@ class _SpendsByTypeState extends State<SpendsByType> {
         _expenseTypes = [...fetchedExpenseTypes, ...defaultExpenseTypes];
       });
     } catch (e) {
-      // Handle error, e.g., display a snackbar
-      print('Error fetching expense types: $e');
+      Get.snackbar("Error", e.toString());
     }
   }
 
@@ -64,9 +63,11 @@ class _SpendsByTypeState extends State<SpendsByType> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              IconButton(onPressed: (){
-                Get.back();
-              }, icon: const Icon(CupertinoIcons.left_chevron)),
+              IconButton(
+                  onPressed: () {
+                    Get.back();
+                  },
+                  icon: const Icon(CupertinoIcons.left_chevron)),
               Padding(
                 padding: EdgeInsets.only(left: 30.w, bottom: 15.h),
                 child: Text(
@@ -108,7 +109,7 @@ class _SpendsByTypeState extends State<SpendsByType> {
       floatingActionButton: FloatingActionButton.extended(
         label: const Icon(Icons.add),
         onPressed: () async {
-          final toreload = await Get.to(
+          final reload = await Get.to(
             routeName: "addExpenseType",
             () => const AddExpenseType(),
             curve: customCurve,
@@ -116,7 +117,7 @@ class _SpendsByTypeState extends State<SpendsByType> {
             duration: duration,
           );
 
-          if (toreload != null) {
+          if (reload != null) {
             _refreshData();
           }
         },
@@ -133,7 +134,9 @@ class _SpendsByTypeState extends State<SpendsByType> {
           curve: customCurve,
           transition: customTrans,
           duration: duration,
-              () => ExpenseTypeTransactions(typeOfExpenseTitle: expenseType),
+          () => ExpenseTypeTransactions(
+            typeOfExpenseTitle: expenseType,
+          ),
         );
         if (toRefresh == "refresh") {
           setState(() {
@@ -149,7 +152,7 @@ class _SpendsByTypeState extends State<SpendsByType> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Icon(getIconData(expenseType.name)),
-              SizedBox(height: 10.h,),
+              SizedBox(height: 10.h),
               Text(expenseType.name),
             ],
           ),

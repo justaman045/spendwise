@@ -120,7 +120,7 @@ class _ExpenseTypeTransactionsState extends State<ExpenseTypeTransactions> {
                       cusTransaction.length, // Use todayTransactions length
                   itemBuilder: (context, index) {
                     return TransactionWidget(
-                      transaction: cusTransaction[index],
+                      transaction: cusTransaction.reversed.toList()[index],
                       refreshData: _refreshData,
                     );
                   },

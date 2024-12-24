@@ -129,9 +129,13 @@ class _TransactionWidgetState extends State<TransactionWidget> {
                       widget.transaction.expenseType,
                       style: TextStyle(fontSize: 13.r),
                     ),
-                    Text(
-                      "${DateFormat.yMMMMd('en_US').format(widget.transaction.dateAndTime)}, ${DateFormat.jm().format(widget.transaction.dateAndTime)}",
-                      style: TextStyle(fontSize: 11.r),
+                    SizedBox(
+                      width: 120.w,
+                      child: Text(
+                        "${DateFormat.yMMMMd('en_US').format(widget.transaction.dateAndTime)}, ${DateFormat.jm().format(widget.transaction.dateAndTime)}",
+                        style: TextStyle(fontSize: 11.r),
+                        textAlign: TextAlign.right,
+                      ),
                     ),
                   ],
                 ),
