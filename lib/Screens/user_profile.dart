@@ -2,6 +2,7 @@ import "package:firebase_auth/firebase_auth.dart";
 import "package:flutter/material.dart";
 import "package:flutter_screenutil/flutter_screenutil.dart";
 import "package:get/get.dart";
+import "package:intl/intl.dart";
 import "package:shared_preferences/shared_preferences.dart";
 import "package:showcaseview/showcaseview.dart";
 import "package:spendwise/Models/cus_transaction.dart";
@@ -146,7 +147,7 @@ class _UserProfileState extends State<UserProfile> {
                                     SizedBox(
                                       width: 150.w,
                                       child: Text(
-                                        "Rs. ${totalAvailableBalance(bankTransaction)} more to Save",
+                                        "Rs. ${NumberFormat.currency(locale: 'HI').format((double.parse(user["dreamToSave"].toString()) * 6) - totalAvailableBalance(bankTransaction)).substring(3, 11)} more to Save",
                                         style: TextStyle(fontSize: 13.r),
                                       ),
                                     ),

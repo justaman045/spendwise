@@ -31,66 +31,71 @@ class RecognizedAccounts extends StatelessWidget {
                 style: TextStyle(fontSize: 15.r),
               ),
             ),
-            Padding(
-              padding: EdgeInsets.all(10.w),
+            // Padding(
+            //   padding: EdgeInsets.all(10.w),
+            //   child: Center(
+            //     child: Container(
+            //       decoration: BoxDecoration(
+            //         gradient: const LinearGradient(
+            //           begin: Alignment.topRight,
+            //           end: Alignment.bottomLeft,
+            //           colors: [
+            //             Color.fromRGBO(210, 209, 254, 1),
+            //             Color.fromRGBO(243, 203, 237, 1),
+            //           ],
+            //         ),
+            //         borderRadius: BorderRadius.all(
+            //           Radius.circular(15.r),
+            //         ),
+            //       ),
+            //       width: 330.w,
+            //       height: 90.h,
+            //       child: Padding(
+            //         padding: EdgeInsets.all(20.r),
+            //         child: Row(
+            //           children: [
+            //             Icon(
+            //               Icons.account_balance,
+            //               size: 25.r,
+            //               color:
+            //                   MyAppColors.normalColoredWidgetTextColorDarkMode,
+            //             ),
+            //             Padding(
+            //               padding: EdgeInsets.only(
+            //                 left: 20.w,
+            //               ),
+            //               child: Column(
+            //                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            //                 crossAxisAlignment: CrossAxisAlignment.start,
+            //                 children: [
+            //                   Text(
+            //                     "***** ${accounts[0].accountNumber.toString().substring(accounts[0].accountNumber.toString().length - 5)}",
+            //                     style: TextStyle(
+            //                       fontSize: 15.r,
+            //                       color: MyAppColors
+            //                           .normalColoredWidgetTextColorDarkMode,
+            //                     ),
+            //                   ),
+            //                   Text(
+            //                     accounts[0].bankName,
+            //                     style: TextStyle(
+            //                       fontSize: 13.r,
+            //                       color: MyAppColors
+            //                           .normalColoredWidgetTextColorDarkMode,
+            //                     ),
+            //                   ),
+            //                 ],
+            //               ),
+            //             ),
+            //           ],
+            //         ),
+            //       ),
+            //     ),
+            //   ),
+            // ),
+            const Expanded(
               child: Center(
-                child: Container(
-                  decoration: BoxDecoration(
-                    gradient: const LinearGradient(
-                      begin: Alignment.topRight,
-                      end: Alignment.bottomLeft,
-                      colors: [
-                        Color.fromRGBO(210, 209, 254, 1),
-                        Color.fromRGBO(243, 203, 237, 1),
-                      ],
-                    ),
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(15.r),
-                    ),
-                  ),
-                  width: 330.w,
-                  height: 90.h,
-                  child: Padding(
-                    padding: EdgeInsets.all(20.r),
-                    child: Row(
-                      children: [
-                        Icon(
-                          Icons.account_balance,
-                          size: 25.r,
-                          color:
-                              MyAppColors.normalColoredWidgetTextColorDarkMode,
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(
-                            left: 20.w,
-                          ),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                "***** ${accounts[0].accountNumber.toString().substring(accounts[0].accountNumber.toString().length - 5)}",
-                                style: TextStyle(
-                                  fontSize: 15.r,
-                                  color: MyAppColors
-                                      .normalColoredWidgetTextColorDarkMode,
-                                ),
-                              ),
-                              Text(
-                                accounts[0].bankName,
-                                style: TextStyle(
-                                  fontSize: 13.r,
-                                  color: MyAppColors
-                                      .normalColoredWidgetTextColorDarkMode,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
+                child: Text("Still need time to Recognise Bank Accounts"),
               ),
             ),
           ],

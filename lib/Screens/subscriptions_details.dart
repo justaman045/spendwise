@@ -1,6 +1,7 @@
 import "package:flutter/material.dart";
 import "package:flutter_screenutil/flutter_screenutil.dart";
 import "package:get/get.dart";
+import "package:shared_preferences/shared_preferences.dart";
 import "package:spendwise/Models/subscription.dart";
 import "package:spendwise/Requirements/data.dart";
 import "package:spendwise/Screens/edit_subscription.dart";
@@ -18,6 +19,22 @@ class SubscriptionsDetails extends StatefulWidget {
 }
 
 class _SubscriptionsDetailsState extends State<SubscriptionsDetails> {
+  bool tester = false;
+
+  Future<void> checkTesterOption() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool testerTemp = prefs.getBool('tester') ?? false;
+    setState(() {
+      tester = testerTemp;
+    });
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     debugPrint(widget.subscription.name);
@@ -33,7 +50,7 @@ class _SubscriptionsDetailsState extends State<SubscriptionsDetails> {
             child: Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(20.r),
-                color: Colors.grey.withOpacity(0.25),
+                color: Colors.grey.withValues(alpha: 0.25),
               ),
               width: double.infinity,
               height: 450.h,
@@ -276,34 +293,36 @@ class _SubscriptionsDetailsState extends State<SubscriptionsDetails> {
                     ),
                   ),
                 ),
-                Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(10.r)),
-                    gradient: const LinearGradient(
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                      colors: [
-                        Color(0xff00B4DB),
-                        Color(0xff0083B0),
-                      ],
+                if(tester) ...[
+                  Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(10.r)),
+                      gradient: const LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [
+                          Color(0xff00B4DB),
+                          Color(0xff0083B0),
+                        ],
+                      ),
                     ),
-                  ),
-                  child: TextButton(
-                    onPressed: () {
-                      Get.snackbar(
-                        "In Development",
-                        "This Feature is Still Under Development",
-                        snackPosition: SnackPosition.TOP,
-                      );
-                    },
-                    child: const Text(
-                      "Pause Subscription",
-                      style: TextStyle(
-                        color: MyAppColors.normalColoredWidgetTextColorDarkMode,
+                    child: TextButton(
+                      onPressed: () {
+                        Get.snackbar(
+                          "In Development",
+                          "This Feature is Still Under Development",
+                          snackPosition: SnackPosition.TOP,
+                        );
+                      },
+                      child: const Text(
+                        "Pause Subscription",
+                        style: TextStyle(
+                          color: MyAppColors.normalColoredWidgetTextColorDarkMode,
+                        ),
                       ),
                     ),
                   ),
-                ),
+                ],
               ],
             ),
           ),

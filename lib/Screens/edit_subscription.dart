@@ -57,7 +57,7 @@ class _EditSubscriptionState extends State<EditSubscription> {
                   child: Container(
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(20.r),
-                      color: Colors.grey.withOpacity(0.25),
+                      color: Colors.grey.withValues(alpha: 0.25),
                     ),
                     width: double.infinity,
                     height: 150.h,

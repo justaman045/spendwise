@@ -1,5 +1,3 @@
-import 'package:flutter/cupertino.dart';
-
 class ExpenseType {
   final int id;
   final String name;

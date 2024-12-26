@@ -8,7 +8,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:spendwise/Models/cus_transaction.dart';
-import 'package:spendwise/Models/expense_type.dart';
 import 'package:spendwise/Requirements/transaction.dart';
 
 Future<QuerySnapshot<Map<String, dynamic>>> getUser() async {

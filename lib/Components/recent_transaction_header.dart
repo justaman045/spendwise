@@ -36,6 +36,7 @@ class RecentTransactionHeader extends StatelessWidget {
                 pageTitle: "All Transactions this Month",
                 chartTitle: "All Transactions from SMS this Month",
                 chartType: "Transaction",
+                thisMonth: true,
               ),
               transition: customTrans,
               curve: customCurve,

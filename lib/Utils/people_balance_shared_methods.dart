@@ -66,11 +66,8 @@ class PeopleBalanceSharedMethods {
   // **Read (Fetch All by Name)** PeopleBalance
   Future<List<PeopleBalance>> getPeopleNames() async {
     final db = await DatabaseHelper().database;
-    final List<Map<String, dynamic>> maps = await db.query(
-      peopleBalanceTable,
-      distinct: true,
-      groupBy: "name"
-    );
+    final List<Map<String, dynamic>> maps =
+        await db.query(peopleBalanceTable, distinct: true, groupBy: "name");
     if (maps.isNotEmpty) {
       return List.generate(maps.length, (i) => PeopleBalance.fromMap(maps[i]));
     }
@@ -98,15 +95,15 @@ class PeopleBalanceSharedMethods {
     );
   }
 
-  Future<List<PeopleBalance>> calculateFinalAmount(List<PeopleBalance> data) async {
+  Future<List<PeopleBalance>> calculateFinalAmount(
+      List<PeopleBalance> data) async {
     // Group data by name
-    final Map<String, List<PeopleBalance>> groupedData =
-    data.fold<Map<String, List<PeopleBalance>>>(
-        {},
+    final Map<String, List<PeopleBalance>> groupedData = data
+        .fold<Map<String, List<PeopleBalance>>>({},
             (Map<String, List<PeopleBalance>> acc, PeopleBalance item) {
-          acc[item.name] = (acc[item.name] ?? []).toList()..add(item);
-          return acc;
-        });
+      acc[item.name] = (acc[item.name] ?? []).toList()..add(item);
+      return acc;
+    });
 
     // Calculate final amount for each group
     final List<PeopleBalance> result = groupedData.entries.map((entry) {
@@ -115,7 +112,7 @@ class PeopleBalanceSharedMethods {
 
       // Calculate total amount (considering both positive and negative values)
       final double totalAmount = transactions.fold<double>(
-          0, (double sum, PeopleBalance item) => sum + item.amount);
+          0, (double sum, PeopleBalance item) => sum + item.amount.round());
 
       return PeopleBalance(
         name: name,
@@ -124,10 +121,22 @@ class PeopleBalanceSharedMethods {
         dateAndTime: transactions.first.dateAndTime,
         transactionFor: transactions.first.transactionFor,
         relationFrom: transactions.first.relationFrom,
-        transactionReferanceNumber: transactions.first.transactionReferanceNumber,
+        transactionReferanceNumber:
+            transactions.first.transactionReferanceNumber,
       );
     }).toList();
 
     return result;
+  }
+
+  Future<double> calculateFinalAmountSingleUser(
+      List<PeopleBalance> transactions) async {
+    // No need to group data by name as we're dealing with a single user
+
+    // Calculate total amount (considering both positive and negative values)
+    final double totalAmount = transactions.fold<double>(
+        0.0, (double sum, PeopleBalance item) => sum + item.amount);
+
+    return totalAmount;
   }
 }

@@ -4,8 +4,10 @@ import "package:flutter_screenutil/flutter_screenutil.dart";
 import "package:get/get.dart";
 import "package:intl/intl.dart";
 import "package:spendwise/Models/cus_transaction.dart";
+import "package:spendwise/Models/people_expense.dart";
 import "package:spendwise/Requirements/data.dart";
 import "package:spendwise/Utils/methods.dart";
+import "package:spendwise/Utils/people_balance_shared_methods.dart";
 import "package:spendwise/Utils/theme.dart";
 import "package:spendwise/Utils/transaction_methods.dart";
 
@@ -14,7 +16,8 @@ final _formKey = GlobalKey<FormState>();
 // TODO: Reduce Lines of Code
 class EditTransaction extends StatefulWidget {
   const EditTransaction({
-    super.key, required this.transaction,
+    super.key,
+    required this.transaction,
   });
 
   final CusTransaction transaction;
@@ -30,6 +33,7 @@ class _EditTransactionState extends State<EditTransaction> {
   TextEditingController fromDate = TextEditingController();
   TextEditingController amountEditingController = TextEditingController();
   String typeOftransaction = "";
+  List<PeopleBalance> peopleBalance = [];
 
   void updateTransaction(String expenseType) {
     _expType = expenseType;
@@ -37,6 +41,17 @@ class _EditTransactionState extends State<EditTransaction> {
 
   void updatetoInclude(String toExclude) {
     _toExclude = toExclude;
+  }
+
+  Future<void> getPeopleBalanceList() async {
+    List<PeopleBalance>? peopleBalanceTemp = await PeopleBalanceSharedMethods()
+        .getAllPeopleBalanceByRef(
+            widget.transaction.transactionReferanceNumber);
+    if (peopleBalanceTemp!.isNotEmpty) {
+      setState(() {
+        peopleBalance = peopleBalanceTemp;
+      });
+    }
   }
 
   @override
@@ -160,7 +175,9 @@ class _EditTransactionState extends State<EditTransaction> {
                   validator: (value) {
                     if (value!.isEmpty) {
                       return "Enter a amount that have been paid or received";
-                    } else if (int.parse(double.parse(value).toInt().toString()) < 1) {
+                    } else if (int.parse(
+                            double.parse(value).toInt().toString()) <
+                        1) {
                       return "Amount cannot be in negative";
                     }
                     return null;
@@ -323,12 +340,13 @@ class _EditTransactionState extends State<EditTransaction> {
                             amount: double.parse(amountEditingController.text),
                             dateAndTime: stringToDateTime(fromDate.text),
                             name: nameController.text,
-                            typeOfTransaction: widget.transaction.typeOfTransaction,
+                            typeOfTransaction:
+                                widget.transaction.typeOfTransaction,
                             expenseType: _expType.isEmpty
                                 ? widget.transaction.expenseType
                                 : _expType,
                             transactionReferanceNumber:
-                            widget.transaction.transactionReferanceNumber,
+                                widget.transaction.transactionReferanceNumber,
                             toInclude: _toExclude == "No" ? 1 : 0,
                           );
                           await TransactionMethods()
@@ -371,8 +389,11 @@ class _EditTransactionState extends State<EditTransaction> {
                     padding: EdgeInsets.only(top: 20.h),
                     child: GestureDetector(
                       onTap: () async {
+                        await PeopleBalanceSharedMethods().deletePeopleBalance(
+                            widget.transaction.transactionReferanceNumber);
                         await TransactionMethods()
-                            .deleteTransaction(widget.transaction.transactionReferanceNumber)
+                            .deleteTransaction(
+                                widget.transaction.transactionReferanceNumber)
                             .then((value) => Get.back(result: "refresh"))
                             .then((value) => Get.back(result: "refresh"));
                       },

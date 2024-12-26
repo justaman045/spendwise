@@ -1,22 +1,18 @@
 import "dart:io";
-
-import "package:firebase_auth/firebase_auth.dart";
 import "package:flutter/material.dart";
 import "package:flutter_screenutil/flutter_screenutil.dart";
 import "package:get/get.dart";
 import "package:intl/intl.dart";
 import "package:path_provider/path_provider.dart";
-import 'package:pdf/widgets.dart' as pw;
 import "package:screenshot/screenshot.dart";
 import "package:spendwise/Components/details_button.dart";
 import "package:spendwise/Models/cus_transaction.dart";
 import "package:spendwise/Models/people_expense.dart";
 import "package:spendwise/Requirements/data.dart";
-import "package:spendwise/Screens/edit_transaction.dart";
 import "package:share_plus/share_plus.dart";
+import "package:spendwise/Utils/methods.dart";
 import "package:spendwise/Utils/people_balance_shared_methods.dart";
 import "package:spendwise/Utils/theme.dart";
-import 'package:path/path.dart';
 import "package:spendwise/Utils/transaction_methods.dart";
 
 // TODO: Reduce Lines of Code
@@ -85,6 +81,14 @@ class _PeopleTransactionDetails extends State<PeopleTransactionDetails> {
 
   @override
   Widget build(BuildContext context) {
+    cusTransaction ??= CusTransaction(
+      amount: widget.transaction.amount,
+      dateAndTime: stringToDateTime(widget.transaction.dateAndTime),
+      name: widget.transaction.name,
+      typeOfTransaction: typeOfTransaction[3],
+      expenseType: widget.transaction.transactionFor,
+      transactionReferanceNumber: widget.transaction.transactionReferanceNumber,
+    );
     return Scaffold(
       body: SafeArea(
         child: Screenshot(
@@ -273,13 +277,13 @@ class _PeopleTransactionDetails extends State<PeopleTransactionDetails> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      cusTransaction!.typeOfTransaction,
+                      cusTransaction!.typeOfTransaction.capitalize ?? cusTransaction!.typeOfTransaction,
                       style: TextStyle(
                         fontSize: 13.r,
                       ),
                     ),
                     Text(
-                      "Rs. ${widget.transaction.amount}",
+                      "Rs. ${(widget.transaction.amount * -1)}",
                       style: TextStyle(
                         fontSize: 13.r,
                       ),

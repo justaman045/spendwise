@@ -1,10 +1,17 @@
+import 'package:confirm_dialog/confirm_dialog.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
+import 'package:spendwise/Models/cus_transaction.dart';
 import 'package:spendwise/Models/people_expense.dart';
 import 'package:spendwise/Requirements/data.dart';
+import 'package:spendwise/Requirements/transaction.dart';
 import 'package:spendwise/Screens/people_transaction_details.dart';
+import 'package:spendwise/Utils/methods.dart';
 import 'package:spendwise/Utils/people_balance_shared_methods.dart';
+import 'package:spendwise/Utils/transaction_methods.dart';
 
 class PeopleTransactions extends StatefulWidget {
   const PeopleTransactions({super.key, required this.peopleBalance});
@@ -15,10 +22,14 @@ class PeopleTransactions extends StatefulWidget {
   State<PeopleTransactions> createState() => _PeopleTransactionsState();
 }
 
+double amount = 0;
+
 Future<List<PeopleBalance>> getTransactions(String name) async {
   List<PeopleBalance> balance =
       await PeopleBalanceSharedMethods().getPeopleBalanceByName(name);
-  return balance;
+  amount = await PeopleBalanceSharedMethods()
+      .calculateFinalAmountSingleUser(balance);
+  return balance.reversed.toList();
 }
 
 class _PeopleTransactionsState extends State<PeopleTransactions> {
@@ -42,6 +53,68 @@ class _PeopleTransactionsState extends State<PeopleTransactions> {
               appBar: AppBar(
                 title: Text("${widget.peopleBalance.name} Transactions"),
                 centerTitle: true,
+                actions: [
+                  if (!amount.isEqual(0)) ...[
+                    IconButton(
+                      onPressed: () async {
+                        if (await confirm(
+                          context,
+                          title: const Text(
+                              "Are you sure, You want to mark it as Paid?"),
+                          content: Text(
+                              "This will mark ${widget.peopleBalance.name}'s Transaction as Balanced"),
+                          textOK: const Text("Mark it as Paid"),
+                        )) {
+                          PeopleBalance peopleBalance = PeopleBalance(
+                            name: widget.peopleBalance.name,
+                            amount: (amount * -1),
+                            dateAndTime:
+                                DateFormat.yMMMMd().format(DateTime.now()),
+                            transactionFor:
+                                "Balancing ${widget.peopleBalance.name} Transaction",
+                            relationFrom: widget.peopleBalance.relationFrom,
+                            transactionReferanceNumber:
+                                generateUniqueRefNumber(),
+                          );
+                          await PeopleBalanceSharedMethods()
+                              .insertPeopleBalance(
+                            peopleBalance,
+                          );
+                          if (amount.isNegative) {
+                            TransactionMethods().insertTransaction(
+                              CusTransaction(
+                                amount: (amount * -1),
+                                dateAndTime: stringToDateTime(peopleBalance.dateAndTime),
+                                name:
+                                    "Balancing ${widget.peopleBalance.name} Amount",
+                                typeOfTransaction: typeOfTransaction[1],
+                                expenseType: typeOfExpense[9],
+                                transactionReferanceNumber:
+                                    peopleBalance.transactionReferanceNumber,
+                              ),
+                            );
+                          } else if (amount.isGreaterThan(0)) {
+                            TransactionMethods().insertTransaction(
+                              CusTransaction(
+                                amount: amount,
+                                dateAndTime:
+                                    stringToDateTime(peopleBalance.dateAndTime),
+                                name:
+                                    "Balancing ${widget.peopleBalance.name} Amount",
+                                typeOfTransaction: typeOfTransaction[0],
+                                expenseType: typeOfExpense[9],
+                                transactionReferanceNumber:
+                                    peopleBalance.transactionReferanceNumber,
+                              ),
+                            );
+                          }
+                          setState(() {});
+                        }
+                      },
+                      icon: const Icon(CupertinoIcons.checkmark_rectangle),
+                    ),
+                  ]
+                ],
               ),
               body: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -60,8 +133,8 @@ class _PeopleTransactionsState extends State<PeopleTransactions> {
                               onTap: () async {
                                 dynamic refresh = await Get.to(
                                   routeName: "Shared Transaction Details",
-                                      () => PeopleTransactionDetails(
-                                        transaction: snapshot.data[index],
+                                  () => PeopleTransactionDetails(
+                                    transaction: snapshot.data[index],
                                   ),
                                   transition: customTrans,
                                   curve: customCurve,

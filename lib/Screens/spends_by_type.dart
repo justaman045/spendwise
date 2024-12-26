@@ -146,14 +146,19 @@ class _SpendsByTypeState extends State<SpendsByType> {
       },
       child: Card(
         child: Padding(
-          padding: EdgeInsets.all(10.w),
+          padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Icon(getIconData(expenseType.name)),
+              Icon(
+                getIconData(expenseType.name),
+              ),
               SizedBox(height: 10.h),
-              Text(expenseType.name),
+              Text(
+                expenseType.name,
+                textAlign: TextAlign.center,
+              ),
             ],
           ),
         ),

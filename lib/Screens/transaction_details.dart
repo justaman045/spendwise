@@ -136,7 +136,7 @@ class _TransactionDetailsState extends State<TransactionDetails> {
                     child: Text(
                       "You've received Income, keep saving and Investing.",
                       style: TextStyle(
-                        fontSize: 15.r,
+                        fontSize: 14.r,
                       ),
                     ),
                   ),
@@ -375,7 +375,7 @@ class _TransactionDetailsState extends State<TransactionDetails> {
               ),
               Padding(
                 padding: EdgeInsets.only(
-                  top: 30.h,
+                  top: 25.h,
                   bottom: 10.h,
                 ),
                 child: Container(
@@ -422,7 +422,7 @@ class _TransactionDetailsState extends State<TransactionDetails> {
                 ),
               ),
               Padding(
-                padding: EdgeInsets.only(top: 10.h),
+                padding: EdgeInsets.only(top: 5.h),
                 child: Container(
                   width: 250.w,
                   decoration: BoxDecoration(

@@ -47,6 +47,7 @@ class _AllTransactionsState extends State<AllTransactions> {
   DateTime endDate = DateTime.now();
   DateTime startDate = DateTime.now();
   bool filter = true;
+  bool tester = true;
 
   // Function to run everytime a user expects to refresh the data but the value is not being used
   Future<void> _refreshData() async {
@@ -54,13 +55,6 @@ class _AllTransactionsState extends State<AllTransactions> {
       getTransactions();
     });
   }
-
-  // void _getData() async {
-  //   bankTransaction = await getTransactions();
-  //   setState(() {
-  //     bankTransaction;
-  //   });
-  // }
 
   // Override default method to get the initial data beforehand only
   @override
@@ -72,8 +66,12 @@ class _AllTransactionsState extends State<AllTransactions> {
   Future<bool> _checkFirstTime({bool getStatus = false}) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     bool filterOptions = prefs.getBool('filterOptions') ?? false;
+    bool testerTemp = prefs.getBool('tester') ?? false;
 
     if (getStatus) {
+      setState(() {
+        tester = testerTemp;
+      });
       return filterOptions;
     }
 
@@ -93,6 +91,7 @@ class _AllTransactionsState extends State<AllTransactions> {
 
   @override
   Widget build(BuildContext context) {
+    debugPrint(tester.toString());
     List<CusTransaction> bankTransactions = [];
     return RefreshIndicator(
       onRefresh: () => _refreshData(),
@@ -130,10 +129,12 @@ class _AllTransactionsState extends State<AllTransactions> {
                   },
                 ),
                 actions: [
-                  IconButton(
-                    onPressed: () => _checkFirstTime(),
-                    icon: const Icon(CupertinoIcons.settings),
-                  ),
+                  if(tester) ...[
+                    IconButton(
+                      onPressed: () => _checkFirstTime(),
+                      icon: const Icon(CupertinoIcons.settings),
+                    ),
+                  ],
                 ],
               ),
               body: SafeArea(
