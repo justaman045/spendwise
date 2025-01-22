@@ -1,5 +1,6 @@
 import "dart:io";
 
+import "package:cloud_firestore/cloud_firestore.dart";
 import "package:firebase_auth/firebase_auth.dart";
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
@@ -28,6 +29,7 @@ class _SettingsState extends State<Settings> {
   late int totalEntries = 0;
   final GlobalKey _import = GlobalKey();
   final GlobalKey _export = GlobalKey();
+  dynamic user;
 
   @override
   void initState() {
@@ -38,11 +40,26 @@ class _SettingsState extends State<Settings> {
     getTotalEntries();
     super.initState();
     totalEntries.isEqual(0) ? _checkImport() : _checkExport();
+    getUserData();
   }
 
   void getTotalEntries() async {
     totalEntries = await DatabaseHelper().getTotalEntryCount();
     setState(() {});
+  }
+
+  Future<void> getUserData() async {
+    var currentUserDocument = await FirebaseFirestore.instance
+        .collection("Users")
+        .where("email", isEqualTo: FirebaseAuth.instance.currentUser!.email)
+        .get();
+    for (dynamic use in currentUserDocument.docs) {
+      if (use["email"].toString() == FirebaseAuth.instance.currentUser!.email) {
+        setState(() {
+          user = use;
+        });
+      }
+    }
   }
 
   Future<void> _checkImport() async {
@@ -51,8 +68,7 @@ class _SettingsState extends State<Settings> {
 
     if (isFirstTime) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        ShowCaseWidget.of(context)
-            .startShowCase([_import]);
+        ShowCaseWidget.of(context).startShowCase([_import]);
       });
 
       prefs.setBool('isFirstTimeImport', false);
@@ -65,8 +81,7 @@ class _SettingsState extends State<Settings> {
 
     if (isFirstTime) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        ShowCaseWidget.of(context)
-            .startShowCase([_export]);
+        ShowCaseWidget.of(context).startShowCase([_export]);
       });
 
       prefs.setBool('isFirstTimeExport', false);
@@ -159,6 +174,47 @@ class _SettingsState extends State<Settings> {
                       ),
                     ),
                   ],
+                  SettingRow(
+                    icon: Icons.developer_mode,
+                    name: "Enable/Disable Tester Mode",
+                    hintMsg: "Testing Options",
+                    pageFunction: () async {
+                      SharedPreferences prefs = await SharedPreferences.getInstance();
+                      try {
+                        bool testerValue;
+
+                        if (user.exists &&
+                            user.data()?.containsKey("tester") == true) {
+                          // If "tester" field exists, use its current value (or set to true/false based on your logic)
+                          testerValue = !(user.data()!["tester"] == true);
+                        } else {
+                          // If "tester" field doesn't exist, set it to false
+                          testerValue = true;
+                        }
+
+                        await prefs.setBool('tester', testerValue);
+
+                        await FirebaseFirestore.instance
+                            .collection("Users")
+                            .doc(FirebaseAuth.instance.currentUser!.uid)
+                            .update({
+                          "tester": testerValue,
+                        }).then((value) {
+                          if (testerValue) {
+                            Get.snackbar("Testing Mode Enabled",
+                                "Congratulations! You are now a Tester for this App");
+                            getUserData();
+                          } else {
+                            Get.snackbar("Testing Mode Disabled",
+                                "Sad to see you leave, You're not a Tester for this App anymore");
+                            getUserData();
+                          }
+                        });
+                      } catch (e) {
+                        debugPrint("Error updating tester field: $e");
+                      }
+                    },
+                  )
                 ],
               ),
             ),
@@ -285,17 +341,25 @@ class SettingRow extends StatelessWidget {
                 SizedBox(
                   width: 20.w,
                 ),
-                Text(
-                  name,
-                  style: TextStyle(fontSize: 15.r),
+                SizedBox(
+                  width: 160.w,
+                  child: Text(
+                    name,
+                    style: TextStyle(fontSize: 15.r),
+                    textAlign: TextAlign.left,
+                  ),
                 ),
               ],
             ),
             Row(
               children: [
-                Text(
-                  hintMsg,
-                  style: TextStyle(fontSize: 12.r),
+                SizedBox(
+                  width: 70.w,
+                  child: Text(
+                    hintMsg,
+                    style: TextStyle(fontSize: 12.r),
+                    textAlign: TextAlign.right,
+                  ),
                 ),
                 SizedBox(
                   width: 10.w,

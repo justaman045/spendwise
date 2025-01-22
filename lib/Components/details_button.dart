@@ -17,7 +17,7 @@ class DetailsButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: onTap,
+      onTap: () => onTap(),
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(15.r),

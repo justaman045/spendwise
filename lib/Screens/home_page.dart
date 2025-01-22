@@ -107,7 +107,8 @@ class _HomePageState extends State<HomePage> {
             // Render homepage screen
             return GestureDetector(
               onVerticalDragEnd: (details) {
-                if (details.primaryVelocity! > 0) { // Check for downward swipe
+                if (details.primaryVelocity! > 0) {
+                  // Check for downward swipe
                   _refreshData();
                 }
               },
@@ -155,9 +156,10 @@ class _HomePageState extends State<HomePage> {
                         ),
 
                         // if there are no transactions made today then show there are no transactions today
-                        if (allTransactions(bankTransaction,
-                                todayTrans: true, thisMonth: true)
-                            .isEmpty) ...[
+                        if (allTransactions(
+                          bankTransaction,
+                          todayTrans: true,
+                        ).isEmpty) ...[
                           Expanded(
                             child: Center(
                               child: Column(
@@ -183,7 +185,8 @@ class _HomePageState extends State<HomePage> {
                                     child: Container(
                                       decoration: BoxDecoration(
                                         gradient: colorsOfGradient(),
-                                        borderRadius: BorderRadius.circular(10.r),
+                                        borderRadius:
+                                            BorderRadius.circular(10.r),
                                       ),
                                       child: TextButton(
                                         onPressed: () {
@@ -211,28 +214,21 @@ class _HomePageState extends State<HomePage> {
                           Expanded(
                             child: ListView.builder(
                               // reverse: true,
-                              itemCount: allTransactions(bankTransaction,
-                                      thisMonth: true, todayTrans: true)
-                                  .length, // Use todaysTransactions length
+                              itemCount: allTransactions(
+                                bankTransaction,
+                                todayTrans: true,
+                              ).length, // Use todaysTransactions length
 
                               // Item builder with a list of Today's transaction of this month
                               itemBuilder: (context, index) {
                                 final transaction = allTransactions(
-                                    bankTransaction,
-                                    thisMonth: true,
-                                    todayTrans: true);
+                                  bankTransaction,
+                                  todayTrans: true,
+                                ).reversed.toList();
 
                                 // Return the Transaction Widget with the transaction details
                                 return TransactionWidget(
-                                  expenseType: transaction[index].expenseType,
-                                  amount: transaction[index].amount.toInt(),
-                                  dateAndTime: transaction[index].dateAndTime,
-                                  name: transaction[index].name,
-                                  typeOfTransaction:
-                                      transaction[index].typeOfTransaction,
-                                  transactionReferanceNumber: transaction[index]
-                                      .transactionReferanceNumber,
-                                  toIncl: transaction[index].toInclude,
+                                  transaction: transaction[index],
                                   refreshData: _refreshData,
                                 );
                               },

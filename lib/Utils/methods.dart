@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:spendwise/Models/cus_transaction.dart';
@@ -73,7 +74,7 @@ Map<String, int> daysToMonths(int days) {
   };
 }
 
-int getTenureInDays(String tenure){
+int getTenureInDays(String tenure) {
   Duration difference;
   switch (tenure) {
     case "1 Day":
@@ -120,4 +121,101 @@ int getTenureInDays(String tenure){
   }
 
   return difference.inDays;
+}
+
+yearBuilder() => ({
+      required year,
+      decoration,
+      isCurrentYear,
+      isDisabled,
+      isSelected,
+      textStyle,
+    }) {
+      return Center(
+        child: Container(
+          decoration: decoration,
+          height: 36,
+          width: 72,
+          child: Center(
+            child: Semantics(
+              selected: isSelected,
+              button: true,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    year.toString(),
+                    style: textStyle,
+                  ),
+                  if (isCurrentYear == true)
+                    Container(
+                      padding: const EdgeInsets.all(5),
+                      margin: const EdgeInsets.only(left: 5),
+                      decoration: const BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Colors.redAccent,
+                      ),
+                    ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
+    };
+
+dayBuilder(BuildContext context) => ({
+      required date,
+      textStyle,
+      decoration,
+      isSelected,
+      isDisabled,
+      isToday,
+    }) {
+      Widget? dayWidget;
+      if (date.day % 3 == 0 && date.day % 9 != 0) {
+        dayWidget = Container(
+          decoration: decoration,
+          child: Center(
+            child: Stack(
+              alignment: AlignmentDirectional.center,
+              children: [
+                Text(
+                  MaterialLocalizations.of(context).formatDecimal(date.day),
+                  style: textStyle,
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 27.5),
+                  child: Container(
+                    height: 4,
+                    width: 4,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(5),
+                      color:
+                          isSelected == true ? Colors.white : Colors.grey[500],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      }
+      return dayWidget;
+    };
+
+List<DropdownMenuItem<String>> getDropDownMenuItems(List<String> listOfStrings){
+  return listOfStrings
+      .map(
+        (e) => DropdownMenuItem(
+      value: e,
+      child: Text(
+        toBeginningOfSentenceCase(e),
+        style: TextStyle(
+          fontSize: 13.r,
+        ),
+      ),
+    ),
+  )
+      .toList();
 }

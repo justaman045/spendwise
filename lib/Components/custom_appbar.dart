@@ -9,7 +9,8 @@ import "package:spendwise/Screens/recognized_accounts.dart";
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   const CustomAppBar({
     super.key,
-    required this.username, required this.three,
+    required this.username,
+    required this.three,
   });
 
   final String username;
@@ -29,23 +30,24 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 
       // Action icon for navigating to recognized accounts
       actions: [
-      Showcase(
-      key: three,
-      description: "All of your Wallets recognised can be seen from here",
-      child: IconButton(
-          onPressed: () => Get.to(
-            routeName: "Accounts",
-            () => const RecognizedAccounts(),
-            curve: customCurve,
-            transition: customTrans,
-            duration: duration,
+        Showcase(
+          key: three,
+          description: "All of your Wallets recognised can be seen from here",
+          child: IconButton(
+            onPressed: () => Get.to(
+              routeName: "Accounts",
+              () => const RecognizedAccounts(),
+              curve: customCurve,
+              transition: customTrans,
+              duration: duration,
+            ),
+            icon: Icon(
+              Icons.wallet,
+              size: 20.h,
+            ),
+            tooltip: "Wallets Recognised",
           ),
-          icon: Icon(
-            Icons.wallet,
-            size: 20.h,
-          ),
-          tooltip: "Wallets Recognised",
-        ),),
+        ),
       ],
     );
   }

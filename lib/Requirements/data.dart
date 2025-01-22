@@ -22,7 +22,8 @@ const List<String> routes = [
   "cashentry",
   "subscription",
   "add_subscription",
-  "verifyEmail"
+  "verifyEmail",
+  "peopleTransaction"
 ];
 const String introText =
     "Experience the future of Payments with our user-friendly app. Say goodbye to Notes making and other unusefull process of recording your transactions.";
@@ -37,7 +38,6 @@ const List<String> typeOfTransaction = [
   "expense",
   "he/She Didn't Pay",
   "you Didn't Paid",
-  "balancing People's Balance"
 ];
 const List<String> typeOfExpense = [
   "Bike and Travel",

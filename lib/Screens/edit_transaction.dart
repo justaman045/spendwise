@@ -1,9 +1,13 @@
 import "package:flutter/material.dart";
+import "package:flutter/services.dart";
 import "package:flutter_screenutil/flutter_screenutil.dart";
 import "package:get/get.dart";
 import "package:intl/intl.dart";
 import "package:spendwise/Models/cus_transaction.dart";
+import "package:spendwise/Models/people_expense.dart";
 import "package:spendwise/Requirements/data.dart";
+import "package:spendwise/Utils/methods.dart";
+import "package:spendwise/Utils/people_balance_shared_methods.dart";
 import "package:spendwise/Utils/theme.dart";
 import "package:spendwise/Utils/transaction_methods.dart";
 
@@ -13,22 +17,10 @@ final _formKey = GlobalKey<FormState>();
 class EditTransaction extends StatefulWidget {
   const EditTransaction({
     super.key,
-    required this.toName,
-    required this.amount,
-    required this.dateTime,
-    required this.transactionReferanceNumber,
-    required this.expenseType,
-    required this.transactionType,
-    required this.toIncl,
+    required this.transaction,
   });
 
-  final String toName;
-  final int amount;
-  final DateTime dateTime;
-  final int transactionReferanceNumber;
-  final String expenseType;
-  final String transactionType;
-  final int toIncl;
+  final CusTransaction transaction;
 
   @override
   State<EditTransaction> createState() => _EditTransactionState();
@@ -37,6 +29,11 @@ class EditTransaction extends StatefulWidget {
 class _EditTransactionState extends State<EditTransaction> {
   String _expType = "";
   String _toExclude = "";
+  TextEditingController nameController = TextEditingController();
+  TextEditingController fromDate = TextEditingController();
+  TextEditingController amountEditingController = TextEditingController();
+  String typeOftransaction = "";
+  List<PeopleBalance> peopleBalance = [];
 
   void updateTransaction(String expenseType) {
     _expType = expenseType;
@@ -46,9 +43,23 @@ class _EditTransactionState extends State<EditTransaction> {
     _toExclude = toExclude;
   }
 
+  Future<void> getPeopleBalanceList() async {
+    List<PeopleBalance>? peopleBalanceTemp = await PeopleBalanceSharedMethods()
+        .getAllPeopleBalanceByRef(
+            widget.transaction.transactionReferanceNumber);
+    if (peopleBalanceTemp!.isNotEmpty) {
+      setState(() {
+        peopleBalance = peopleBalanceTemp;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     List<String> typeOfTransaction = typeOfExpense;
+    nameController.text = widget.transaction.name;
+    fromDate.text = DateFormat.yMMMMd().format(widget.transaction.dateAndTime);
+    amountEditingController.text = widget.transaction.amount.toString();
     // TextEditingController expenseEditingController = TextEditingController();
 
     return Scaffold(
@@ -56,132 +67,140 @@ class _EditTransactionState extends State<EditTransaction> {
         title: const Text("Edit Transaction"),
         centerTitle: true,
       ),
-      body: Column(
-        children: [
-          Padding(
-            padding: EdgeInsets.only(
-              left: 30.w,
-              right: 30.w,
-              top: 20.h,
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                if (widget.expenseType == "income") ...[
-                  Text(
-                    "From",
-                    style: TextStyle(
-                      fontSize: 13.r,
+      body: Form(
+        key: _formKey,
+        child: Column(
+          children: [
+            Padding(
+              padding: EdgeInsets.only(
+                left: 20.r,
+                top: 15.h,
+                right: 20.w,
+              ),
+              child: SizedBox(
+                height: 48.h,
+                child: TextFormField(
+                  controller: nameController,
+                  inputFormatters: <TextInputFormatter>[
+                    FilteringTextInputFormatter.allow(RegExp('[a-z A-Z]'))
+                  ],
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return "Add a Recipient name";
+                    } else if (value.length < 3) {
+                      return "Name must be at-least 3 characters";
+                    }
+                    return null;
+                  },
+                  decoration: InputDecoration(
+                    label: Text(
+                      "Recipient Name",
+                      style: TextStyle(
+                        fontSize: 13.r,
+                      ),
+                    ),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(15.h),
                     ),
                   ),
-                ] else ...[
+                ),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(
+                left: 20.r,
+                top: 15.h,
+                right: 20.w,
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
                   Text(
-                    "To",
+                    "Transaction ID",
+                    style: TextStyle(fontSize: 13.r),
+                  ),
+                  Text(
+                    widget.transaction.transactionReferanceNumber.toString(),
                     style: TextStyle(
                       fontSize: 13.r,
                     ),
                   ),
                 ],
-                Text(
-                  widget.toName,
-                  style: TextStyle(
-                    fontSize: 13.r,
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(
+                left: 20.r,
+                top: 15.h,
+                right: 20.w,
+              ),
+              child: TextFormField(
+                canRequestFocus: false,
+                keyboardType: TextInputType.none,
+                controller: fromDate,
+                decoration: InputDecoration(
+                  suffixIcon: IconButton(
+                    icon: const Icon(Icons.calendar_month_rounded),
+                    onPressed: () async {
+                      dynamic date = await showDatePicker(
+                          context: context,
+                          firstDate: DateTime(DateTime.now().year - 1),
+                          lastDate: DateTime(2099));
+                      fromDate.text = DateFormat.yMMMMd().format(date);
+                    },
+                  ),
+                  label: const Text("Start Date of the Subscription"),
+                  hintText: "".toString(),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(15.r),
                   ),
                 ),
-              ],
+              ),
             ),
-          ),
-          Padding(
-            padding: EdgeInsets.only(
-              left: 30.w,
-              right: 30.w,
-              top: 15.h,
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  "Transaction ID",
-                  style: TextStyle(fontSize: 13.r),
-                ),
-                Text(
-                  widget.transactionReferanceNumber.toString(),
-                  style: TextStyle(
-                    fontSize: 13.r,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.only(
-              left: 30.w,
-              right: 30.w,
-              top: 15.h,
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  "Date and Time",
-                  style: TextStyle(
-                    fontSize: 13.r,
-                  ),
-                ),
-                Row(
-                  children: [
-                    Text(
-                      DateFormat.yMMMMd('en_US')
-                          .format(widget.dateTime)
-                          .toString(),
-                      style: TextStyle(
-                        fontSize: 13.r,
-                      ),
-                    ),
-                    Text(
-                      ", ",
-                      style: TextStyle(
-                        fontSize: 13.r,
-                      ),
-                    ),
-                    Text(
-                      DateFormat.jm().format(widget.dateTime).toString(),
-                      style: TextStyle(
-                        fontSize: 13.r,
-                      ),
-                    ),
+            Padding(
+              padding: EdgeInsets.only(
+                left: 20.r,
+                top: 15.h,
+                right: 20.w,
+              ),
+              child: SizedBox(
+                height: 48.h,
+                child: TextFormField(
+                  controller: amountEditingController,
+                  keyboardType: const TextInputType.numberWithOptions(
+                      decimal: true, signed: true),
+                  inputFormatters: [
+                    FilteringTextInputFormatter.allow(RegExp(r'^\+?\d*'))
                   ],
-                )
-              ],
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.only(
-              left: 30.w,
-              right: 30.w,
-              top: 15.h,
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  "Expense",
-                  style: TextStyle(
-                    fontSize: 13.r,
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return "Enter a amount that have been paid or received";
+                    } else if (int.parse(
+                            double.parse(value).toInt().toString()) <
+                        1) {
+                      return "Amount cannot be in negative";
+                    }
+                    return null;
+                  },
+                  readOnly: typeOftransaction.toLowerCase() ==
+                          typeOfTransaction[4].toLowerCase()
+                      ? true
+                      : false,
+                  decoration: InputDecoration(
+                    label: Text(
+                      "Amount",
+                      style: TextStyle(
+                        fontSize: 13.r,
+                      ),
+                    ),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(15.h),
+                    ),
                   ),
                 ),
-                Text(
-                  "Rs. ${widget.amount}",
-                  style: TextStyle(
-                    fontSize: 13.r,
-                  ),
-                ),
-              ],
+              ),
             ),
-          ),
-          Form(
-            key: _formKey,
-            child: Column(
+            Column(
               children: [
                 Padding(
                   padding: EdgeInsets.only(
@@ -222,7 +241,7 @@ class _EditTransactionState extends State<EditTransaction> {
                           updateTransaction(value);
                         }
                       },
-                      value: widget.expenseType,
+                      value: widget.transaction.expenseType,
                     ),
                   ),
                 ),
@@ -265,82 +284,118 @@ class _EditTransactionState extends State<EditTransaction> {
                           updatetoInclude(value);
                         }
                       },
-                      value: widget.toIncl == 1 ? "No" : "Yes",
+                      value: widget.transaction.toInclude == 1 ? "No" : "Yes",
                     ),
                   ),
                 ),
               ],
             ),
-          ),
-          Padding(
-            padding: EdgeInsets.symmetric(vertical: 50.h),
-            child: Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    GestureDetector(
-                      onTap: () => Get.back(),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(15.r),
-                          gradient: const LinearGradient(
-                            begin: Alignment.topRight,
-                            end: Alignment.bottomLeft,
-                            colors: [
-                              Color.fromRGBO(210, 209, 254, 1),
-                              Color.fromRGBO(243, 203, 237, 1),
-                            ],
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: 50.h),
+              child: Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      GestureDetector(
+                        onTap: () => Get.back(),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(15.r),
+                            gradient: const LinearGradient(
+                              begin: Alignment.topRight,
+                              end: Alignment.bottomLeft,
+                              colors: [
+                                Color.fromRGBO(210, 209, 254, 1),
+                                Color.fromRGBO(243, 203, 237, 1),
+                              ],
+                            ),
                           ),
-                        ),
-                        width: 100.w,
-                        height: 50.h,
-                        child: Center(
-                          child: Text(
-                            "Go Back",
-                            style: TextStyle(
-                              fontSize: 13.r,
-                              color: Get.isDarkMode
-                                  ? MyAppColors
-                                      .normalColoredWidgetTextColorDarkMode
-                                  : MyAppColors
-                                      .normalColoredWidgetTextColorLightMode,
+                          width: 100.w,
+                          height: 50.h,
+                          child: Center(
+                            child: Text(
+                              "Go Back",
+                              style: TextStyle(
+                                fontSize: 13.r,
+                                color: Get.isDarkMode
+                                    ? MyAppColors
+                                        .normalColoredWidgetTextColorDarkMode
+                                    : MyAppColors
+                                        .normalColoredWidgetTextColorLightMode,
+                              ),
                             ),
                           ),
                         ),
                       ),
-                    ),
-                    GestureDetector(
-                      onTap: () async {
-                        if (_formKey.currentState!.validate()) {
-                          debugPrint(_expType.toString());
-                        }
-                        if (_expType.isNotEmpty || _toExclude.isNotEmpty) {
+                      GestureDetector(
+                        onTap: () async {
+                          if (_formKey.currentState!.validate()) {
+                            debugPrint(_expType.toString());
+                          }
                           if (_toExclude != "Yes") {
                             _toExclude = "No";
                           }
                           CusTransaction transaction = CusTransaction(
-                            amount: widget.amount.toDouble(),
-                            dateAndTime: widget.dateTime,
-                            name: widget.toName,
-                            typeOfTransaction: widget.transactionType,
+                            amount: double.parse(amountEditingController.text),
+                            dateAndTime: stringToDateTime(fromDate.text),
+                            name: nameController.text,
+                            typeOfTransaction:
+                                widget.transaction.typeOfTransaction,
                             expenseType: _expType.isEmpty
-                                ? widget.expenseType
+                                ? widget.transaction.expenseType
                                 : _expType,
                             transactionReferanceNumber:
-                                widget.transactionReferanceNumber,
+                                widget.transaction.transactionReferanceNumber,
                             toInclude: _toExclude == "No" ? 1 : 0,
                           );
                           await TransactionMethods()
                               .updateTransaction(transaction)
                               .then((value) => Get.back(result: "refresh"))
                               .then((value) => Get.back(result: "refresh"));
-                        } else {
-                          Get.snackbar(
-                            "You haven't changed anything",
-                            "To Save anything new you must change anything",
-                          );
-                        }
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(15.r),
+                            gradient: const LinearGradient(
+                              begin: Alignment.topRight,
+                              end: Alignment.bottomLeft,
+                              colors: [
+                                Color.fromRGBO(210, 209, 254, 1),
+                                Color.fromRGBO(243, 203, 237, 1),
+                              ],
+                            ),
+                          ),
+                          width: 100.w,
+                          height: 50.h,
+                          child: Center(
+                            child: Text(
+                              "Save Changes",
+                              style: TextStyle(
+                                fontSize: 13.r,
+                                color: Get.isDarkMode
+                                    ? MyAppColors
+                                        .normalColoredWidgetTextColorDarkMode
+                                    : MyAppColors
+                                        .normalColoredWidgetTextColorLightMode,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 20.h),
+                    child: GestureDetector(
+                      onTap: () async {
+                        await PeopleBalanceSharedMethods().deletePeopleBalance(
+                            widget.transaction.transactionReferanceNumber);
+                        await TransactionMethods()
+                            .deleteTransaction(
+                                widget.transaction.transactionReferanceNumber)
+                            .then((value) => Get.back(result: "refresh"))
+                            .then((value) => Get.back(result: "refresh"));
                       },
                       child: Container(
                         decoration: BoxDecoration(
@@ -354,11 +409,11 @@ class _EditTransactionState extends State<EditTransaction> {
                             ],
                           ),
                         ),
-                        width: 100.w,
+                        width: 150.w,
                         height: 50.h,
                         child: Center(
                           child: Text(
-                            "Save Changes",
+                            "Delete Transaction",
                             style: TextStyle(
                               fontSize: 13.r,
                               color: Get.isDarkMode
@@ -371,50 +426,12 @@ class _EditTransactionState extends State<EditTransaction> {
                         ),
                       ),
                     ),
-                  ],
-                ),
-                Padding(
-                  padding: EdgeInsets.only(top: 20.h),
-                  child: GestureDetector(
-                    onTap: () async {
-                      await TransactionMethods()
-                          .deleteTransaction(widget.transactionReferanceNumber)
-                          .then((value) => Get.back(result: "refresh")).then((value) => Get.back(result: "refresh"));
-                    },
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(15.r),
-                        gradient: const LinearGradient(
-                          begin: Alignment.topRight,
-                          end: Alignment.bottomLeft,
-                          colors: [
-                            Color.fromRGBO(210, 209, 254, 1),
-                            Color.fromRGBO(243, 203, 237, 1),
-                          ],
-                        ),
-                      ),
-                      width: 150.w,
-                      height: 50.h,
-                      child: Center(
-                        child: Text(
-                          "Delete Transaction",
-                          style: TextStyle(
-                            fontSize: 13.r,
-                            color: Get.isDarkMode
-                                ? MyAppColors
-                                    .normalColoredWidgetTextColorDarkMode
-                                : MyAppColors
-                                    .normalColoredWidgetTextColorLightMode,
-                          ),
-                        ),
-                      ),
-                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

@@ -2,6 +2,7 @@ import "package:flutter/cupertino.dart";
 import "package:flutter/material.dart";
 import "package:flutter_screenutil/flutter_screenutil.dart";
 import "package:get/get.dart";
+import "package:shared_preferences/shared_preferences.dart";
 import "package:showcaseview/showcaseview.dart";
 import "package:spendwise/Requirements/data.dart";
 import "package:spendwise/Screens/all_transactions.dart";
@@ -9,13 +10,14 @@ import "package:spendwise/Screens/features_to_impliment.dart";
 import "package:spendwise/Screens/home_page.dart";
 import "package:spendwise/Screens/people.dart";
 import "package:spendwise/Screens/settings.dart";
+import "package:spendwise/Screens/spends_by_type.dart";
 import "package:spendwise/Screens/subscription.dart";
 import "package:spendwise/Screens/user_profile.dart";
 import "package:spendwise/Utils/theme.dart";
 import "package:url_launcher/url_launcher.dart"; // Assuming MyAppColors is defined here
 
 // Represents a custom drawer for the Spendwise app
-class CustomDrawer extends StatelessWidget {
+class CustomDrawer extends StatefulWidget {
   const CustomDrawer({
     super.key,
     required this.scaffoldKey,
@@ -26,6 +28,27 @@ class CustomDrawer extends StatelessWidget {
   final GlobalKey<ScaffoldState> scaffoldKey;
 
   @override
+  State<CustomDrawer> createState() => _CustomDrawerState();
+}
+
+class _CustomDrawerState extends State<CustomDrawer> {
+  bool _testerEnabled = false;
+
+  Future<void> _loadTesterPreference() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _testerEnabled = prefs.getBool('tester') ?? false;
+    });
+  }
+
+  @override
+  void initState() {
+    _loadTesterPreference();
+    // TODO: implement initState
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     // Static list of drawer item names
     final Map<String, IconData> navBars = {
@@ -34,12 +57,11 @@ class CustomDrawer extends StatelessWidget {
       "Profile": Icons.person_2,
       "Subscriptions": Icons.subscriptions,
       "People": CupertinoIcons.group_solid,
+      "Spends": CupertinoIcons.arrow_right_arrow_left,
       "Settings": CupertinoIcons.settings_solid,
       "Features yet to Implement": CupertinoIcons.tray_full,
       "Contact me for Feature Suggestion": Icons.contact_emergency,
     };
-
-    final settingsIndex = navBars.keys.toList().indexOf("Settings");
 
     return Drawer(
       width: 250.w,
@@ -64,7 +86,7 @@ class CustomDrawer extends StatelessWidget {
                   children: [
                     Center(
                       child: Text(
-                        username, // Username of the user
+                        widget.username, // Username of the user
                         style: TextStyle(
                           fontSize: 20.w,
                           color:
@@ -80,42 +102,19 @@ class CustomDrawer extends StatelessWidget {
 
           // Items of the NavBar
           for (int i = 0; i < navBars.length; i++)
-            ListTile(
-              leading: Icon(navBars.values.elementAt(i)),
-              title: Text(
-                navBars.keys.elementAt(i),
-                style: TextStyle(fontSize: 15.w),
+            if (_testerEnabled || i < navBars.length - 2) ...[
+              ListTile(
+                leading: Icon(navBars.values.elementAt(i)),
+                title: Text(
+                  navBars.keys.elementAt(i),
+                  style: TextStyle(fontSize: 15.w),
+                ),
+                onTap: () {
+                  Navigator.of(context).pop();
+                  _handleNavigation(context, i);
+                },
               ),
-              onTap: () { _handleNavigation(context, i); },
-            ),
-
-          // // Items before Settings
-          // for (int i = 0; i <= settingsIndex; i++)
-          //   ListTile(
-          //     leading: Icon(navBars.values.elementAt(i)),
-          //     title: Text(
-          //       navBars.keys.elementAt(i),
-          //       style: TextStyle(fontSize: 15.w),
-          //     ),
-          //     onTap: () { _handleNavigation(context, i); },
-          //   ),
-          //
-          // // Divider before items after Settings
-          // Padding(
-          //   padding: EdgeInsets.symmetric(vertical: 75.h),
-          //   child: const Spacer(),
-          // ),
-          //
-          // // Items after Settings
-          // for (int i = settingsIndex + 1; i < navBars.length; i++)
-          //   ListTile(
-          //     leading: Icon(navBars.values.elementAt(i)),
-          //     title: Text(
-          //       navBars.keys.elementAt(i),
-          //       style: TextStyle(fontSize: 15.w),
-          //     ),
-          //     onTap: () { _handleNavigation(context, i); },
-          //   ),
+            ]
         ],
       ),
     );
@@ -143,7 +142,6 @@ class CustomDrawer extends StatelessWidget {
             routeName: routes[4],
             () => ShowCaseWidget(
               builder: (context) => const AllTransactions(
-                type: "allTransactions",
                 pageTitle: "All Transactions",
                 chartTitle: "All Transactions from SMS",
                 chartType: "Transaction",
@@ -190,6 +188,17 @@ class CustomDrawer extends StatelessWidget {
         }
         break;
       case 5: // Settings
+        if (currentRoute != "spends") {
+          Get.to(
+            routeName: "spends",
+            () => ShowCaseWidget(builder: (context) => const SpendsByType()),
+            curve: customCurve,
+            transition: customTrans,
+            duration: duration,
+          );
+        }
+        break;
+      case 6: // Settings
         if (currentRoute != routes[7]) {
           Get.to(
             routeName: routes[7],
@@ -200,7 +209,7 @@ class CustomDrawer extends StatelessWidget {
           );
         }
         break;
-      case 6: // Settings
+      case 7: // Settings
         if (currentRoute != "features") {
           Get.to(
             routeName: "features",
@@ -211,7 +220,7 @@ class CustomDrawer extends StatelessWidget {
           );
         }
         break;
-      case 7: // Settings
+      case 8: // Settings
         launchUrl(Uri.parse("https://wa.me/+918586047520"));
         break;
     }

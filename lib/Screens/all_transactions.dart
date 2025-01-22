@@ -1,7 +1,10 @@
+import "package:calendar_date_picker2/calendar_date_picker2.dart";
+import "package:flutter/cupertino.dart";
 import "package:flutter/material.dart";
 import "package:flutter_screenutil/flutter_screenutil.dart";
 import "package:get/get.dart";
-import "package:showcaseview/showcaseview.dart";
+import "package:intl/intl.dart";
+import "package:shared_preferences/shared_preferences.dart";
 import "package:spendwise/Components/transaction_charts.dart";
 import "package:spendwise/Components/transaction_widget.dart";
 import "package:spendwise/Models/cus_transaction.dart";
@@ -16,14 +19,22 @@ class AllTransactions extends StatefulWidget {
     required this.pageTitle,
     required this.chartTitle,
     required this.chartType,
-    required this.type,
+    this.showHidden = false,
+    this.income = false,
+    this.thisMonth = false,
+    this.expense = false,
+    this.todayTrans = false,
   });
 
-  // final List<Transaction> transactioncustom;
+  // final List<Transaction> transaction custom;
   final String pageTitle;
   final String chartTitle;
   final String chartType;
-  final String type;
+  final bool showHidden;
+  final bool income;
+  final bool thisMonth;
+  final bool expense;
+  final bool todayTrans;
 
   @override
   State<AllTransactions> createState() => _AllTransactionsState();
@@ -32,29 +43,55 @@ class AllTransactions extends StatefulWidget {
 class _AllTransactionsState extends State<AllTransactions> {
   // Local Variable Declaration to use it in rendering
   List<CusTransaction> bankTransaction = [];
-  // ignore: unused_field
-  Future? _future;
   dynamic username;
-  final GlobalKey _one = GlobalKey();
+  DateTime endDate = DateTime.now();
+  DateTime startDate = DateTime.now();
+  bool filter = true;
+  bool tester = true;
 
   // Function to run everytime a user expects to refresh the data but the value is not being used
   Future<void> _refreshData() async {
     setState(() {
-      _future = getTransactions();
+      getTransactions();
     });
   }
 
   // Override default method to get the initial data beforehand only
   @override
   void initState() {
-    // _getData();
+    _checkFirstTime(getStatus: true).then((value) => filter = value);
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback(
-            (_) => ShowCaseWidget.of(context).startShowCase([_one]));
+  }
+
+  Future<bool> _checkFirstTime({bool getStatus = false}) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool filterOptions = prefs.getBool('filterOptions') ?? false;
+    bool testerTemp = prefs.getBool('tester') ?? false;
+
+    if (getStatus) {
+      setState(() {
+        tester = testerTemp;
+      });
+      return filterOptions;
+    }
+
+    // Toggle the filterOptions value
+    filterOptions = !filterOptions;
+
+    // Update SharedPreferences
+    prefs.setBool('filterOptions', filterOptions);
+
+    // Update the UI state only if filterOptions is true
+    setState(() {
+      filter = filterOptions;
+    });
+
+    return filterOptions;
   }
 
   @override
   Widget build(BuildContext context) {
+    debugPrint(tester.toString());
     List<CusTransaction> bankTransactions = [];
     return RefreshIndicator(
       onRefresh: () => _refreshData(),
@@ -62,31 +99,17 @@ class _AllTransactionsState extends State<AllTransactions> {
         future: getTransactions(),
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
-            if (widget.type.toLowerCase() == "thismonthIncome".toLowerCase()) {
-              bankTransactions =
-                  allTransactions(snapshot.data, income: true, thisMonth: true);
-            } else if (widget.type.toLowerCase() ==
-                "thismonthexpense".toLowerCase()) {
-              bankTransactions = allTransactions(snapshot.data,
-                  expense: true, thisMonth: true);
-            } else if (widget.type.toLowerCase() ==
-                "withhiddenIncome".toLowerCase()) {
-              bankTransactions = allTransactions(snapshot.data,
-                  showHidden: true, income: true);
-            } else if (widget.type.toLowerCase() ==
-                "withHiddenExpense".toLowerCase()) {
-              bankTransactions = allTransactions(snapshot.data,
-                  expense: true, showHidden: true);
-            } else if (widget.type.toLowerCase() ==
-                "allTransactions".toLowerCase()) {
-              bankTransactions = allTransactions(
-                snapshot.data,
-              );
-            } else if (widget.type.toLowerCase() ==
-                "thisMonthTransactions".toLowerCase()) {
-              bankTransactions =
-                  allTransactions(snapshot.data, thisMonth: true);
-            }
+            bankTransactions = allTransactions(
+              snapshot.data,
+              todayTrans: widget.todayTrans,
+              expense: widget.expense,
+              income: widget.income,
+              showHidden: widget.showHidden,
+              thisMonth: widget.thisMonth,
+            );
+
+            bankTransactions
+                .sort((b, a) => a.dateAndTime.compareTo(b.dateAndTime));
             return Scaffold(
               appBar: AppBar(
                 title: Text(
@@ -95,14 +118,24 @@ class _AllTransactionsState extends State<AllTransactions> {
                 ),
                 centerTitle: true,
                 leading: IconButton(
-                  icon: Icon(Icons.arrow_back,
-                      color: Get.isDarkMode
-                          ? MyAppColors.normalColoredWidgetTextColorLightMode
-                          : MyAppColors.normalColoredWidgetTextColorDarkMode),
+                  icon: Icon(
+                    Icons.arrow_back,
+                    color: Get.isDarkMode
+                        ? MyAppColors.normalColoredWidgetTextColorLightMode
+                        : MyAppColors.normalColoredWidgetTextColorDarkMode,
+                  ),
                   onPressed: () => {
                     Get.back(result: "refresh"),
                   },
                 ),
+                actions: [
+                  if(tester) ...[
+                    IconButton(
+                      onPressed: () => _checkFirstTime(),
+                      icon: const Icon(CupertinoIcons.settings),
+                    ),
+                  ],
+                ],
               ),
               body: SafeArea(
                 child: bankTransactions.isEmpty
@@ -116,27 +149,88 @@ class _AllTransactionsState extends State<AllTransactions> {
                       )
                     : Column(
                         children: [
+                          //TODO: Add a Date Based Transaction Filtering option
+                          if (!filter) ...[
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(20.r),
+                                    gradient: colorsOfGradient(),
+                                  ),
+                                  child: TextButton(
+                                    onPressed: () async {
+                                      var results =
+                                          await showCalendarDatePicker2Dialog(
+                                        context: context,
+                                        config:
+                                            CalendarDatePicker2WithActionButtonsConfig(
+                                          firstDayOfWeek: 1,
+                                          calendarType:
+                                              CalendarDatePicker2Type.range,
+                                          selectedDayTextStyle: const TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.w700,
+                                          ),
+                                          selectedDayHighlightColor:
+                                              Colors.purple,
+                                          centerAlignModePicker: true,
+                                          customModePickerIcon:
+                                              const SizedBox(),
+                                          dayBuilder: dayBuilder(context),
+                                          yearBuilder: yearBuilder(),
+                                        ),
+                                        dialogSize: const Size(325, 400),
+                                      );
+                                      if (results != null) {
+                                        startDate = results[0]!;
+                                        endDate = results[1]!;
+                                        final filteredTransactions = snapshot
+                                            .data
+                                            .where((element) =>
+                                                element.dateAndTime
+                                                    .isAfter(startDate) &&
+                                                element.dateAndTime
+                                                    .isBefore(endDate))
+                                            .toList();
+
+                                        setState(() {
+                                          bankTransactions =
+                                              filteredTransactions;
+                                        });
+                                      }
+                                    },
+                                    child: Text(
+                                        DateFormat.yMMMMd().format(startDate)),
+                                  ),
+                                ),
+                                const Text("-"),
+                                Container(
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(20.r),
+                                      gradient: colorsOfGradient()),
+                                  child: TextButton(
+                                    onPressed: () {},
+                                    child: Text(
+                                        DateFormat.yMMMMd().format(endDate)),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
                           TransactionCharts(
                             chartTitle: widget.chartTitle,
                             chartName: widget.chartType,
-                            chartData: bankTransactions,
+                            chartData: bankTransactions.reversed.toList(),
                           ),
                           Expanded(
                             child: ListView.builder(
                               itemCount: bankTransactions
-                                  .length, // Use todaysTransactions length
+                                  .length, // Use todayTransactions length
                               itemBuilder: (context, index) {
-                                final transaction = bankTransactions[index];
                                 return TransactionWidget(
-                                  expenseType: transaction.expenseType,
-                                  amount: transaction.amount.toInt(),
-                                  dateAndTime: transaction.dateAndTime,
-                                  name: transaction.name,
-                                  typeOfTransaction:
-                                      transaction.typeOfTransaction,
-                                  transactionReferanceNumber:
-                                      transaction.transactionReferanceNumber,
-                                  toIncl: transaction.toInclude,
+                                  transaction: bankTransactions[index],
                                   refreshData: _refreshData,
                                 );
                               },

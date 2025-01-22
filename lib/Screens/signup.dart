@@ -345,6 +345,7 @@ class _SignUpState extends State<SignUp> {
                                         "dreamToSave":
                                             dreamSavingsController.text,
                                         "dateOfJoining": DateTime.now(),
+                                        "tester": false,
                                       }).then(
                                         (value) => Get.offAll(
                                           routeName: routes[15],

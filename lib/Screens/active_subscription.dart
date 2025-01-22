@@ -101,7 +101,7 @@ class _ActiveSubscriptionState extends State<ActiveSubscription> {
                             child: Container(
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(15.r),
-                                color: Colors.grey.withOpacity(0.25),
+                                color: Colors.grey.withValues(alpha: 0.25),
                               ),
                               child: Padding(
                                 padding: EdgeInsets.symmetric(

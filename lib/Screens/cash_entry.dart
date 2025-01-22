@@ -1,17 +1,22 @@
 import "package:flutter/material.dart";
-import "package:flutter/services.dart";
 import "package:flutter_screenutil/flutter_screenutil.dart";
 import "package:get/get.dart";
-import "package:intl/intl.dart";
 import "package:multi_dropdown/multi_dropdown.dart";
-import "package:spendwise/Models/cus_transaction.dart";
+import "package:spendwise/Models/expense_type.dart";
 import "package:spendwise/Models/people_expense.dart";
 import "package:spendwise/Requirements/data.dart";
 import "package:spendwise/Requirements/transaction.dart";
 import "package:spendwise/Screens/add_people.dart";
+import "package:spendwise/Utils/expense_type_methods.dart";
+import "package:spendwise/Utils/methods.dart";
 import "package:spendwise/Utils/people_balance_shared_methods.dart";
 import "package:spendwise/Utils/theme.dart";
-import "package:spendwise/Utils/transaction_methods.dart";
+import "package:spendwise/Utils/utils.dart";
+import "package:spendwise/Components/custom_text_box.dart";
+import "package:spendwise/Components/date_text_box.dart";
+import "package:spendwise/Components/option_box.dart";
+
+import "../Components/option_check_box.dart";
 
 // TODO: Reduce Lines of Code
 final _formKey = GlobalKey<FormState>();
@@ -19,7 +24,7 @@ final _formKey = GlobalKey<FormState>();
 class AddCashEntry extends StatefulWidget {
   const AddCashEntry({super.key});
 
-  static const route = '/cashentry';
+  static const route = '/cash-entry';
 
   @override
   State<AddCashEntry> createState() => _AddCashEntryState();
@@ -28,29 +33,35 @@ class AddCashEntry extends StatefulWidget {
 class _AddCashEntryState extends State<AddCashEntry> {
   TextEditingController nameEditingController = TextEditingController();
   TextEditingController amountEditingController = TextEditingController();
+  TextEditingController fromDate = TextEditingController();
   TextEditingController typeOftransactionEditingController =
       TextEditingController();
-  String save = "";
   TextEditingController expenseTypeEditingController = TextEditingController();
-  TextEditingController endingRecurring = TextEditingController();
-  String typeOfexp = "";
-  String typeOftransaction = "";
+  String typeOfExp = "";
   String transactionReferanceNumber = "";
   DateTime? recurringDate;
-  bool isSharable = true;
+  bool isSharable = false;
   bool toAddNewPerson = false;
   bool toIncludeYourself = false;
+  bool pastDateTransaction = false;
   MultiSelectController<String> multiSelectDropDownController =
       MultiSelectController<String>();
   List<PeopleBalance> _peopleBalanceList = [];
+  List<String> _expenseTypeList = [];
   List<PeopleBalance> people = [];
   double updatedAmount = 0;
-  late CusTransaction transaction;
+  DateTime? fromdate;
 
   Future<void> _fetchData() async {
-    _peopleBalanceList =
-        await PeopleBalanceSharedMethods().getAllPeopleBalance();
-    setState(() {});
+    _peopleBalanceList = await PeopleBalanceSharedMethods().getPeopleNames();
+    List<ExpenseType> expenseTypeListTemp =
+        await ExpenseTypeMethods().getAllExpenseTypes();
+    List<String> defaultExpenseTypes =
+        expenseTypeListTemp.map((expense) => expense.name).toList();
+    setState(() {
+      _peopleBalanceList;
+      _expenseTypeList = [...defaultExpenseTypes, ...typeOfExpense];
+    });
   }
 
   Future<void> _refreshData() async {
@@ -100,222 +111,78 @@ class _AddCashEntryState extends State<AddCashEntry> {
                 key: _formKey,
                 child: Column(
                   children: [
-                    Padding(
-                      padding: EdgeInsets.only(
-                        left: 20.r,
-                        top: 15.h,
-                        right: 20.w,
-                      ),
-                      child: SizedBox(
-                        height: 60.h,
-                        child: TextFormField(
-                          controller: nameEditingController,
-                          inputFormatters: <TextInputFormatter>[
-                            FilteringTextInputFormatter.allow(
-                                RegExp('[a-z A-Z]'))
-                          ],
-                          validator: (value) {
-                            if (value!.isEmpty) {
-                              return "Add a Recipient name";
-                            } else if (value.length < 3) {
-                              return "Name must be at-least 3 characters";
+                    // Recipient Name
+                    TextBox(
+                      controller: nameEditingController,
+                      formatter: formatters["Name"]!,
+                      labelString: "Recipient Name",
+                      function: validators["Name"]!,
+                    ),
+
+                    // Amount
+                    TextBox(
+                      controller: amountEditingController,
+                      formatter: formatters["Amount"]!,
+                      labelString: "Amount",
+                      function: validators["Amount"]!,
+                      readOnly: false,
+                    ),
+
+                    // Category of Expense
+                    OptionBox(
+                      function: (newValue) => setState(() {
+                        typeOfExp = newValue!;
+                      }),
+                      items: getDropDownMenuItems(_expenseTypeList),
+                      labelString: "Type Of Expense",
+                    ),
+
+                    // Type Of Transaction
+                    OptionBox(
+                      function: (String? value) => setState(
+                        () {
+                          if (value != null) {
+                            typeOftransactionEditingController.text = value;
+                            if (![
+                              typeOfTransaction[0].toLowerCase(),
+                              typeOfTransaction[1].toLowerCase()
+                            ].contains(typeOftransactionEditingController.text
+                                .toLowerCase())) {
+                              isSharable = true;
+                            } else {
+                              isSharable = false;
                             }
-                            return null;
-                          },
-                          decoration: InputDecoration(
-                            label: Text(
-                              "Recipient Name",
-                              style: TextStyle(
-                                fontSize: 13.r,
-                              ),
-                            ),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(15.h),
-                            ),
-                          ),
-                        ),
+                          }
+                          setState(() {});
+                        },
                       ),
+                      items: getDropDownMenuItems(typeOfTransaction),
+                      labelString: "Income/Expense",
                     ),
-                    Padding(
-                      padding: EdgeInsets.only(
-                        left: 20.r,
-                        top: 15.h,
-                        right: 20.w,
-                      ),
-                      child: SizedBox(
-                        height: 60.h,
-                        child: TextFormField(
-                          controller: amountEditingController,
-                          keyboardType: const TextInputType.numberWithOptions(
-                              decimal: true, signed: true),
-                          inputFormatters: [
-                            FilteringTextInputFormatter.allow(
-                                RegExp(r'^\+?\d*'))
-                          ],
-                          validator: (value) {
-                            if (value!.isEmpty) {
-                              return "Enter a amount that have been paid or received";
-                            } else if (int.parse(value) < 1) {
-                              return "Amount cannot be in negative";
-                            }
-                            return null;
-                          },
-                          readOnly: typeOftransaction.toLowerCase() ==
-                              typeOfTransaction[4].toLowerCase()
-                              ? true
-                              : false,
-                          decoration: InputDecoration(
-                            label: Text(
-                              "Amount",
-                              style: TextStyle(
-                                fontSize: 13.r,
-                              ),
-                            ),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(15.h),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(
-                        left: 20.r,
-                        top: 15.h,
-                        right: 20.w,
-                      ),
-                      child: SizedBox(
-                        height: 60.h,
-                        child: DropdownButtonFormField(
-                          decoration: InputDecoration(
-                            label: Text(
-                              "Type of Expense",
-                              style: TextStyle(
-                                fontSize: 13.r,
-                              ),
-                            ),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(15.h),
-                            ),
-                          ),
-                          items: typeOfExpense
-                              .map(
-                                (e) => DropdownMenuItem(
-                                  value: toBeginningOfSentenceCase(e),
-                                  child: Text(
-                                    toBeginningOfSentenceCase(e),
-                                    style: TextStyle(
-                                      fontSize: 13.r,
-                                    ),
-                                  ),
-                                ),
-                              )
-                              .toList(),
-                          onChanged: (String? value) => setState(
+
+                    // Add a Date to the Transaction
+                    if (pastDateTransaction == true) ...[
+                      DateField(dateController: fromDate),
+                    ],
+
+                    // Option to Add a New User
+                    if (isSharable) ...[
+                      OptionCheckBox(
+                        stringLabel:
+                            "If the person is not available in the list, Click here",
+                        dataValue: toAddNewPerson,
+                        function: (value) {
+                          setState(
                             () {
-                              if (value != null) typeOfexp = value;
+                              toAddNewPerson = value!;
                             },
-                          ),
-                        ),
+                          );
+                        },
                       ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(
-                        left: 20.r,
-                        top: 15.h,
-                        right: 20.w,
-                      ),
-                      child: SizedBox(
-                        height: 60.h,
-                        child: DropdownButtonFormField(
-                          decoration: InputDecoration(
-                            label: Text(
-                              "Income/Expense",
-                              style: TextStyle(
-                                fontSize: 13.r,
-                              ),
-                            ),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(15.h),
-                            ),
-                          ),
-                          items: typeOfTransaction
-                              .map(
-                                (e) => DropdownMenuItem(
-                                  value: e,
-                                  child: Text(
-                                    toBeginningOfSentenceCase(e),
-                                    style: TextStyle(
-                                      fontSize: 13.r,
-                                    ),
-                                  ),
-                                ),
-                              )
-                              .toList(),
-                          onChanged: (String? value) => setState(
-                            () {
-                              if (value != null) {
-                                typeOftransaction = value;
-                                typeOftransactionEditingController.text =
-                                    typeOftransaction;
-                              }
-                              if(multiSelectDropDownController.selectedItems.isNotEmpty){
-                                if (typeOftransactionEditingController.text
-                                    .toLowerCase() ==
-                                    typeOfTransaction[4].toLowerCase()) {
-                                  for (PeopleBalance people
-                                  in _peopleBalanceList) {
-                                    if(multiSelectDropDownController.selectedItems[0].label.toLowerCase() == people.name.toLowerCase()){
-                                      save = amountEditingController.text;
-                                      debugPrint((people.amount*-1).toString());
-                                      amountEditingController.text = ((people.amount)*-1).toString();
-                                    }
-                                  }
-                                } else if((typeOftransactionEditingController.text
-                                    .toLowerCase() !=
-                                    typeOfTransaction[4].toLowerCase()) && save != ""){
-                                  amountEditingController.text = save;
-                                }
-                              }
-                              setState(() {});
-                            },
-                          ),
-                        ),
-                      ),
-                    ),
-                    if (((typeOftransactionEditingController.text)
-                                .toLowerCase() !=
-                            (typeOfTransaction[0]).toLowerCase()) &&
-                        ((typeOftransactionEditingController.text)
-                                .toLowerCase() !=
-                            (typeOfTransaction[1]).toLowerCase())) ...[
-                      Padding(
-                        padding: EdgeInsets.only(
-                          left: 30.r,
-                          right: 20.w,
-                        ),
-                        child: Row(
-                          children: [
-                            Checkbox(
-                              value: toAddNewPerson,
-                              onChanged: (bool? value) {
-                                endingRecurring.text = "";
-                                setState(
-                                  () {
-                                    toAddNewPerson = value!;
-                                  },
-                                );
-                              },
-                            ),
-                            SizedBox(
-                              width: 250.w,
-                              child: const Text(
-                                  "If the person is not available in the list, Click here"),
-                            )
-                          ],
-                        ),
-                      ),
+
+                      // Multi Select Dropdown to Select Persons
                       if (toAddNewPerson == false) ...[
+                        //TODO: to look into future
                         Padding(
                           padding: EdgeInsets.only(
                             left: 20.r,
@@ -323,10 +190,7 @@ class _AddCashEntryState extends State<AddCashEntry> {
                             right: 20.w,
                           ),
                           child: MultiDropdown<String>(
-                            maxSelections: typeOftransaction.toLowerCase() ==
-                                    typeOfTransaction[4].toLowerCase()
-                                ? 1
-                                : 500,
+                            maxSelections: _peopleBalanceList.length,
                             controller: multiSelectDropDownController,
                             items: _peopleBalanceList.isEmpty
                                 ? []
@@ -348,32 +212,18 @@ class _AddCashEntryState extends State<AddCashEntry> {
                               if (selectedOptions!.isEmpty) {
                                 return "Select any Person to share the Expense/Income";
                               }
-
                               return null;
                             },
                             onSelectionChange: (List<String> list) {
-                              if (typeOftransactionEditingController.text
-                                      .toLowerCase() ==
-                                  typeOfTransaction[4].toLowerCase()) {
-                                for (PeopleBalance people
-                                    in _peopleBalanceList) {
-                                  if(multiSelectDropDownController.selectedItems[0].label.toLowerCase() == people.name.toLowerCase()){
-                                    save = amountEditingController.text;
-                                    amountEditingController.text = (((people.amount) *-1).toInt()).toString();
-                                  }
-                                }
-                              } else if((typeOftransactionEditingController.text
-                                  .toLowerCase() !=
-                                  typeOfTransaction[4].toLowerCase()) && save != ""){
-                                amountEditingController.text = save;
-                              }
+                              //TODO: To make amount of person non changeable when it's about managing people balance
                             },
                           ),
                         ),
                       ] else ...[
+                        // Add People Feature
                         GestureDetector(
                           onTap: () async {
-                            final toreload = await Get.to(
+                            final reload = await Get.to(
                               routeName: "add_people",
                               () => const AddPeople(),
                               curve: customCurve,
@@ -381,7 +231,7 @@ class _AddCashEntryState extends State<AddCashEntry> {
                               duration: duration,
                             );
 
-                            if (toreload != null) {
+                            if (reload != null) {
                               _refreshData();
                             }
                           },
@@ -404,33 +254,32 @@ class _AddCashEntryState extends State<AddCashEntry> {
                         ),
                       ]
                     ],
-                    Padding(
-                      padding: EdgeInsets.only(
-                        left: 30.r,
-                        right: 20.w,
-                        top: 10.h,
-                      ),
-                      child: Row(
-                        children: [
-                          Checkbox(
-                            value: toIncludeYourself,
-                            onChanged: (bool? value) {
-                              endingRecurring.text = "";
-                              setState(
-                                () {
-                                  toIncludeYourself = value!;
-                                },
-                              );
+                    if ((isSharable == true) && (toAddNewPerson == false)) ...[
+                      OptionCheckBox(
+                        stringLabel:
+                            "Exclude yourself from the Split of Amount",
+                        dataValue: toIncludeYourself,
+                        function: (bool? value) {
+                          setState(
+                            () {
+                              toIncludeYourself = value!;
                             },
-                          ),
-                          SizedBox(
-                            width: 250.w,
-                            child: const Text(
-                                "Click here to divide the amount between only the selected Persons"),
-                          )
-                        ],
+                          );
+                        },
                       ),
-                    ),
+                    ],
+                    OptionCheckBox(
+                      stringLabel:
+                          "Click here to add a Date Of the Transaction",
+                      dataValue: pastDateTransaction,
+                      function: (bool? value) {
+                        setState(
+                          () {
+                            pastDateTransaction = value!;
+                          },
+                        );
+                      },
+                    )
                   ],
                 ),
               ),
@@ -444,26 +293,7 @@ class _AddCashEntryState extends State<AddCashEntry> {
                     GestureDetector(
                       onTap: () async {
                         if (_formKey.currentState!.validate()) {
-                          CusTransaction transaction = CusTransaction(
-                            amount: double.parse(amountEditingController.text),
-                            dateAndTime: DateTime.now(),
-                            name: nameEditingController.text,
-                            typeOfTransaction: typeOftransaction,
-                            expenseType: typeOfexp,
-                            transactionReferanceNumber:
-                                generateUniqueRefNumber(),
-                          );
-                          await TransactionMethods()
-                              .insertTransaction(transaction)
-                              .then(
-                                (value) => Get.off(
-                                  routeName: "saveAndAdd",
-                                  () => const AddCashEntry(),
-                                  curve: customCurve,
-                                  transition: customTrans,
-                                  duration: duration,
-                                ),
-                              );
+                          //TODO: feature to save and add transactions
                         }
                       },
                       child: Container(
@@ -498,180 +328,47 @@ class _AddCashEntryState extends State<AddCashEntry> {
                     GestureDetector(
                       onTap: () async {
                         if (_formKey.currentState!.validate()) {
-                          if (typeOftransactionEditingController.text
-                                  .toLowerCase() ==
-                              typeOfTransaction[2].toLowerCase()) {
-                            if (multiSelectDropDownController
-                                .selectedItems.length
-                                .isGreaterThan(0)) {
-                              for (PeopleBalance peopleBalance
-                                  in _peopleBalanceList) {
-                                for (DropdownItem name
-                                    in multiSelectDropDownController
-                                        .selectedItems) {
-                                  if (name.label == peopleBalance.name) {
-                                    double newAmount = peopleBalance.amount;
-                                    newAmount += (double.parse(
-                                            amountEditingController.text) /
-                                        (multiSelectDropDownController
-                                                .selectedItems.length +
-                                            (toIncludeYourself ? 0 : 1)));
-                                    PeopleBalanceSharedMethods()
-                                        .updatePeopleBalance(PeopleBalance(
-                                            name: peopleBalance.name,
-                                            amount: newAmount,
-                                            dateAndTime:
-                                                peopleBalance.dateAndTime,
-                                            transactionFor:
-                                                peopleBalance.transactionFor,
-                                            relationFrom:
-                                                peopleBalance.relationFrom,
-                                            transactionReferanceNumber:
-                                                peopleBalance
-                                                    .transactionReferanceNumber));
-                                    transaction = CusTransaction(
-                                      amount: double.parse(
-                                          amountEditingController.text),
-                                      dateAndTime: DateTime.now(),
-                                      name: nameEditingController.text,
-                                      typeOfTransaction:
-                                          typeOftransactionEditingController
-                                              .text,
-                                      expenseType: typeOfexp,
-                                      transactionReferanceNumber:
-                                          generateUniqueRefNumber(),
-                                    );
-                                  }
-                                }
-                              }
-                            }
-                          } else if (typeOftransactionEditingController.text
-                                  .toLowerCase() ==
-                              typeOfTransaction[3].toLowerCase()) {
-                            if (multiSelectDropDownController
-                                .selectedItems.length
-                                .isGreaterThan(0)) {
-                              for (PeopleBalance peopleBalance
-                                  in _peopleBalanceList) {
-                                for (DropdownItem name
-                                    in multiSelectDropDownController
-                                        .selectedItems) {
-                                  if (name.label == peopleBalance.name) {
-                                    double newAmount = peopleBalance.amount;
-                                    newAmount -= (double.parse(
-                                            amountEditingController.text) /
-                                        (multiSelectDropDownController
-                                                .selectedItems.length +
-                                            (toIncludeYourself ? 0 : 1)));
-                                    PeopleBalanceSharedMethods()
-                                        .updatePeopleBalance(PeopleBalance(
-                                            name: peopleBalance.name,
-                                            amount: newAmount,
-                                            dateAndTime:
-                                                peopleBalance.dateAndTime,
-                                            transactionFor:
-                                                peopleBalance.transactionFor,
-                                            relationFrom:
-                                                peopleBalance.relationFrom,
-                                            transactionReferanceNumber:
-                                                peopleBalance
-                                                    .transactionReferanceNumber));
-                                    transaction = CusTransaction(
-                                      amount: double.parse(
-                                          amountEditingController.text),
-                                      dateAndTime: DateTime.now(),
-                                      name: nameEditingController.text,
-                                      typeOfTransaction:
-                                          typeOftransactionEditingController
-                                              .text,
-                                      expenseType: typeOfexp,
-                                      transactionReferanceNumber:
-                                          generateUniqueRefNumber(),
-                                    );
-                                  }
-                                }
-                              }
-                            }
-                          } else if (typeOftransactionEditingController.text
-                                  .toLowerCase() ==
-                              typeOfTransaction[4].toLowerCase()) {
-                            if (multiSelectDropDownController
-                                .selectedItems.length
-                                .isGreaterThan(0)) {
-                              for (PeopleBalance peopleBalance
-                                  in _peopleBalanceList) {
-                                for (DropdownItem name
-                                    in multiSelectDropDownController
-                                        .selectedItems) {
-                                  if (name.label == peopleBalance.name) {
-                                    double newAmount = peopleBalance.amount;
-                                    if (peopleBalance.amount.toInt() > 0) {
-                                      newAmount -= (double.parse(
-                                              amountEditingController.text) /
-                                          (multiSelectDropDownController
-                                                  .selectedItems.length +
-                                              (toIncludeYourself ? 0 : 1)));
-                                    } else {
-                                      newAmount += (double.parse(
-                                              amountEditingController.text) /
-                                          (multiSelectDropDownController
-                                                  .selectedItems.length +
-                                              (toIncludeYourself ? 0 : 1)));
-                                    }
-                                    PeopleBalanceSharedMethods()
-                                        .updatePeopleBalance(PeopleBalance(
-                                            name: peopleBalance.name,
-                                            amount: newAmount,
-                                            dateAndTime:
-                                                peopleBalance.dateAndTime,
-                                            transactionFor:
-                                                peopleBalance.transactionFor,
-                                            relationFrom:
-                                                peopleBalance.relationFrom,
-                                            transactionReferanceNumber:
-                                                peopleBalance
-                                                    .transactionReferanceNumber));
-                                    transaction = CusTransaction(
-                                      amount: double.parse(
-                                          amountEditingController.text),
-                                      dateAndTime: DateTime.now(),
-                                      name: nameEditingController.text,
-                                      typeOfTransaction:
-                                          typeOftransactionEditingController
-                                              .text,
-                                      expenseType: typeOfexp,
-                                      transactionReferanceNumber:
-                                          generateUniqueRefNumber(),
-                                    );
-                                  }
-                                }
-                              }
-                            }
-                          } else {
-                            transaction = CusTransaction(
-                              amount:
-                                  double.parse(amountEditingController.text),
-                              dateAndTime: DateTime.now(),
-                              name: nameEditingController.text,
-                              typeOfTransaction:
-                                  typeOftransactionEditingController.text,
-                              expenseType: typeOfexp,
-                              transactionReferanceNumber:
-                                  generateUniqueRefNumber(),
+                          //TODO: add the transaction based on different income/expense
+                          if ([
+                            typeOfTransaction[0].toLowerCase(),
+                            typeOfTransaction[1].toString()
+                          ].contains(typeOftransactionEditingController.text
+                              .toLowerCase())) {
+                            bool inserted = await addIncomeAndExpense(
+                              nameEditingController.text,
+                              amountEditingController.text,
+                              typeOfExp,
+                              fromDate.text,
+                              pastDateTransaction,
+                              typeOftransactionEditingController.text,
                             );
-                          }
-
-                          if (transaction.typeOfTransaction
-                                  .toString()
-                                  .toLowerCase() !=
-                              typeOfTransaction[3].toString().toLowerCase()) {
-                            await TransactionMethods()
-                                .insertTransaction(transaction)
-                                .then(
-                                  (value) => Get.back(result: "refresh"),
-                                );
-                          } else {
-                            Get.back(result: "result");
+                            if (inserted) {
+                              Get.back(result: "refresh");
+                            } else {
+                              Get.snackbar("Internal Error",
+                                  "Your Transaction wasn't saved");
+                            }
+                          } else if ([
+                            typeOfTransaction[2].toLowerCase(),
+                            typeOfTransaction[3].toLowerCase()
+                          ].contains(typeOftransactionEditingController.text
+                              .toLowerCase())) {
+                            debugPrint("Yes");
+                            bool inserted = await addSharedIncomeAndExpense(
+                                nameEditingController.text,
+                                amountEditingController.text,
+                                typeOfExp,
+                                typeOftransactionEditingController.text,
+                                multiSelectDropDownController.selectedItems,
+                                toIncludeYourself,
+                                fromDate.text,
+                                pastDateTransaction);
+                            if (inserted) {
+                              Get.back(result: "refresh");
+                            } else {
+                              Get.snackbar("Internal Error",
+                                  "Your Transaction wasn't saved");
+                            }
                           }
                         }
                       },
