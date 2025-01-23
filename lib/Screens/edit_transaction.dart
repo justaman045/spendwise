@@ -241,7 +241,7 @@ class _EditTransactionState extends State<EditTransaction> {
                           updateTransaction(value);
                         }
                       },
-                      value: widget.transaction.expenseType,
+                      value: typeOfExpense.contains(widget.transaction.expenseType) ? widget.transaction.expenseType : null,
                     ),
                   ),
                 ),

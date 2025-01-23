@@ -18,7 +18,7 @@ class CurrentFlow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.start, // Align items to the left
+      mainAxisAlignment: MainAxisAlignment.spaceAround, // Align items to the left
       children: [
         _buildCashFlowItem(
           onTap: () => Get.to(

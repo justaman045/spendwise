@@ -52,7 +52,7 @@ class AvailableBalance extends StatelessWidget {
           ),
           child: Center(
             child: Padding(
-              padding: EdgeInsets.all(40.r),
+              padding: EdgeInsets.all(30.r),
               child: Column(
                 children: [
                   Text(

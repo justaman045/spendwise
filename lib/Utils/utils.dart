@@ -6,7 +6,9 @@ Map<String, List<FilteringTextInputFormatter>> formatters = {
       RegExp('[a-z A-Z]'),
     ),
   ],
-  "Amount": [FilteringTextInputFormatter.allow(RegExp(r'^\+?\d*'))],
+  "Amount": [
+    FilteringTextInputFormatter.allow(RegExp(r'(^\d*[\.\,]?\d{0,2})')),
+  ],
 };
 
 Map<String, Function> validators = {

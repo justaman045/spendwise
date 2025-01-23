@@ -10,6 +10,7 @@ class TextBox extends StatelessWidget {
     required this.function,
     required this.labelString,
     this.readOnly = false,
+    required this.keyboardType,
   });
 
   final TextEditingController controller;
@@ -17,6 +18,7 @@ class TextBox extends StatelessWidget {
   final Function function;
   final String labelString;
   final bool readOnly;
+  final TextInputType keyboardType;
 
   @override
   Widget build(BuildContext context) {
@@ -31,6 +33,7 @@ class TextBox extends StatelessWidget {
         child: TextFormField(
           controller: controller,
           inputFormatters: formatter,
+          keyboardType: keyboardType,
           validator: (value) => function(value),
           decoration: InputDecoration(
             label: Text(

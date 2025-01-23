@@ -97,7 +97,8 @@ class _SpendsByTypeState extends State<SpendsByType> {
                     itemBuilder: (context, index) {
                       final expenseType = _expenseTypes[index];
                       return _buildExpenseTypeCard(
-                          expenseType); // Call a method to build the card widget
+                        expenseType,
+                      ); // Call a method to build the card widget
                     },
                   ),
                 ),
@@ -130,7 +131,7 @@ class _SpendsByTypeState extends State<SpendsByType> {
     // You can use Text, Icon, or other widgets as needed
     return GestureDetector(
       onTap: () async {
-        dynamic toRefresh = Get.to(
+        dynamic toRefresh = await Get.to(
           curve: customCurve,
           transition: customTrans,
           duration: duration,
@@ -146,7 +147,7 @@ class _SpendsByTypeState extends State<SpendsByType> {
       },
       child: Card(
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
+          padding: EdgeInsets.all(10.r),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,

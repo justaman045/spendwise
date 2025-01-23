@@ -18,7 +18,9 @@ class CashFlow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.all(15.r), // Spacing around the cash flow widget
+      padding: EdgeInsets.symmetric(
+          horizontal: 10.w,
+          vertical: 7.h), // Spacing around the cash flow widget
       child: Row(
         children: [
           Container(
@@ -30,16 +32,19 @@ class CashFlow extends StatelessWidget {
               ),
             ),
             child: Padding(
-              padding: EdgeInsets.all(15.r), // Padding within the container
+              padding: EdgeInsets.all(13.r), // Padding within the container
               child: Column(
                 crossAxisAlignment:
                     CrossAxisAlignment.start, // Align text to the left
                 children: [
                   Padding(
                     padding: EdgeInsets.all(5.r), // Spacing for the icon
-                    child: const Icon(
-                      Icons.attach_money, // Money icon to represent cash flow
-                      color: MyAppColors.normalColoredWidgetTextColorDarkMode,
+                    child: Text(
+                      '\u{20B9}', // Money icon to represent cash flow
+                      style: TextStyle(
+                        color: MyAppColors.normalColoredWidgetTextColorDarkMode,
+                        fontSize: 25.r,
+                      ),
                     ),
                   ),
                   Text(

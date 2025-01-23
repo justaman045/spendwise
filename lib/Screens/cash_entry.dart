@@ -117,6 +117,7 @@ class _AddCashEntryState extends State<AddCashEntry> {
                       formatter: formatters["Name"]!,
                       labelString: "Recipient Name",
                       function: validators["Name"]!,
+                      keyboardType: TextInputType.name,
                     ),
 
                     // Amount
@@ -126,6 +127,9 @@ class _AddCashEntryState extends State<AddCashEntry> {
                       labelString: "Amount",
                       function: validators["Amount"]!,
                       readOnly: false,
+                      keyboardType: TextInputType.numberWithOptions(
+                        decimal: true,
+                      ),
                     ),
 
                     // Category of Expense
